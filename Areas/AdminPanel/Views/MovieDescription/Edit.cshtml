@@ -1,0 +1,252 @@
+﻿@model Service.Admin.Movies.MovieDescription.MovieDescriptionEditDto
+
+@{
+    ViewData["Title"] = "ویرایش شرح کامل فیلم";
+}
+
+@section Styles
+{
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css"
+          rel="stylesheet" />
+
+    <style>
+
+        #editor {
+            min-height: 350px;
+        }
+
+        .ql-editor {
+            min-height: 350px;
+            direction: rtl;
+            text-align: right;
+        }
+
+    </style>
+}
+
+<div class="container-fluid">
+
+    <div class="mb-4">
+
+        <h4>
+            ویرایش شرح کامل فیلم
+        </h4>
+
+        <p class="text-muted mb-0">
+            فیلم:
+            <strong>
+                @Model.MovieTitle
+            </strong>
+        </p>
+
+    </div>
+
+    <div class="card">
+
+        <div class="card-body">
+
+            <form asp-action="Edit"
+                  method="post"
+                  id="descriptionForm">
+
+                @Html.AntiForgeryToken()
+
+                <input asp-for="Id"
+                       type="hidden" />
+
+                <input asp-for="MovieId"
+                       type="hidden" />
+
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger mb-3">
+                </div>
+
+                <div class="mb-4">
+
+                    <label class="form-label">
+                        فیلم
+                    </label>
+
+                    <input type="text"
+                           class="form-control"
+                           value="@Model.MovieTitle"
+                           readonly />
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        شرح کامل فیلم
+                    </label>
+
+                    <div id="toolbar">
+
+                        <!-- Heading -->
+                        <span class="ql-formats">
+
+                            <select class="ql-header">
+                                <option selected></option>
+                                <option value="1"></option>
+                                <option value="2"></option>
+                                <option value="3"></option>
+                                <option value="4"></option>
+                                <option value="5"></option>
+                                <option value="6"></option>
+                            </select>
+
+                        </span>
+
+                        <!-- Bold / Italic / Underline -->
+                        <span class="ql-formats">
+
+                            <button class="ql-bold"></button>
+
+                            <button class="ql-italic"></button>
+
+                            <button class="ql-underline"></button>
+
+                        </span>
+
+                        <!-- List -->
+                        <span class="ql-formats">
+
+                            <button class="ql-list"
+                                    value="ordered">
+                            </button>
+
+                            <button class="ql-list"
+                                    value="bullet">
+                            </button>
+
+                        </span>
+
+                        <!-- Alignment -->
+                        <span class="ql-formats">
+
+                            <select class="ql-align">
+                                <option selected></option>
+                                <option value="center"></option>
+                                <option value="right"></option>
+                                <option value="justify"></option>
+                            </select>
+
+                        </span>
+
+                        <!-- Link / Image -->
+                        <span class="ql-formats">
+
+                            <button class="ql-link"></button>
+
+                            <button class="ql-image"></button>
+
+                        </span>
+
+                        <!-- Clear -->
+                        <span class="ql-formats">
+
+                            <button class="ql-clean"></button>
+
+                        </span>
+
+                    </div>
+
+                    <div id="editor">
+                        @Html.Raw(Model.Content)
+                    </div>
+
+                    <textarea asp-for="Content"
+                              id="Content"
+                              hidden>
+                    </textarea>
+
+                    <span asp-validation-for="Content"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+                <div class="d-flex gap-2">
+
+                    <button type="submit"
+                            class="btn btn-primary">
+                        ذخیره تغییرات
+                    </button>
+
+                    <a asp-action="Details"
+                       asp-route-id="@Model.Id"
+                       class="btn btn-secondary">
+                        انصراف
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+
+    <script>
+
+        const quill = new Quill('#editor', {
+
+            theme: 'snow',
+
+            modules: {
+
+                toolbar: {
+
+                    container: '#toolbar',
+
+                    handlers: {
+
+                        image: function () {
+
+                            const url = prompt(
+                                'آدرس تصویر را وارد کنید:'
+                            );
+
+                            if (url) {
+
+                                const range =
+                                    quill.getSelection();
+
+                                quill.insertEmbed(
+                                    range ? range.index : 0,
+                                    'image',
+                                    url
+                                );
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        });
+
+        const form =
+            document.getElementById('descriptionForm');
+
+        form.addEventListener('submit', function () {
+
+            document.getElementById('Content').value =
+                quill.root.innerHTML;
+
+        });
+
+    </script>
+}

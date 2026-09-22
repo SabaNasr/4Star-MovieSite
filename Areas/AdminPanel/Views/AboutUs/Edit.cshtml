@@ -1,0 +1,379 @@
+﻿@model Service.Admin.Content.AboutUs.AboutUsEditDto
+
+
+<div class="card border-0 shadow-sm">
+
+    <div class="card-header">
+
+        <div class="d-flex align-items-center">
+
+            <div class="avatar me-3">
+                <span class="avatar-initial rounded bg-label-warning">
+                    <i class="bx bx-edit-alt fs-4"></i>
+                </span>
+            </div>
+
+            <div>
+                <h5 class="mb-1">
+                    ویرایش درباره ما
+                </h5>
+
+                <small class="text-muted">
+                    محتوای صفحه و آمار را ویرایش کنید.
+                </small>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <form asp-action="Edit"
+              method="post"
+              enctype="multipart/form-data">
+
+            @Html.AntiForgeryToken()
+
+            <input asp-for="Id"
+                   type="hidden" />
+
+            <input asp-for="ExistingImagePath"
+                   type="hidden" />
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger mb-4">
+            </div>
+
+            <div class="row">
+
+                <div class="col-lg-8">
+
+                    <div class="card bg-light border-0 mb-4">
+
+                        <div class="card-body">
+
+                            <div class="d-flex align-items-center mb-3">
+
+                                <i class="bx bx-edit text-warning fs-4 me-2"></i>
+
+                                <h6 class="mb-0">
+                                    محتوای صفحه
+                                </h6>
+
+                            </div>
+
+                            <label asp-for="Content"
+                                   class="form-label">
+                                متن درباره ما
+                            </label>
+
+                            <textarea asp-for="Content"
+                                      id="content"
+                                      class="d-none">
+                            </textarea>
+
+                            <div id="editor"
+                                 style="min-height:350px; background:#fff;">
+                            </div>
+
+                            <span asp-validation-for="Content"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-lg-4">
+
+                    <div class="card bg-light border-0 mb-4">
+
+                        <div class="card-body">
+
+                            <div class="d-flex align-items-center mb-3">
+
+                                <i class="bx bx-image text-warning fs-4 me-2"></i>
+
+                                <h6 class="mb-0">
+                                    تصویر
+                                </h6>
+
+                            </div>
+
+                            <div class="text-center mb-3">
+
+                                <img src="~/@Model.ExistingImagePath"
+                                     alt="درباره ما"
+                                     class="img-fluid rounded-3"
+                                     style="max-height:230px;" />
+
+                            </div>
+
+                            <label asp-for="Image"
+                                   class="form-label">
+                                تصویر جدید
+                            </label>
+
+                            <input asp-for="Image"
+                                   type="file"
+                                   accept=".jpg,.jpeg,.png,.gif,.svg,.webp"
+                                   class="form-control" />
+
+                            <span asp-validation-for="Image"
+                                  class="text-danger">
+                            </span>
+
+                            <div class="text-center mt-3">
+
+                                <img id="imagePreview"
+                                     class="img-fluid rounded-3 d-none"
+                                     style="max-height:200px;" />
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="card bg-light border-0">
+
+                        <div class="card-body">
+
+                            <div class="d-flex align-items-center mb-3">
+
+                                <i class="bx bx-power-off text-warning fs-4 me-2"></i>
+
+                                <h6 class="mb-0">
+                                    وضعیت صفحه
+                                </h6>
+
+                            </div>
+
+                            <div class="form-check">
+
+                                <input asp-for="IsActive"
+                                       class="form-check-input" />
+
+                                <label asp-for="IsActive"
+                                       class="form-check-label">
+                                    صفحه فعال باشد
+                                </label>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="card bg-light border-0 mt-4">
+
+                <div class="card-body">
+
+                    <div class="d-flex align-items-center mb-4">
+
+                        <i class="bx bx-bar-chart-alt-2 text-warning fs-4 me-2"></i>
+
+                        <h6 class="mb-0">
+                            آمار و شمارنده‌ها
+                        </h6>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-6 mb-3">
+
+                            <label asp-for="CustomerCount"
+                                   class="form-label">
+                                <i class="bx bx-user me-1"></i>
+                                تعداد مشتریان
+                            </label>
+
+                            <input asp-for="CustomerCount"
+                                   type="number"
+                                   min="0"
+                                   class="form-control" />
+
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+
+                            <label asp-for="ActiveUserCount"
+                                   class="form-label">
+                                <i class="bx bx-user-check me-1"></i>
+                                کاربران فعال
+                            </label>
+
+                            <input asp-for="ActiveUserCount"
+                                   type="number"
+                                   min="0"
+                                   class="form-control" />
+
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+
+                            <label asp-for="TotalVideoCount"
+                                   class="form-label">
+                                <i class="bx bx-video me-1"></i>
+                                کل ویدیوها
+                            </label>
+
+                            <input asp-for="TotalVideoCount"
+                                   type="number"
+                                   min="0"
+                                   class="form-control" />
+
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+
+                            <label asp-for="SubscriberCount"
+                                   class="form-label">
+                                <i class="bx bx-group me-1"></i>
+                                مشترکین
+                            </label>
+
+                            <input asp-for="SubscriberCount"
+                                   type="number"
+                                   min="0"
+                                   class="form-control" />
+
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+
+                            <label asp-for="AwardCount"
+                                   class="form-label">
+                                <i class="bx bx-trophy me-1"></i>
+                                جوایز
+                            </label>
+
+                            <input asp-for="AwardCount"
+                                   type="number"
+                                   min="0"
+                                   class="form-control" />
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="d-flex justify-content-end gap-2 mt-4">
+
+                <a asp-action="Details"
+                   asp-route-id="@Model.Id"
+                   class="btn btn-outline-info">
+
+                    <i class="bx bx-show me-1"></i>
+                    مشاهده
+
+                </a>
+
+                <a asp-action="Index"
+                   class="btn btn-outline-secondary">
+
+                    <i class="bx bx-arrow-back me-1"></i>
+                    بازگشت
+
+                </a>
+
+                <button type="submit"
+                        class="btn btn-warning">
+
+                    <i class="bx bx-save me-1"></i>
+                    ذخیره تغییرات
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+@section Styles {
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css">
+}
+
+@section Scripts {
+
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+
+    @{
+        await Html.RenderPartialAsync(
+            "_ValidationScriptsPartial");
+    }
+
+    <script>
+
+        const quill = new Quill('#editor', {
+            theme: 'snow',
+            placeholder: 'محتوای درباره ما را وارد کنید...',
+            modules: {
+                toolbar: [
+                    [{ header: [1, 2, 3, 4, 5, 6, false] }],
+                    ['bold', 'italic', 'underline'],
+                    [{ list: 'ordered' }, { list: 'bullet' }],
+                    [{ align: [] }],
+                    ['link', 'image'],
+                    ['clean']
+                ]
+            }
+        });
+
+        const contentInput =
+            document.getElementById('content');
+
+        quill.root.innerHTML =
+            contentInput.value || '';
+
+        document.querySelector('form')
+            .addEventListener('submit', function () {
+
+                contentInput.value =
+                    quill.root.innerHTML;
+
+            });
+
+        document
+            .querySelector('input[type="file"]')
+            .addEventListener('change', function (event) {
+
+                const file =
+                    event.target.files[0];
+
+                const preview =
+                    document.getElementById('imagePreview');
+
+                if (!file) {
+                    preview.classList.add('d-none');
+                    return;
+                }
+
+                preview.src =
+                    URL.createObjectURL(file);
+
+                preview.classList.remove('d-none');
+
+                    });
+
+    </script>
+}

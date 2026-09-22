@@ -1,0 +1,429 @@
+﻿@model List<MovieListDto>
+
+@{
+    ViewData["Title"] = "مدیریت فیلم‌ها";
+}
+
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+
+    <!-- عنوان صفحه -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h4 class="fw-bold py-3 mb-0">
+                مدیریت فیلم‌ها
+            </h4>
+
+            <p class="text-muted mb-0">
+                مدیریت و مشاهده فیلم‌های ثبت شده در سایت
+            </p>
+
+        </div>
+
+
+        <div>
+
+            <a asp-area="AdminPanel"
+               asp-controller="Movie"
+               asp-action="Create"
+               class="btn btn-primary">
+
+                <i class="bx bx-plus"></i>
+
+                افزودن فیلم جدید
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- کارت اصلی -->
+
+    <div class="card">
+
+
+        <!-- Header -->
+
+        <div class="card-header d-flex justify-content-between align-items-center">
+
+            <h5 class="mb-0">
+                لیست فیلم‌ها
+            </h5>
+
+
+            <div>
+
+                <a asp-area="AdminPanel"
+                   asp-controller="Movie"
+                   asp-action="Archived"
+                   class="btn btn-outline-warning btn-sm">
+
+                    <i class="bx bx-archive"></i>
+
+                    آرشیو شده‌ها
+
+                </a>
+
+
+                <a asp-area="AdminPanel"
+                   asp-controller="Movie"
+                   asp-action="Deleted"
+                   class="btn btn-outline-danger btn-sm">
+
+                    <i class="bx bx-trash"></i>
+
+                    حذف شده‌ها
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- جدول -->
+
+        <div class="table-responsive text-nowrap">
+
+            <table class="table table-hover">
+
+                <thead>
+
+                    <tr>
+
+                        <th>پوستر</th>
+
+                        <th>نام فیلم</th>
+
+                        <th>سال ساخت</th>
+
+                        <th>مدت زمان</th>
+
+                        <th>IMDb</th>
+
+                        <th>بازدید</th>
+
+                        <th>وضعیت</th>
+
+                        <th>عملیات</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody class="table-border-bottom-0">
+
+
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var movie in Model)
+                        {
+
+                            <tr>
+
+
+                                <!-- پوستر -->
+
+                                <td>
+
+                                    @if (!string.IsNullOrEmpty(movie.PosterPath))
+                                    {
+
+                                        <img src="@movie.PosterPath"
+                                             alt="@movie.Title"
+                                             class="rounded"
+                                             style="width:60px;height:80px;object-fit:cover;" />
+
+                                    }
+                                    else
+                                    {
+
+                                        <div class="avatar">
+
+                                            <span class="avatar-initial rounded bg-label-secondary">
+
+                                                <i class="bx bx-movie"></i>
+
+                                            </span>
+
+                                        </div>
+
+                                    }
+
+                                </td>
+
+
+
+                                <!-- نام فیلم -->
+
+                                <td>
+
+                                    <strong>
+                                        @movie.Title
+                                    </strong>
+
+                                </td>
+
+
+
+                                <!-- سال ساخت -->
+
+                                <td>
+
+                                    @movie.Year
+
+                                </td>
+
+
+
+                                <!-- مدت زمان -->
+
+                                <td>
+
+                                    @movie.DurationMinutes دقیقه
+
+                                </td>
+
+
+
+                                <!-- IMDb -->
+
+                                <td>
+
+                                    <span class="badge bg-label-warning">
+
+                                        <i class="bx bx-star"></i>
+
+                                        @movie.ImdbRating
+
+                                    </span>
+
+                                </td>
+
+
+
+                                <!-- بازدید -->
+
+                                <td>
+
+                                    <span class="badge bg-label-info">
+
+                                        <i class="bx bx-show"></i>
+
+                                        @movie.ViewCount
+
+                                    </span>
+
+                                </td>
+
+
+
+                                <!-- وضعیت -->
+
+                                <td>
+
+                                    @if (movie.IsActive)
+                                    {
+                                        <span class="badge bg-label-success">
+                                            فعال
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-label-secondary">
+                                            غیرفعال
+                                        </span>
+                                    }
+
+                                </td>
+
+
+
+                                <!-- عملیات -->
+
+                                <td>
+
+                                    <div class="dropdown">
+
+                                        <button type="button"
+                                                class="btn p-0 dropdown-toggle hide-arrow"
+                                                data-bs-toggle="dropdown">
+
+                                            <i class="bx bx-dots-vertical-rounded"></i>
+
+                                        </button>
+
+
+                                        <div class="dropdown-menu">
+
+
+                                            <!-- جزئیات -->
+
+                                            <a asp-area="AdminPanel"
+                                               asp-controller="Movie"
+                                               asp-action="Details"
+                                               asp-route-id="@movie.Id"
+                                               class="dropdown-item">
+
+                                                <i class="bx bx-show me-1"></i>
+
+                                                مشاهده
+
+                                            </a>
+
+
+                                            <!-- ویرایش -->
+
+                                            <a asp-area="AdminPanel"
+                                               asp-controller="Movie"
+                                               asp-action="Edit"
+                                               asp-route-id="@movie.Id"
+                                               class="dropdown-item">
+
+                                                <i class="bx bx-edit-alt me-1"></i>
+
+                                                ویرایش
+
+                                            </a>
+
+
+                                            <div class="dropdown-divider"></div>
+
+
+                                            <!-- فعال و غیرفعال -->
+
+                                            <form asp-area="AdminPanel"
+                                                  asp-controller="Movie"
+                                                  asp-action="ChangeStatus"
+                                                  asp-route-id="@movie.Id"
+                                                  method="post">
+
+                                                <button type="submit"
+                                                        class="dropdown-item">
+
+                                                    @if (movie.IsActive)
+                                                    {
+                                                        <i class="bx bx-toggle-left me-1"></i>
+
+                                                        <span>
+                                                            غیرفعال کردن
+                                                        </span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <i class="bx bx-toggle-right me-1"></i>
+
+                                                        <span>
+                                                            فعال کردن
+                                                        </span>
+                                                    }
+
+                                                </button>
+
+                                            </form>
+
+
+                                            <!-- آرشیو -->
+
+                                            <form asp-area="AdminPanel"
+                                                  asp-controller="Movie"
+                                                  asp-action="Archive"
+                                                  asp-route-id="@movie.Id"
+                                                  method="post">
+
+                                                <button type="submit"
+                                                        class="dropdown-item text-warning">
+
+                                                    <i class="bx bx-archive me-1"></i>
+
+                                                    آرشیو کردن
+
+                                                </button>
+
+                                            </form>
+
+
+                                            <!-- حذف نرم -->
+
+                                            <form asp-area="AdminPanel"
+                                                  asp-controller="Movie"
+                                                  asp-action="Delete"
+                                                  asp-route-id="@movie.Id"
+                                                  method="post"
+                                                  onsubmit="return confirm('آیا از حذف این فیلم مطمئن هستید؟');">
+
+                                                <button type="submit"
+                                                        class="dropdown-item text-danger">
+
+                                                    <i class="bx bx-trash me-1"></i>
+
+                                                    حذف
+
+                                                </button>
+
+                                            </form>
+
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+
+                            </tr>
+
+                        }
+                    }
+                    else
+                    {
+
+                        <tr>
+
+                            <td colspan="8"
+                                class="text-center py-5">
+
+                                <i class="bx bx-movie-play fs-1 text-muted"></i>
+
+                                <p class="mt-3 text-muted">
+
+                                    هنوز هیچ فیلمی ثبت نشده است.
+
+                                </p>
+
+
+                                <a asp-area="AdminPanel"
+                                   asp-controller="Movie"
+                                   asp-action="Create"
+                                   class="btn btn-primary">
+
+                                    افزودن اولین فیلم
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                    }
+
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+</div>

@@ -1,0 +1,256 @@
+﻿@* ==================================================
+   View - Language Index
+   Areas/AdminPanel/Views/Language/Index.cshtml
+   ================================================== *@
+
+@model List<Service.Admin.Movies.Language.LanguageListDto>
+
+@{
+    ViewData["Title"] = "زبان‌ها";
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    @* ==================================================
+       Header
+       ================================================== *@
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h4 class="fw-bold mb-1">زبان‌ها</h4>
+
+            <p class="text-muted mb-0">
+                مدیریت زبان‌های فیلم‌ها
+            </p>
+        </div>
+
+        <a asp-area="AdminPanel"
+           asp-controller="Language"
+           asp-action="Create"
+           class="btn btn-primary">
+
+            <i class="bx bx-plus me-1"></i>
+            افزودن زبان
+
+        </a>
+
+    </div>
+
+
+    @* ==================================================
+       Success Message
+       ================================================== *@
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible mb-4"
+             role="alert">
+
+            @TempData["SuccessMessage"]
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+
+        </div>
+    }
+
+
+    @* ==================================================
+       Error Message
+       ================================================== *@
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible mb-4"
+             role="alert">
+
+            @TempData["ErrorMessage"]
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+
+        </div>
+    }
+
+
+    @* ==================================================
+       Language Table
+       ================================================== *@
+
+    <div class="card">
+
+        <div class="card-header d-flex justify-content-between align-items-center">
+
+            <h5 class="mb-0">
+                لیست زبان‌ها
+            </h5>
+
+            <span class="badge bg-label-primary">
+                @Model.Count زبان
+            </span>
+
+        </div>
+
+        <div class="table-responsive text-nowrap">
+
+            <table class="table">
+
+                <thead>
+
+                    <tr>
+                        <th>#</th>
+                        <th>نام زبان</th>
+                        <th>وضعیت</th>
+                        <th>تاریخ ایجاد</th>
+                        <th>آخرین بروزرسانی</th>
+                        <th>عملیات</th>
+                    </tr>
+
+                </thead>
+
+                <tbody class="table-border-bottom-0">
+
+                    @if (Model.Count == 0)
+                    {
+                        <tr>
+
+                            <td colspan="6"
+                                class="text-center py-5">
+
+                                <div class="text-muted">
+
+                                    <i class="bx bx-world fs-1 d-block mb-2"></i>
+
+                                    هنوز هیچ زبانی ثبت نشده است.
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+                    }
+                    else
+                    {
+                        var row = 1;
+
+                        foreach (var language in Model)
+                        {
+                            <tr>
+
+                                <td>
+                                    @row
+                                </td>
+
+                                <td>
+                                    <strong>
+                                        @language.Name
+                                    </strong>
+                                </td>
+
+                                <td>
+
+                                    @if (language.IsActive)
+                                    {
+                                        <span class="badge bg-label-success">
+                                            فعال
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-label-secondary">
+                                            غیرفعال
+                                        </span>
+                                    }
+
+                                </td>
+
+                                <td>
+                                    @language.CreatedAt.ToString("yyyy/MM/dd HH:mm")
+                                </td>
+
+                                <td>
+
+                                    @if (language.UpdatedAt.HasValue)
+                                    {
+                                        @language.UpdatedAt.Value.ToString("yyyy/MM/dd HH:mm")
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">
+                                            -
+                                        </span>
+                                    }
+
+                                </td>
+
+                                <td>
+
+                                    <div class="d-flex gap-2">
+
+                                        <a asp-area="AdminPanel"
+                                           asp-controller="Language"
+                                           asp-action="Edit"
+                                           asp-route-id="@language.Id"
+                                           class="btn btn-sm btn-outline-primary">
+
+                                            <i class="bx bx-edit-alt me-1"></i>
+                                            ویرایش
+
+                                        </a>
+
+
+                                        <form asp-area="AdminPanel"
+                                              asp-controller="Language"
+                                              asp-action="ChangeStatus"
+                                              asp-route-id="@language.Id"
+                                              method="post">
+
+                                            @Html.AntiForgeryToken()
+
+                                            @if (language.IsActive)
+                                            {
+                                                <button type="submit"
+                                                        class="btn btn-sm btn-outline-warning">
+
+                                                    <i class="bx bx-block me-1"></i>
+                                                    غیرفعال کردن
+
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <button type="submit"
+                                                        class="btn btn-sm btn-outline-success">
+
+                                                    <i class="bx bx-check me-1"></i>
+                                                    فعال کردن
+
+                                                </button>
+                                            }
+
+                                        </form>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                            row++;
+                        }
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

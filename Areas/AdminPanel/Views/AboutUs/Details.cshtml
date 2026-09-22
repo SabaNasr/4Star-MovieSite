@@ -1,0 +1,276 @@
+﻿@model Service.Admin.Content.AboutUs.AboutUsDetailsDto
+
+
+<div class="card border-0 shadow-sm">
+
+    <div class="card-header">
+
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+
+            <div class="d-flex align-items-center">
+
+                <div class="avatar me-3">
+                    <span class="avatar-initial rounded bg-label-info">
+                        <i class="bx bx-show fs-4"></i>
+                    </span>
+                </div>
+
+                <div>
+
+                    <h5 class="mb-1">
+                        جزئیات درباره ما
+                    </h5>
+
+                    <small class="text-muted">
+                        مشاهده اطلاعات کامل صفحه
+                    </small>
+
+                </div>
+
+            </div>
+
+            <div class="d-flex gap-2">
+
+                <a asp-action="Edit"
+                   asp-route-id="@Model.Id"
+                   class="btn btn-warning">
+
+                    <i class="bx bx-edit-alt me-1"></i>
+                    ویرایش
+
+                </a>
+
+                <a asp-action="Index"
+                   class="btn btn-outline-secondary">
+
+                    <i class="bx bx-arrow-back me-1"></i>
+                    بازگشت
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row">
+
+            <div class="col-lg-4 mb-4">
+
+                <img src="@Model.ImagePath"
+                     alt="درباره ما"
+                     class="img-fluid rounded-3"
+                     style="width:100%; max-height:360px; object-fit:cover;" />
+
+            </div>
+
+            <div class="col-lg-8">
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+
+                    <h6 class="mb-0">
+                        وضعیت صفحه
+                    </h6>
+
+                    @if (Model.IsActive)
+                    {
+                        <span class="badge bg-success">
+                            <i class="bx bx-check me-1"></i>
+                            فعال
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">
+                            <i class="bx bx-block me-1"></i>
+                            غیرفعال
+                        </span>
+                    }
+
+                </div>
+
+                <div class="row g-3">
+
+                    <div class="col-sm-6">
+
+                        <div class="border rounded-3 p-3">
+
+                            <div class="d-flex align-items-center">
+
+                                <div class="avatar me-3">
+                                    <span class="avatar-initial rounded bg-label-primary">
+                                        <i class="bx bx-user"></i>
+                                    </span>
+                                </div>
+
+                                <div>
+                                    <small class="text-muted d-block">
+                                        مشتریان
+                                    </small>
+
+                                    <h5 class="mb-0">
+                                        @Model.CustomerCount
+                                    </h5>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-sm-6">
+
+                        <div class="border rounded-3 p-3">
+
+                            <div class="d-flex align-items-center">
+
+                                <div class="avatar me-3">
+                                    <span class="avatar-initial rounded bg-label-success">
+                                        <i class="bx bx-user-check"></i>
+                                    </span>
+                                </div>
+
+                                <div>
+                                    <small class="text-muted d-block">
+                                        کاربران فعال
+                                    </small>
+
+                                    <h5 class="mb-0">
+                                        @Model.ActiveUserCount
+                                    </h5>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-sm-4">
+
+                        <div class="border rounded-3 p-3 text-center">
+
+                            <i class="bx bx-video text-primary fs-3"></i>
+
+                            <small class="text-muted d-block mt-2">
+                                ویدیوها
+                            </small>
+
+                            <h5 class="mb-0 mt-1">
+                                @Model.TotalVideoCount
+                            </h5>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-sm-4">
+
+                        <div class="border rounded-3 p-3 text-center">
+
+                            <i class="bx bx-group text-info fs-3"></i>
+
+                            <small class="text-muted d-block mt-2">
+                                مشترکین
+                            </small>
+
+                            <h5 class="mb-0 mt-1">
+                                @Model.SubscriberCount
+                            </h5>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-sm-4">
+
+                        <div class="border rounded-3 p-3 text-center">
+
+                            <i class="bx bx-trophy text-warning fs-3"></i>
+
+                            <small class="text-muted d-block mt-2">
+                                جوایز
+                            </small>
+
+                            <h5 class="mb-0 mt-1">
+                                @Model.AwardCount
+                            </h5>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <hr class="my-4" />
+
+        <div>
+
+            <div class="d-flex align-items-center mb-3">
+
+                <i class="bx bx-file text-primary fs-4 me-2"></i>
+
+                <h6 class="mb-0">
+                    محتوای صفحه
+                </h6>
+
+            </div>
+
+            <div class="border rounded-3 p-4">
+                @Html.Raw(Model.Content)
+            </div>
+
+        </div>
+
+        <hr class="my-4" />
+
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+
+                <small class="text-muted d-block mb-1">
+                    تاریخ ایجاد
+                </small>
+
+                <span>
+                    <i class="bx bx-calendar me-1"></i>
+                    @Model.CreatedAt
+                    .ToLocalTime()
+                    .ToString("yyyy/MM/dd HH:mm")
+                </span>
+
+            </div>
+
+            <div class="col-md-6 mb-3">
+
+                <small class="text-muted d-block mb-1">
+                    آخرین ویرایش
+                </small>
+
+                <span>
+
+                    <i class="bx bx-edit me-1"></i>
+
+                    @(Model.UpdatedAt.HasValue
+                        ? Model.UpdatedAt.Value
+                            .ToLocalTime()
+                            .ToString("yyyy/MM/dd HH:mm")
+                        : "ویرایش نشده")
+
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

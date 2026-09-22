@@ -1,0 +1,261 @@
+﻿@model Service.Admin.TvSeries.SeriesReview.SeriesReviewDetailsDto
+
+@{
+    ViewData["Title"] = "جزئیات نظر سریال";
+}
+
+<div class="container-fluid">
+
+    <!-- ==================================================
+         Header
+         ================================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h4 class="mb-1">
+                جزئیات نظر سریال
+            </h4>
+
+            <p class="text-muted mb-0">
+                مشاهده جزئیات نظر ثبت شده
+            </p>
+
+        </div>
+
+        <a asp-action="Index"
+           class="btn btn-secondary">
+
+            <i class="bx bx-arrow-back me-1"></i>
+            بازگشت
+
+        </a>
+
+    </div>
+
+
+    <!-- ==================================================
+         Information
+         ================================================== -->
+
+    <div class="card mb-4">
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label text-muted">
+                        نام
+                    </label>
+
+                    <div class="fw-bold">
+                        @Model.FullName
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label text-muted">
+                        سریال
+                    </label>
+
+                    <div class="fw-bold">
+                        @Model.SeriesTitle
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label text-muted">
+                        امتیاز
+                    </label>
+
+                    <div>
+                        @((int)Model.StarRating)
+                        از 5
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label text-muted">
+                        وضعیت
+                    </label>
+
+                    <div>
+
+                        @if (Model.IsApproved)
+                        {
+                            <span class="badge bg-success">
+                                تایید شده
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning text-dark">
+                                تایید نشده
+                            </span>
+                        }
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label text-muted">
+                        تاریخ ایجاد
+                    </label>
+
+                    <div>
+
+                        @Model.CreatedAt
+                        .ToLocalTime()
+                        .ToString("yyyy/MM/dd HH:mm")
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label text-muted">
+                        آخرین ویرایش
+                    </label>
+
+                    <div>
+
+                        @if (Model.UpdatedAt.HasValue)
+                        {
+                                @Model.UpdatedAt.Value.ToLocalTime().ToString("yyyy/MM/dd HH:mm")
+                        }
+                        else
+                        {
+                            <span class="text-muted">
+                                -
+                            </span>
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==================================================
+         Comment Content
+         ================================================== -->
+
+    <div class="card">
+
+        <div class="card-header">
+
+            <h5 class="mb-0">
+                متن نظر
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div style="
+                direction: rtl;
+                text-align: right;
+                line-height: 2;
+                white-space: pre-wrap;">
+
+                @Model.Content
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==================================================
+         Actions
+         ================================================== -->
+
+    <div class="d-flex gap-2 mt-4">
+
+        @if (!Model.IsApproved)
+        {
+            <form asp-action="Approve"
+                  asp-route-id="@Model.Id"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <button type="submit"
+                        class="btn btn-success">
+
+                    <i class="bx bx-check me-1"></i>
+                    تایید نظر
+
+                </button>
+
+            </form>
+        }
+        else
+        {
+            <form asp-action="Reject"
+                  asp-route-id="@Model.Id"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <button type="submit"
+                        class="btn btn-warning">
+
+                    <i class="bx bx-x me-1"></i>
+                    لغو تایید
+
+                </button>
+
+            </form>
+        }
+
+        <form asp-action="Delete"
+              asp-route-id="@Model.Id"
+              method="post"
+              onsubmit="return confirm('آیا از حذف این نظر مطمئن هستید؟');">
+
+            @Html.AntiForgeryToken()
+
+            <button type="submit"
+                    class="btn btn-danger">
+
+                <i class="bx bx-trash me-1"></i>
+                حذف نظر
+
+            </button>
+
+        </form>
+
+        <a asp-action="Index"
+           class="btn btn-secondary">
+
+            بازگشت
+
+        </a>
+
+    </div>
+
+</div>

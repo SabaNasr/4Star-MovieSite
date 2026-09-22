@@ -1,0 +1,201 @@
+﻿@model Service.Admin.Content.TermsAndConditions.TermsAndConditionsCreateDto
+
+@{
+    ViewData["Title"] = "ثبت شرایط و ضوابط";
+}
+
+@section Styles
+{
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css"
+          rel="stylesheet" />
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <!-- ==================================================
+         Header
+    ================================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h4 class="fw-bold mb-0">
+            ثبت شرایط و ضوابط
+        </h4>
+
+        <a asp-action="Index"
+           class="btn btn-secondary">
+
+            <i class="bx bx-arrow-back me-1"></i>
+
+            بازگشت
+
+        </a>
+
+    </div>
+
+
+    <!-- ==================================================
+         Form
+    ================================================== -->
+
+    <div class="card">
+
+        <div class="card-body">
+
+            <form asp-action="Create"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger mb-3">
+                </div>
+
+
+                <!-- ==================================================
+                     Rich Text Editor
+                ================================================== -->
+
+                <div class="mb-4">
+
+                    <label class="form-label">
+                        محتوای شرایط و ضوابط
+                    </label>
+
+                    <div id="editor"
+                         style="min-height: 400px;">
+                    </div>
+
+                    <textarea asp-for="Content"
+                              id="Content"
+                              class="d-none">
+                    </textarea>
+
+                    <span asp-validation-for="Content"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+
+                <!-- ==================================================
+                     Buttons
+                ================================================== -->
+
+                <div class="d-flex justify-content-end gap-2">
+
+                    <a asp-action="Index"
+                       class="btn btn-secondary">
+
+                        انصراف
+
+                    </a>
+
+                    <button type="submit"
+                            class="btn btn-primary">
+
+                        <i class="bx bx-save me-1"></i>
+
+                        ثبت شرایط و ضوابط
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+
+    <script>
+
+        const textarea =
+            document.getElementById('Content');
+
+        const quill =
+            new Quill('#editor', {
+
+                theme: 'snow',
+
+                modules: {
+
+                    toolbar: [
+
+                        [
+                            {
+                                header: [
+                                    1,
+                                    2,
+                                    3,
+                                    4,
+                                    5,
+                                    6,
+                                    false
+                                ]
+                            }
+                        ],
+
+                        [
+                            'bold',
+                            'italic',
+                            'underline'
+                        ],
+
+                        [
+                            {
+                                list: 'ordered'
+                            },
+                            {
+                                list: 'bullet'
+                            }
+                        ],
+
+                        [
+                            {
+                                align: []
+                            }
+                        ],
+
+                        [
+                            'link',
+                            'image'
+                        ],
+
+                        [
+                            'clean'
+                        ]
+
+                    ]
+
+                }
+
+            });
+
+
+        // ==================================================
+        // Submit
+        // ==================================================
+
+        document
+            .querySelector('form')
+            .addEventListener(
+                'submit',
+                function() {
+
+                    textarea.value =
+                        quill.root.innerHTML;
+
+                });
+
+    </script>
+}

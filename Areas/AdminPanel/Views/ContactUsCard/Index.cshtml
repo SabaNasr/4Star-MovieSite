@@ -1,0 +1,252 @@
+﻿@model List<Service.Admin.Content.ContactUsCard.ContactUsCardListDto>
+
+@{
+    ViewData["Title"] = "کارت‌های تماس با ما";
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <!-- ==================================================
+         Header
+    ================================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h4 class="fw-bold mb-1">
+                کارت‌های تماس با ما
+            </h4>
+
+            <p class="text-muted mb-0">
+                مدیریت اطلاعات ثابت بخش تماس با ما
+            </p>
+
+        </div>
+
+        <div class="d-flex gap-2">
+
+            <a asp-area="AdminPanel"
+               asp-controller="ContactUs"
+               asp-action="Index"
+               class="btn btn-secondary">
+
+                <i class="bx bx-arrow-back me-1"></i>
+
+                پیام‌های دریافتی
+
+            </a>
+
+            <a asp-action="Create"
+               class="btn btn-primary">
+
+                <i class="bx bx-plus me-1"></i>
+
+                افزودن کارت
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==================================================
+         Cards Table
+    ================================================== -->
+
+    <div class="card">
+
+        <div class="card-body">
+
+            @if (Model.Count == 0)
+            {
+                <div class="text-center py-5">
+
+                    <i class="bx bx-id-card"
+                       style="font-size: 50px;">
+                    </i>
+
+                    <h5 class="mt-3">
+                        هنوز کارتی ثبت نشده است.
+                    </h5>
+
+                    <p class="text-muted">
+                        برای نمایش اطلاعات تماس در سایت،
+                        اولین کارت را ایجاد کنید.
+                    </p>
+
+                    <a asp-action="Create"
+                       class="btn btn-primary">
+
+                        <i class="bx bx-plus me-1"></i>
+
+                        افزودن کارت
+
+                    </a>
+
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    آیکون
+                                </th>
+
+                                <th>
+                                    عنوان
+                                </th>
+
+                                <th>
+                                    محتوا
+                                </th>
+
+                                <th>
+                                    ترتیب
+                                </th>
+
+                                <th>
+                                    وضعیت
+                                </th>
+
+                                <th>
+                                    عملیات
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+
+                                    <td>
+
+                                        <i class="@item.Icon"
+                                           style="font-size: 24px;">
+                                        </i>
+
+                                    </td>
+
+                                    <td>
+                                        @item.Title
+                                    </td>
+
+                                    <td>
+
+                                        @if (item.Content.Length > 60)
+                                        {
+                                            @item.Content[..60]
+                                            <span>...</span>
+                                        }
+                                        else
+                                        {
+                                            @item.Content
+                                        }
+
+                                    </td>
+
+                                    <td>
+                                        @item.DisplayOrder
+                                    </td>
+
+                                    <td>
+
+                                        @if (item.IsActive)
+                                        {
+                                            <span class="badge bg-success">
+                                                فعال
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">
+                                                غیرفعال
+                                            </span>
+                                        }
+
+                                    </td>
+
+                                    <td>
+
+                                        <div class="d-flex gap-2">
+
+                                            <a asp-action="Details"
+                                               asp-route-id="@item.Id"
+                                               class="btn btn-sm btn-info">
+
+                                                <i class="bx bx-show"></i>
+
+                                            </a>
+
+                                            <a asp-action="Edit"
+                                               asp-route-id="@item.Id"
+                                               class="btn btn-sm btn-warning">
+
+                                                <i class="bx bx-edit"></i>
+
+                                            </a>
+
+                                            <form asp-action="ChangeStatus"
+                                                  asp-route-id="@item.Id"
+                                                  method="post">
+
+                                                @Html.AntiForgeryToken()
+
+                                                <button type="submit"
+                                                        class="btn btn-sm btn-secondary"
+                                                        title="تغییر وضعیت">
+
+                                                    <i class="bx bx-power-off"></i>
+
+                                                </button>
+
+                                            </form>
+
+                                            <form asp-action="Delete"
+                                                  asp-route-id="@item.Id"
+                                                  method="post">
+
+                                                @Html.AntiForgeryToken()
+
+                                                <button type="submit"
+                                                        class="btn btn-sm btn-danger"
+                                                        title="حذف"
+                                                        onclick="return confirm('آیا از حذف این کارت مطمئن هستید؟');">
+
+                                                    <i class="bx bx-trash"></i>
+
+                                                </button>
+
+                                            </form>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+</div>

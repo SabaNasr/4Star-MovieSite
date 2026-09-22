@@ -1,0 +1,382 @@
+﻿@using Service.Admin.Movies.Review
+@model List<ReviewListDto>
+
+@{
+    ViewData["Title"] = "مدیریت نظرات";
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+
+    <!-- ==================================================
+         Header
+    ================================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h4 class="fw-bold py-3 mb-0">
+                مدیریت نظرات
+            </h4>
+
+            <p class="text-muted mb-0">
+                مدیریت نظرات و امتیازهای کاربران
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==================================================
+         Card
+    ================================================== -->
+
+    <div class="card">
+
+
+        <!-- Header -->
+
+        <div class="card-header d-flex justify-content-between align-items-center">
+
+            <h5 class="mb-0">
+                لیست نظرات
+            </h5>
+
+
+            @if (Model != null)
+            {
+                <span class="badge bg-label-primary">
+
+                    @Model.Count نظر
+
+                </span>
+            }
+
+        </div>
+
+
+        <!-- ==================================================
+             Table
+        ================================================== -->
+
+        <div class="table-responsive">
+
+            <table class="table table-hover">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            ارسال‌کننده
+                        </th>
+
+                        <th>
+                            فیلم
+                        </th>
+
+                        <th>
+                            امتیاز
+                        </th>
+
+                        <th>
+                            متن نظر
+                        </th>
+
+                        <th>
+                            وضعیت
+                        </th>
+
+                        <th>
+                            تاریخ
+                        </th>
+
+                        <th>
+                            عملیات
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+
+                    @if (Model != null && Model.Any())
+                    {
+
+                        foreach (var review in Model)
+                        {
+
+                            <tr>
+
+
+                                <!-- ==================================================
+                                     ارسال‌کننده
+                                ================================================== -->
+
+                                <td>
+
+                                    <strong>
+                                        @review.FullName
+                                    </strong>
+
+                                </td>
+
+
+                                <!-- ==================================================
+                                     فیلم
+                                ================================================== -->
+
+                                <td>
+
+                                    <span class="fw-semibold">
+
+                                        @review.MovieTitle
+
+                                    </span>
+
+                                </td>
+
+
+                                <!-- ==================================================
+                                     امتیاز
+                                ================================================== -->
+
+                                <td>
+
+                                    <div class="text-warning">
+
+                                        @for (var i = 1; i <= 5; i++)
+                                        {
+                                            if (i <= (int)review.StarRating)
+                                            {
+                                                <i class="bx bxs-star"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="bx bx-star"></i>
+                                            }
+                                        }
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- ==================================================
+                                     متن
+                                ================================================== -->
+
+                                <td style="max-width:300px;">
+
+                                    <div class="text-truncate"
+                                         style="max-width:300px;"
+                                         title="@review.Content">
+
+                                        @review.Content
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- ==================================================
+                                     وضعیت
+                                ================================================== -->
+
+                                <td>
+
+                                    @if (review.IsApproved)
+                                    {
+                                        <span class="badge bg-label-success">
+
+                                            تایید شده
+
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-label-warning">
+
+                                            تایید نشده
+
+                                        </span>
+                                    }
+
+                                </td>
+
+
+                                <!-- ==================================================
+                                     تاریخ
+                                ================================================== -->
+
+                                <td>
+
+                                    <small>
+
+                                        @review.CreatedAt
+                                        .ToLocalTime()
+                                        .ToString("yyyy/MM/dd HH:mm")
+
+                                    </small>
+
+                                </td>
+
+
+                                <!-- ==================================================
+                                     عملیات
+                                ================================================== -->
+
+                                <td>
+
+                                    <div class="dropdown">
+
+
+                                        <button type="button"
+                                                class="btn p-0 dropdown-toggle hide-arrow"
+                                                data-bs-toggle="dropdown">
+
+                                            <i class="bx bx-dots-vertical-rounded"></i>
+
+                                        </button>
+
+
+                                        <div class="dropdown-menu">
+
+
+                                            <!-- جزئیات -->
+
+                                            <a asp-area="AdminPanel"
+                                               asp-controller="Review"
+                                               asp-action="Details"
+                                               asp-route-id="@review.Id"
+                                               class="dropdown-item">
+
+                                                <i class="bx bx-show me-1"></i>
+
+                                                مشاهده
+
+                                            </a>
+
+
+                                            <!-- ==================================================
+                                                 تایید / عدم تایید
+                                            ================================================== -->
+                                            @if (!review.IsApproved)
+                                            {
+                                                <form asp-area="AdminPanel"
+                                                      asp-controller="Review"
+                                                      asp-action="Approve"
+                                                      asp-route-id="@review.Id"
+                                                      method="post">
+
+                                                    @Html.AntiForgeryToken()
+
+                                                    <button type="submit"
+                                                            class="dropdown-item text-success">
+
+                                                        <i class="bx bx-check-circle me-1"></i>
+
+                                                        تایید نظر
+
+                                                    </button>
+
+                                                </form>
+                                            }
+                                            else
+                                            {
+                                                <form asp-area="AdminPanel"
+                                                      asp-controller="Review"
+                                                      asp-action="Reject"
+                                                      asp-route-id="@review.Id"
+                                                      method="post">
+
+                                                    @Html.AntiForgeryToken()
+
+                                                    <button type="submit"
+                                                            class="dropdown-item text-warning">
+
+                                                        <i class="bx bx-x-circle me-1"></i>
+
+                                                        عدم تایید
+
+                                                    </button>
+
+                                                </form>
+                                            }
+
+
+                                            <div class="dropdown-divider"></div>
+
+
+                                            <!-- حذف -->
+
+                                            <form asp-area="AdminPanel"
+                                                  asp-controller="Review"
+                                                  asp-action="Delete"
+                                                  asp-route-id="@review.Id"
+                                                  method="post"
+                                                  onsubmit="return confirm('آیا از حذف این نظر مطمئن هستید؟');">
+
+                                                @Html.AntiForgeryToken()
+
+                                                <button type="submit"
+                                                        class="dropdown-item text-danger">
+
+                                                    <i class="bx bx-trash me-1"></i>
+
+                                                    حذف
+
+                                                </button>
+
+                                            </form>
+
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+
+                            </tr>
+
+                        }
+
+                    }
+                    else
+                    {
+
+                        <tr>
+
+                            <td colspan="7"
+                                class="text-center py-5">
+
+                                <div class="text-muted">
+
+                                    <i class="bx bx-message-square-dots fs-1 d-block mb-2"></i>
+
+                                    هنوز نظری ثبت نشده است.
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                    }
+
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

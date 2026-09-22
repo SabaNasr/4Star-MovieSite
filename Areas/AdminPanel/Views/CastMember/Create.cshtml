@@ -1,0 +1,83 @@
+﻿@model Service.Admin.Movies.CastMember.CastMemberCreateDto
+
+@{
+    ViewData["Title"] = "افزودن شخص";
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <div class="card">
+
+        <div class="card-header">
+            <h5 class="mb-0">افزودن شخص</h5>
+        </div>
+
+        <div class="card-body">
+
+            <form asp-action="Create"
+                  method="post"
+                  enctype="multipart/form-data">
+
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="FullName"
+                           class="form-label">
+                        نام شخص
+                    </label>
+
+                    <input asp-for="FullName"
+                           class="form-control"
+                           placeholder="مثلاً آرش رضایی" />
+
+                    <span asp-validation-for="FullName"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="Photo"
+                           class="form-label">
+                        عکس شخص
+                    </label>
+
+                    <input asp-for="Photo"
+                           type="file"
+                           class="form-control"
+                           accept=".jpg,.jpeg,.png,.gif,.svg,.webp" />
+
+                    <div class="form-text">
+                        عکس شخص فقط در همین بخش مدیریت می‌شود.
+                    </div>
+
+                    <span asp-validation-for="Photo"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="d-flex gap-2">
+
+                    <button type="submit"
+                            class="btn btn-primary">
+                        ذخیره
+                    </button>
+
+                    <a asp-action="Index"
+                       class="btn btn-outline-secondary">
+                        انصراف
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

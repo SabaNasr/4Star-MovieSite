@@ -1,0 +1,227 @@
+﻿@model Service.Admin.Blog.BlogCategory.BlogCategoryDetailsDto
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <!-- ==================================================
+         Header
+    ================================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h4 class="fw-bold mb-1">
+                جزئیات دسته‌بندی
+            </h4>
+
+            <p class="text-muted mb-0">
+                اطلاعات کامل دسته‌بندی وبلاگ
+            </p>
+
+        </div>
+
+
+        <div class="d-flex gap-2">
+
+            <a asp-action="Edit"
+               asp-route-id="@Model.Id"
+               class="btn btn-warning">
+
+                ویرایش
+
+            </a>
+
+
+            <a asp-action="Index"
+               class="btn btn-secondary">
+
+                بازگشت
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="row">
+
+
+        <!-- ==================================================
+             Main Information
+        ================================================== -->
+
+        <div class="col-md-8">
+
+            <div class="card mb-4">
+
+                <div class="card-header">
+
+                    <h5 class="mb-0">
+                        اطلاعات دسته‌بندی
+                    </h5>
+
+                </div>
+
+
+                <div class="card-body">
+
+                    <div class="mb-4">
+
+                        <small class="text-muted d-block mb-1">
+                            نام دسته‌بندی
+                        </small>
+
+                        <h5 class="mb-0">
+                            @Model.Name
+                        </h5>
+
+                    </div>
+
+
+                    <div class="mb-4">
+
+                        <small class="text-muted d-block mb-1">
+                            Slug
+                        </small>
+
+                        <div dir="ltr"
+                             class="text-end">
+
+                            @Model.Slug
+
+                        </div>
+
+                    </div>
+
+
+                    <div>
+
+                        <small class="text-muted d-block mb-1">
+                            توضیحات
+                        </small>
+
+                        <p class="mb-0">
+
+                            @if (string.IsNullOrWhiteSpace(Model.Description))
+                            {
+                                <span class="text-muted">
+                                    توضیحاتی ثبت نشده است.
+                                </span>
+                            }
+                            else
+                            {
+                                @Model.Description
+                            }
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ==================================================
+             Status / Settings
+        ================================================== -->
+
+        <div class="col-md-4">
+
+            <div class="card mb-4">
+
+                <div class="card-header">
+
+                    <h5 class="mb-0">
+                        وضعیت و تنظیمات
+                    </h5>
+
+                </div>
+
+
+                <div class="card-body">
+
+
+                    <div class="mb-4">
+
+                        <small class="text-muted d-block mb-2">
+                            وضعیت
+                        </small>
+
+                        @if (Model.IsActive)
+                        {
+                            <span class="badge bg-label-success">
+                                فعال
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-label-secondary">
+                                غیرفعال
+                            </span>
+                        }
+
+                    </div>
+
+
+                    <div class="mb-4">
+
+                        <small class="text-muted d-block mb-1">
+                            ترتیب نمایش
+                        </small>
+
+                        <strong>
+                            @Model.DisplayOrder
+                        </strong>
+
+                    </div>
+
+
+                    <div class="mb-4">
+
+                        <small class="text-muted d-block mb-1">
+                            تاریخ ایجاد
+                        </small>
+
+                        <span>
+                            @Model.CreatedAt.ToLocalTime().ToString("yyyy/MM/dd HH:mm")
+                        </span>
+
+                    </div>
+
+
+                    <div>
+
+                        <small class="text-muted d-block mb-1">
+                            آخرین ویرایش
+                        </small>
+
+                        @if (Model.UpdatedAt.HasValue)
+                        {
+                            <span>
+                                @Model.UpdatedAt.Value
+                                .ToLocalTime()
+                                .ToString("yyyy/MM/dd HH:mm")
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="text-muted">
+                                ویرایش نشده است.
+                            </span>
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

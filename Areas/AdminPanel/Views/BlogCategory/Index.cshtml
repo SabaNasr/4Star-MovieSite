@@ -1,0 +1,260 @@
+﻿@model List<Service.Admin.Blog.BlogCategory.BlogCategoryListDto>
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <!-- ==================================================
+         Header
+    ================================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h4 class="fw-bold mb-1">
+                مدیریت دسته‌بندی‌های وبلاگ
+            </h4>
+
+            <p class="text-muted mb-0">
+                مدیریت دسته‌بندی‌های مطالب وبلاگ
+            </p>
+
+        </div>
+
+
+        <a asp-action="Create"
+           class="btn btn-primary">
+
+            <i class="bx bx-plus me-1"></i>
+
+            افزودن دسته‌بندی
+
+        </a>
+
+    </div>
+
+
+    <!-- ==================================================
+         Messages
+    ================================================== -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show"
+             role="alert">
+
+            @TempData["SuccessMessage"]
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+
+        </div>
+    }
+
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show"
+             role="alert">
+
+            @TempData["ErrorMessage"]
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+
+        </div>
+    }
+
+
+    <!-- ==================================================
+         Categories Table
+    ================================================== -->
+
+    <div class="card">
+
+        <div class="card-header">
+
+            <h5 class="mb-0">
+                لیست دسته‌بندی‌ها
+            </h5>
+
+        </div>
+
+
+        <div class="table-responsive text-nowrap">
+
+            <table class="table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            #
+                        </th>
+
+                        <th>
+                            نام
+                        </th>
+
+                        <th>
+                            Slug
+                        </th>
+
+                        <th>
+                            ترتیب نمایش
+                        </th>
+
+                        <th>
+                            وضعیت
+                        </th>
+
+                        <th>
+                            تاریخ ایجاد
+                        </th>
+
+                        <th>
+                            عملیات
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    @if (Model.Count == 0)
+                    {
+                        <tr>
+
+                            <td colspan="7"
+                                class="text-center py-4 text-muted">
+
+                                هنوز هیچ دسته‌بندی‌ای ثبت نشده است.
+
+                            </td>
+
+                        </tr>
+                    }
+                    else
+                    {
+                        var row = 1;
+
+                        foreach (var item in Model)
+                        {
+                            <tr>
+
+                                <td>
+                                    @row
+                                </td>
+
+                                <td>
+
+                                    <strong>
+                                        @item.Name
+                                    </strong>
+
+                                </td>
+
+                                <td>
+                                    <span class="text-muted">
+                                        @item.Slug
+                                    </span>
+                                </td>
+
+                                <td>
+                                    @item.DisplayOrder
+                                </td>
+
+                                <td>
+
+                                    @if (item.IsActive)
+                                    {
+                                        <span class="badge bg-label-success">
+                                            فعال
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-label-secondary">
+                                            غیرفعال
+                                        </span>
+                                    }
+
+                                </td>
+
+                                <td>
+                                    @item.CreatedAt.ToLocalTime().ToString("yyyy/MM/dd")
+                                </td>
+
+                                <td>
+
+                                    <div class="d-flex gap-1">
+
+                                        <a asp-action="Details"
+                                           asp-route-id="@item.Id"
+                                           class="btn btn-sm btn-info">
+
+                                            جزئیات
+
+                                        </a>
+
+
+                                        <a asp-action="Edit"
+                                           asp-route-id="@item.Id"
+                                           class="btn btn-sm btn-warning">
+
+                                            ویرایش
+
+                                        </a>
+
+
+                                        <form asp-action="ChangeStatus"
+                                              asp-route-id="@item.Id"
+                                              method="post">
+
+                                            @Html.AntiForgeryToken()
+
+                                            @if (item.IsActive)
+                                            {
+                                                <button type="submit"
+                                                        class="btn btn-sm btn-secondary">
+
+                                                    غیرفعال
+
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <button type="submit"
+                                                        class="btn btn-sm btn-success">
+
+                                                    فعال
+
+                                                </button>
+                                            }
+
+                                        </form>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                            row++;
+                        }
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

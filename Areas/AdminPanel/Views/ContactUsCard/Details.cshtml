@@ -1,0 +1,194 @@
+﻿@model Service.Admin.Content.ContactUsCard.ContactUsCardDetailsDto
+
+@{
+    ViewData["Title"] = "جزئیات کارت تماس با ما";
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <!-- ==================================================
+         Header
+    ================================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h4 class="fw-bold mb-0">
+            جزئیات کارت تماس با ما
+        </h4>
+
+        <div class="d-flex gap-2">
+
+            <a asp-action="Edit"
+               asp-route-id="@Model.Id"
+               class="btn btn-warning">
+
+                <i class="bx bx-edit me-1"></i>
+
+                ویرایش
+
+            </a>
+
+            <a asp-action="Index"
+               class="btn btn-secondary">
+
+                <i class="bx bx-arrow-back me-1"></i>
+
+                بازگشت
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==================================================
+         Details
+    ================================================== -->
+
+    <div class="card">
+
+        <div class="card-body">
+
+            <div class="row g-4">
+
+                <!-- Icon -->
+
+                <div class="col-md-6">
+
+                    <label class="form-label text-muted">
+                        آیکون
+                    </label>
+
+                    <div class="d-flex align-items-center gap-3">
+
+                        <i class="@Model.Icon"
+                           style="font-size: 35px;">
+                        </i>
+
+                        <span>
+                            @Model.Icon
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Title -->
+
+                <div class="col-md-6">
+
+                    <label class="form-label text-muted">
+                        عنوان
+                    </label>
+
+                    <div class="fw-semibold">
+                        @Model.Title
+                    </div>
+
+                </div>
+
+
+                <!-- Display Order -->
+
+                <div class="col-md-6">
+
+                    <label class="form-label text-muted">
+                        ترتیب نمایش
+                    </label>
+
+                    <div class="fw-semibold">
+                        @Model.DisplayOrder
+                    </div>
+
+                </div>
+
+
+                <!-- Status -->
+
+                <div class="col-md-6">
+
+                    <label class="form-label text-muted">
+                        وضعیت
+                    </label>
+
+                    <div>
+
+                        @if (Model.IsActive)
+                        {
+                            <span class="badge bg-success">
+                                فعال
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">
+                                غیرفعال
+                            </span>
+                        }
+
+                    </div>
+
+                </div>
+
+
+                <!-- Content -->
+
+                <div class="col-12">
+
+                    <label class="form-label text-muted">
+                        محتوا
+                    </label>
+
+                    <div class="border rounded p-3">
+
+                        @Model.Content
+
+                    </div>
+
+                </div>
+
+
+                <!-- Created At -->
+
+                <div class="col-md-6">
+
+                    <label class="form-label text-muted">
+                        تاریخ ایجاد
+                    </label>
+
+                    <div>
+                        @Model.CreatedAt.ToString(
+                            "yyyy/MM/dd HH:mm")
+                    </div>
+
+                </div>
+
+
+                <!-- Updated At -->
+
+                <div class="col-md-6">
+
+                    <label class="form-label text-muted">
+                        آخرین ویرایش
+                    </label>
+
+                    <div>
+                        @(
+                            Model.UpdatedAt.HasValue
+                                ? Model.UpdatedAt.Value.ToString(
+                                    "yyyy/MM/dd HH:mm")
+                                : "-"
+                        )
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

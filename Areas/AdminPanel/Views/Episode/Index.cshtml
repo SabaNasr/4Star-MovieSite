@@ -1,0 +1,201 @@
+﻿@model List<Service.Admin.TvSeries.Episodes.EpisodeListDto>
+
+@{
+    ViewData["Title"] = "مدیریت قسمت‌ها";
+}
+
+<!-- ==================================================
+     View - Episode Index
+     ================================================== -->
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h4 class="mb-1">مدیریت قسمت‌ها</h4>
+
+            <p class="text-muted mb-0">
+                مدیریت قسمت‌های فصل‌های سریال‌ها
+            </p>
+        </div>
+
+        <a asp-action="Create"
+           class="btn btn-primary">
+
+            <i class="bx bx-plus"></i>
+            افزودن قسمت
+
+        </a>
+
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <div class="card">
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle">
+
+                    <thead>
+
+                        <tr>
+                            <th>#</th>
+                            <th>سریال</th>
+                            <th>فصل</th>
+                            <th>قسمت</th>
+                            <th>لینک دانلود</th>
+                            <th>وضعیت</th>
+                            <th>تاریخ ایجاد</th>
+                            <th>عملیات</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        @if (Model.Count == 0)
+                        {
+                            <tr>
+
+                                <td colspan="8"
+                                    class="text-center text-muted py-4">
+
+                                    هنوز قسمتی ثبت نشده است.
+
+                                </td>
+
+                            </tr>
+                        }
+                        else
+                        {
+                            var row = 1;
+
+                            foreach (var episode in Model)
+                            {
+                                <tr>
+
+                                    <td>
+                                        @row
+                                    </td>
+
+                                    <td>
+                                        <strong>
+                                            @episode.SeriesTitle
+                                        </strong>
+                                    </td>
+
+                                    <td>
+                                        @episode.SeasonName
+                                    </td>
+
+                                    <td>
+                                        @episode.Name
+                                    </td>
+
+                                    <td>
+
+                                        <a href="@episode.DownloadLink"
+                                           target="_blank"
+                                           rel="noopener noreferrer">
+
+                                            مشاهده لینک
+
+                                        </a>
+
+                                    </td>
+
+                                    <td>
+
+                                        @if (episode.IsActive)
+                                        {
+                                            <span class="badge bg-success">
+                                                فعال
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">
+                                                غیرفعال
+                                            </span>
+                                        }
+
+                                    </td>
+
+                                    <td>
+                                        @episode.CreatedAt
+                                        .ToLocalTime()
+                                        .ToString("yyyy/MM/dd")
+                                    </td>
+
+                                    <td>
+
+                                        <div class="d-flex gap-1">
+
+                                            <a asp-action="Details"
+                                               asp-route-id="@episode.Id"
+                                               class="btn btn-sm btn-info">
+
+                                                <i class="bx bx-show"></i>
+
+                                            </a>
+
+                                            <a asp-action="Edit"
+                                               asp-route-id="@episode.Id"
+                                               class="btn btn-sm btn-warning">
+
+                                                <i class="bx bx-edit"></i>
+
+                                            </a>
+
+                                            <form asp-action="ChangeStatus"
+                                                  asp-route-id="@episode.Id"
+                                                  method="post">
+
+                                                @Html.AntiForgeryToken()
+
+                                                <button type="submit"
+                                                        class="btn btn-sm @(episode.IsActive ? "btn-secondary" : "btn-success")">
+
+                                                    <i class="bx @(episode.IsActive ? "bx-hide" : "bx-show")"></i>
+
+                                                </button>
+
+                                            </form>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+
+                                row++;
+                            }
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

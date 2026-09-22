@@ -1,0 +1,148 @@
+﻿@model List<Service.Admin.Content.PrivacyPolicies.PrivacyPolicyListDto>
+
+@{
+    ViewData["Title"] = "سیاست حفظ حریم خصوصی";
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="fw-bold mb-1">
+                سیاست حفظ حریم خصوصی
+            </h4>
+
+            <p class="text-muted mb-0">
+                مدیریت متن سیاست حفظ حریم خصوصی سایت
+            </p>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <a asp-action="Create"
+               class="btn btn-primary">
+                <i class="bx bx-plus me-1"></i>
+                ایجاد سیاست حفظ حریم خصوصی
+            </a>
+        }
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="card">
+            <div class="card-body text-center py-5">
+
+                <i class="bx bx-shield-quarter"
+                   style="font-size: 4rem;"></i>
+
+                <h5 class="mt-3">
+                    سیاست حفظ حریم خصوصی هنوز ثبت نشده است.
+                </h5>
+
+                <p class="text-muted">
+                    برای ایجاد محتوای این صفحه، روی دکمه ایجاد کلیک کنید.
+                </p>
+
+                <a asp-action="Create"
+                   class="btn btn-primary">
+                    ایجاد سیاست حفظ حریم خصوصی
+                </a>
+
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card">
+
+            <div class="card-header">
+                <h5 class="mb-0">
+                    اطلاعات سیاست حفظ حریم خصوصی
+                </h5>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover">
+
+                    <thead>
+                        <tr>
+                            <th>وضعیت</th>
+                            <th>تاریخ ایجاد</th>
+                            <th>آخرین ویرایش</th>
+                            <th class="text-center">عملیات</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+
+                                <td>
+                                    @if (item.IsActive)
+                                    {
+                                        <span class="badge bg-label-success">
+                                            فعال
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-label-secondary">
+                                            غیرفعال
+                                        </span>
+                                    }
+                                </td>
+
+                                <td>
+                                    @item.CreatedAt.ToString("yyyy/MM/dd HH:mm")
+                                </td>
+
+                                <td>
+                                    @(item.UpdatedAt.HasValue
+                                        ? item.UpdatedAt.Value.ToString("yyyy/MM/dd HH:mm")
+                                        : "-")
+                                </td>
+
+                                <td class="text-center">
+
+                                    <a asp-action="Details"
+                                       asp-route-id="@item.Id"
+                                       class="btn btn-sm btn-info">
+                                        <i class="bx bx-show"></i>
+                                    </a>
+
+                                    <a asp-action="Edit"
+                                       asp-route-id="@item.Id"
+                                       class="btn btn-sm btn-warning">
+                                        <i class="bx bx-edit"></i>
+                                    </a>
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+            </div>
+
+        </div>
+    }
+
+</div>

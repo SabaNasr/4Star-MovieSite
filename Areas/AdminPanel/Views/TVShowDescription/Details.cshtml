@@ -1,0 +1,181 @@
+﻿@model Service.Admin.TVShows.TVShowDescription.TVShowDescriptionDetailsDto
+
+@{
+    ViewData["Title"] = "جزئیات شرح تی‌وی شو";
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h4 class="fw-bold mb-1">
+                شرح کامل تی‌وی شو
+            </h4>
+
+            <p class="text-muted mb-0">
+                @Model.TVShowTitle
+            </p>
+
+        </div>
+
+
+        <div class="d-flex gap-2">
+
+            <a asp-action="Edit"
+               asp-route-id="@Model.Id"
+               class="btn btn-primary">
+
+                <i class="bx bx-edit"></i>
+                ویرایش
+
+            </a>
+
+
+            <a asp-action="Index"
+               class="btn btn-outline-secondary">
+
+                <i class="bx bx-arrow-back"></i>
+                بازگشت
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="row">
+
+        <!-- اطلاعات -->
+
+        <div class="col-lg-4">
+
+            <div class="card mb-4">
+
+                <div class="card-header">
+
+                    <h5 class="mb-0">
+                        اطلاعات تی‌وی شو
+                    </h5>
+
+                </div>
+
+
+                <div class="card-body">
+
+                    <div class="mb-4">
+
+                        <small class="text-muted d-block">
+                            تی‌وی شو
+                        </small>
+
+                        <strong>
+                            @Model.TVShowTitle
+                        </strong>
+
+                    </div>
+
+
+                    <div class="mb-4">
+
+                        <small class="text-muted d-block">
+                            وضعیت
+                        </small>
+
+
+                        @if (Model.IsActive)
+                        {
+                            <span class="badge bg-label-success">
+                                فعال
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-label-secondary">
+                                غیرفعال
+                            </span>
+                        }
+
+                    </div>
+
+
+                    <div class="mb-4">
+
+                        <small class="text-muted d-block">
+                            تاریخ ایجاد
+                        </small>
+
+                        <strong>
+                            @Model.CreatedAt
+                            .ToLocalTime()
+                            .ToString("yyyy/MM/dd HH:mm")
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <small class="text-muted d-block">
+                            آخرین بروزرسانی
+                        </small>
+
+
+                        @if (Model.UpdatedAt.HasValue)
+                        {
+                            <strong>
+                                @Model.UpdatedAt.Value
+                                .ToLocalTime()
+                                .ToString("yyyy/MM/dd HH:mm")
+                            </strong>
+                        }
+                        else
+                        {
+                            <span class="text-muted">
+                                هنوز بروزرسانی نشده است.
+                            </span>
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- محتوا -->
+
+        <div class="col-lg-8">
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <h5 class="mb-0">
+                        شرح کامل
+                    </h5>
+
+                </div>
+
+
+                <div class="card-body">
+
+                    <div class="description-content">
+
+                        @Html.Raw(Model.Content)
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

@@ -1,0 +1,284 @@
+﻿@model List<Service.Admin.TvSeries.SeriesReview.SeriesReviewListDto>
+
+@{
+    ViewData["Title"] = "نظرات سریال‌ها";
+}
+
+<div class="container-fluid">
+
+    <!-- ==================================================
+         Header
+         ================================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h4 class="mb-1">
+                نظرات سریال‌ها
+            </h4>
+
+            <p class="text-muted mb-0">
+                مدیریت نظرات ثبت شده برای سریال‌ها
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==================================================
+         Messages
+         ================================================== -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show"
+             role="alert">
+
+            @TempData["SuccessMessage"]
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show"
+             role="alert">
+
+            @TempData["ErrorMessage"]
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+
+        </div>
+    }
+
+
+    <!-- ==================================================
+         Table
+         ================================================== -->
+
+    <div class="card">
+
+        <div class="card-body">
+
+            @if (Model == null || Model.Count == 0)
+            {
+                <div class="text-center py-5">
+
+                    <i class="bx bx-message-rounded-dots"
+                       style="font-size: 48px;">
+                    </i>
+
+                    <h5 class="mt-3">
+                        هنوز نظری برای سریال‌ها ثبت نشده است.
+                    </h5>
+
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>#</th>
+
+                                <th>
+                                    نام
+                                </th>
+
+                                <th>
+                                    سریال
+                                </th>
+
+                                <th>
+                                    نظر
+                                </th>
+
+                                <th>
+                                    امتیاز
+                                </th>
+
+                                <th>
+                                    وضعیت
+                                </th>
+
+                                <th>
+                                    تاریخ
+                                </th>
+
+                                <th>
+                                    عملیات
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            @{
+                                var rowNumber = 1;
+                            }
+
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+
+                                    <td>
+                                        @rowNumber
+                                    </td>
+
+                                    <td>
+                                        <strong>
+                                            @item.FullName
+                                        </strong>
+                                    </td>
+
+                                    <td>
+                                        @item.SeriesTitle
+                                    </td>
+
+                                    <td style="max-width: 300px;">
+
+                                        @if (item.Content.Length > 80)
+                                        {
+                                            @item.Content.Substring(0, 80)
+
+                                            <span>...</span>
+                                        }
+                                        else
+                                        {
+                                            @item.Content
+                                        }
+
+                                    </td>
+
+                                    <td>
+                                        @((int)item.StarRating)
+                                        از 5
+                                    </td>
+
+                                    <td>
+
+                                        @if (item.IsApproved)
+                                        {
+                                            <span class="badge bg-success">
+                                                تایید شده
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning text-dark">
+                                                تایید نشده
+                                            </span>
+                                        }
+
+                                    </td>
+
+                                    <td>
+                                        @item.CreatedAt
+                                        .ToLocalTime()
+                                        .ToString("yyyy/MM/dd HH:mm")
+                                    </td>
+
+                                    <td>
+
+                                        <div class="d-flex gap-1">
+
+                                            <a asp-action="Details"
+                                               asp-route-id="@item.Id"
+                                               class="btn btn-sm btn-info"
+                                               title="جزئیات">
+
+                                                <i class="bx bx-show"></i>
+
+                                            </a>
+
+                                            @if (!item.IsApproved)
+                                            {
+                                                <form asp-action="Approve"
+                                                      asp-route-id="@item.Id"
+                                                      method="post">
+
+                                                    @Html.AntiForgeryToken()
+
+                                                    <button type="submit"
+                                                            class="btn btn-sm btn-success"
+                                                            title="تایید">
+
+                                                        <i class="bx bx-check"></i>
+
+                                                    </button>
+
+                                                </form>
+                                            }
+                                            else
+                                            {
+                                                <form asp-action="Reject"
+                                                      asp-route-id="@item.Id"
+                                                      method="post">
+
+                                                    @Html.AntiForgeryToken()
+
+                                                    <button type="submit"
+                                                            class="btn btn-sm btn-warning"
+                                                            title="لغو تایید">
+
+                                                        <i class="bx bx-x"></i>
+
+                                                    </button>
+
+                                                </form>
+                                            }
+
+                                            <form asp-action="Delete"
+                                                  asp-route-id="@item.Id"
+                                                  method="post"
+                                                  onsubmit="return confirm('آیا از حذف این نظر مطمئن هستید؟');">
+
+                                                @Html.AntiForgeryToken()
+
+                                                <button type="submit"
+                                                        class="btn btn-sm btn-danger"
+                                                        title="حذف">
+
+                                                    <i class="bx bx-trash"></i>
+
+                                                </button>
+
+                                            </form>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+
+                                rowNumber++;
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+</div>

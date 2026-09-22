@@ -1,0 +1,219 @@
+﻿@model List<Service.Admin.Content.AboutUsTeamMember.AboutUsTeamMemberListDto>
+
+
+<div class="card border-0 shadow-sm">
+
+    <div class="card-header">
+
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+
+            <div class="d-flex align-items-center">
+
+                <div class="avatar me-3">
+                    <span class="avatar-initial rounded bg-label-success">
+                        <i class="bx bx-group fs-4"></i>
+                    </span>
+                </div>
+
+                <div>
+
+                    <h5 class="mb-1">
+                        اعضای تیم
+                    </h5>
+
+                    <small class="text-muted">
+                        مدیریت اعضای تیم صفحه درباره ما
+                    </small>
+
+                </div>
+
+            </div>
+
+            <div class="d-flex gap-2">
+
+                <a asp-action="Create"
+                   class="btn btn-success">
+
+                    <i class="bx bx-user-plus me-1"></i>
+                    افزودن عضو
+
+                </a>
+
+                <a asp-area="AdminPanel"
+                   asp-controller="AboutUs"
+                   asp-action="Index"
+                   class="btn btn-outline-secondary">
+
+                    <i class="bx bx-arrow-back me-1"></i>
+                    درباره ما
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        @if (Model.Count == 0)
+        {
+            <div class="text-center py-5">
+
+                <div class="avatar avatar-xl mx-auto mb-3">
+                    <span class="avatar-initial rounded bg-label-success">
+                        <i class="bx bx-group fs-2"></i>
+                    </span>
+                </div>
+
+                <h5>
+                    هنوز عضوی ثبت نشده است
+                </h5>
+
+                <p class="text-muted mb-3">
+                    اعضای تیم را برای نمایش در صفحه درباره ما اضافه کنید.
+                </p>
+
+                <a asp-action="Create"
+                   class="btn btn-success">
+
+                    <i class="bx bx-user-plus me-1"></i>
+                    افزودن عضو تیم
+
+                </a>
+
+            </div>
+        }
+        else
+        {
+            <div class="row g-4">
+
+                @foreach (var member in Model)
+                {
+                    <div class="col-md-6 col-xl-4">
+
+                        <div class="card h-100 border shadow-none">
+
+                            <div class="card-body">
+
+                                <div class="text-center mb-3">
+
+                                    <img src="@member.ImagePath"
+                                         alt="@member.FullName"
+                                         class="rounded-circle"
+                                         style="width:110px;height:110px;object-fit:cover;" />
+
+                                </div>
+
+                                <div class="text-center">
+
+                                    <h5 class="mb-1">
+                                        @member.FullName
+                                    </h5>
+
+                                    <span class="text-muted">
+                                        @member.JobTitle
+                                    </span>
+
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center mt-4">
+
+                                    <span class="badge bg-label-primary">
+                                        ترتیب: @member.Order
+                                    </span>
+
+                                    @if (member.IsActive)
+                                    {
+                                        <span class="badge bg-label-success">
+                                            فعال
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-label-secondary">
+                                            غیرفعال
+                                        </span>
+                                    }
+
+                                </div>
+
+                                <div class="d-flex justify-content-center gap-2 mt-4">
+
+                                    <a asp-action="Details"
+                                       asp-route-id="@member.Id"
+                                       class="btn btn-sm btn-outline-info"
+                                       title="مشاهده">
+
+                                        <i class="bx bx-show"></i>
+
+                                    </a>
+
+                                    <a asp-action="Edit"
+                                       asp-route-id="@member.Id"
+                                       class="btn btn-sm btn-outline-warning"
+                                       title="ویرایش">
+
+                                        <i class="bx bx-edit"></i>
+
+                                    </a>
+
+                                    <a asp-area="AdminPanel"
+                                       asp-controller="AboutUsSocialLink"
+                                       asp-action="Index"
+                                       class="btn btn-sm btn-outline-primary"
+                                       title="شبکه‌های اجتماعی">
+
+                                        <i class="bx bx-share-alt"></i>
+
+                                    </a>
+
+                                    <form asp-action="ChangeStatus"
+                                          asp-route-id="@member.Id"
+                                          method="post">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <button type="submit"
+                                                class="btn btn-sm btn-outline-secondary"
+                                                title="تغییر وضعیت">
+
+                                            <i class="bx bx-power-off"></i>
+
+                                        </button>
+
+                                    </form>
+
+                                    <form asp-action="Delete"
+                                          asp-route-id="@member.Id"
+                                          method="post"
+                                          onsubmit="return confirm('آیا از حذف این عضو تیم مطمئن هستید؟');">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <button type="submit"
+                                                class="btn btn-sm btn-outline-danger"
+                                                title="حذف">
+
+                                            <i class="bx bx-trash"></i>
+
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+        }
+
+    </div>
+
+</div>

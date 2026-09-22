@@ -1,0 +1,234 @@
+﻿@model Service.Admin.TvSeries.Seasons.SeasonDetailsDto
+
+@{
+    ViewData["Title"] = "جزئیات فصل";
+}
+
+<!-- ==================================================
+     View - Season Details
+     ================================================== -->
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h4 class="mb-1">جزئیات فصل</h4>
+            <p class="text-muted mb-0">
+                اطلاعات فصل
+            </p>
+        </div>
+
+        <div class="d-flex gap-2">
+
+            <a asp-action="Edit"
+               asp-route-id="@Model.Id"
+               class="btn btn-warning">
+                <i class="bx bx-edit"></i>
+                ویرایش
+            </a>
+
+            <a asp-action="Index"
+               class="btn btn-secondary">
+                <i class="bx bx-arrow-back"></i>
+                بازگشت
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-8">
+
+            <div class="card mb-4">
+
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        اطلاعات فصل
+                    </h5>
+                </div>
+
+                <div class="card-body">
+
+                    <div class="row mb-4">
+
+                        <div class="col-md-6">
+
+                            <small class="text-muted">
+                                سریال
+                            </small>
+
+                            <h6 class="mt-1">
+                                @Model.SeriesTitle
+                            </h6>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <small class="text-muted">
+                                نام فصل
+                            </small>
+
+                            <h6 class="mt-1">
+                                @Model.Name
+                            </h6>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row mb-4">
+
+                        <div class="col-md-6">
+
+                            <small class="text-muted">
+                                تعداد قسمت‌ها
+                            </small>
+
+                            <h6 class="mt-1">
+                                @Model.EpisodeCount قسمت
+                            </h6>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <small class="text-muted">
+                                وضعیت
+                            </small>
+
+                            <div class="mt-1">
+
+                                @if (Model.IsActive)
+                                {
+                                    <span class="badge bg-success">
+                                        فعال
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">
+                                        غیرفعال
+                                    </span>
+                                }
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <small class="text-muted">
+                            لینک دانلود فصل
+                        </small>
+
+                        <div class="mt-2">
+
+                            @if (!string.IsNullOrWhiteSpace(Model.DownloadLink))
+                            {
+                                <a href="@Model.DownloadLink"
+                                   target="_blank"
+                                   rel="noopener noreferrer"
+                                   class="btn btn-outline-primary">
+
+                                    <i class="bx bx-download"></i>
+                                    مشاهده لینک دانلود
+
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="text-muted">
+                                    لینک دانلود ثبت نشده است.
+                                </span>
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="card mb-4">
+
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        اطلاعات ثبت
+                    </h5>
+                </div>
+
+                <div class="card-body">
+
+                    <div class="mb-3">
+
+                        <small class="text-muted">
+                            تاریخ ایجاد
+                        </small>
+
+                        <div class="mt-1">
+                            @Model.CreatedAt.ToLocalTime().ToString("yyyy/MM/dd HH:mm")
+                        </div>
+
+                    </div>
+
+                    <div>
+
+                        <small class="text-muted">
+                            آخرین ویرایش
+                        </small>
+
+                        <div class="mt-1">
+
+                            @if (Model.UpdatedAt.HasValue)
+                            {
+                                @Model.UpdatedAt.Value.ToLocalTime().ToString("yyyy/MM/dd HH:mm")
+                            }
+                            else
+                            {
+                                <span class="text-muted">
+                                    بدون ویرایش
+                                </span>
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="card">
+
+                <div class="card-body text-center">
+
+                    <a asp-controller="Episode"
+                       asp-action="Index"
+                       asp-route-seasonId="@Model.Id"
+                       class="btn btn-primary w-100">
+
+                        <i class="bx bx-list-ul"></i>
+                        مدیریت قسمت‌های این فصل
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

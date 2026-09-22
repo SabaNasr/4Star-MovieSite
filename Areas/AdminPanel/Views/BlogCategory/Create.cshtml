@@ -1,0 +1,241 @@
+﻿@model Service.Admin.Blog.BlogCategory.BlogCategoryCreateDto
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <!-- ==================================================
+         Header
+    ================================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h4 class="fw-bold mb-1">
+                افزودن دسته‌بندی وبلاگ
+            </h4>
+
+            <p class="text-muted mb-0">
+                ایجاد یک دسته‌بندی جدید برای مطالب وبلاگ
+            </p>
+
+        </div>
+
+
+        <a asp-action="Index"
+           class="btn btn-secondary">
+
+            بازگشت
+
+        </a>
+
+    </div>
+
+
+    <!-- ==================================================
+         Validation
+    ================================================== -->
+
+    <div asp-validation-summary="ModelOnly"
+         class="text-danger mb-3">
+    </div>
+
+
+    <!-- ==================================================
+         Form
+    ================================================== -->
+
+    <form asp-action="Create"
+          method="post">
+
+        @Html.AntiForgeryToken()
+
+
+        <div class="row">
+
+
+            <!-- ==================================================
+                 Main Information
+            ================================================== -->
+
+            <div class="col-md-8">
+
+                <div class="card mb-4">
+
+                    <div class="card-header">
+
+                        <h5 class="mb-0">
+                            اطلاعات دسته‌بندی
+                        </h5>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+
+                        <!-- نام -->
+
+                        <div class="mb-3">
+
+                            <label asp-for="Name"
+                                   class="form-label">
+
+                                نام دسته‌بندی
+
+                            </label>
+
+                            <input asp-for="Name"
+                                   class="form-control"
+                                   placeholder="مثلاً آموزش">
+
+                            <span asp-validation-for="Name"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+
+                        <!-- Slug -->
+
+                        <div class="mb-3">
+
+                            <label asp-for="Slug"
+                                   class="form-label">
+
+                                Slug
+
+                            </label>
+
+                            <input asp-for="Slug"
+                                   class="form-control"
+                                   dir="ltr"
+                                   placeholder="example-category">
+
+                            <span asp-validation-for="Slug"
+                                  class="text-danger">
+                            </span>
+
+                            <small class="form-text text-muted">
+                                مقدار انگلیسی و مناسب برای URL وارد کنید.
+                            </small>
+
+                        </div>
+
+
+                        <!-- Description -->
+
+                        <div class="mb-3">
+
+                            <label asp-for="Description"
+                                   class="form-label">
+
+                                توضیحات
+
+                            </label>
+
+                            <textarea asp-for="Description"
+                                      class="form-control"
+                                      rows="5"
+                                      placeholder="توضیحات دسته‌بندی..."></textarea>
+
+                            <span asp-validation-for="Description"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ==================================================
+                 Settings
+            ================================================== -->
+
+            <div class="col-md-4">
+
+                <div class="card mb-4">
+
+                    <div class="card-header">
+
+                        <h5 class="mb-0">
+                            تنظیمات
+                        </h5>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+
+                        <!-- Display Order -->
+
+                        <div class="mb-3">
+
+                            <label asp-for="DisplayOrder"
+                                   class="form-label">
+
+                                ترتیب نمایش
+
+                            </label>
+
+                            <input asp-for="DisplayOrder"
+                                   type="number"
+                                   min="0"
+                                   class="form-control">
+
+                            <span asp-validation-for="DisplayOrder"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+
+                        <!-- Active -->
+
+                        <div class="form-check form-switch mb-3">
+
+                            <input asp-for="IsActive"
+                                   class="form-check-input"
+                                   type="checkbox">
+
+                            <label asp-for="IsActive"
+                                   class="form-check-label">
+
+                                دسته‌بندی فعال باشد
+
+                            </label>
+
+                        </div>
+
+
+                        <button type="submit"
+                                class="btn btn-primary w-100">
+
+                            <i class="bx bx-save me-1"></i>
+
+                            ذخیره دسته‌بندی
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+}

@@ -1,0 +1,250 @@
+﻿@model List<Service.Admin.Blog.BlogComment.BlogCommentListDto>
+
+@{
+    ViewData["Title"] = "مدیریت کامنت‌های وبلاگ";
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h4 class="fw-bold mb-1">
+                مدیریت کامنت‌های وبلاگ
+            </h4>
+
+            <p class="text-muted mb-0">
+                مدیریت، تایید و حذف کامنت‌های کاربران
+            </p>
+        </div>
+
+    </div>
+
+    <!-- Messages -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show"
+             role="alert">
+
+            @TempData["SuccessMessage"]
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show"
+             role="alert">
+
+            @TempData["ErrorMessage"]
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+        </div>
+    }
+
+    <!-- Comments Table -->
+    <div class="card">
+
+        <div class="card-header d-flex justify-content-between align-items-center">
+
+            <h5 class="mb-0">
+                لیست کامنت‌ها
+            </h5>
+
+            <span class="badge bg-label-secondary">
+                تعداد: @Model.Count
+            </span>
+
+        </div>
+
+        <div class="table-responsive text-nowrap">
+
+            <table class="table">
+
+                <thead>
+                    <tr>
+                        <th>نام</th>
+                        <th>مقاله</th>
+                        <th>متن کامنت</th>
+                        <th>وضعیت</th>
+                        <th>تاریخ ثبت</th>
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+
+                <tbody class="table-border-bottom-0">
+
+                    @if (Model.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="6"
+                                class="text-center py-4 text-muted">
+
+                                هنوز کامنتی ثبت نشده است.
+
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var comment in Model)
+                        {
+                            <tr>
+
+                                <!-- Name -->
+                                <td>
+                                    <strong>
+                                        @comment.FullName
+                                    </strong>
+                                </td>
+
+                                <!-- Blog Post -->
+                                <td>
+                                    <span>
+                                        @comment.BlogPostTitle
+                                    </span>
+                                </td>
+
+                                <!-- Content -->
+                                <td>
+                                    <div style="max-width: 350px;
+                                        white-space: nowrap;
+                                        overflow: hidden;
+                                        text-overflow: ellipsis;">
+                                        @comment.Content
+                                    </div>
+                                </td>
+
+                                <!-- Status -->
+                                <td>
+
+                                    @if (comment.IsApproved)
+                                    {
+                                        <span class="badge bg-label-success">
+                                            تایید شده
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-label-warning">
+                                            تایید نشده
+                                        </span>
+                                    }
+
+                                </td>
+
+                                <!-- Date -->
+                                <td>
+                                    @comment.CreatedAt.ToLocalTime()
+                                    .ToString("yyyy/MM/dd HH:mm")
+                                </td>
+
+                                <!-- Operations -->
+                                <td>
+
+                                    <div class="d-flex gap-1">
+
+                                        <!-- Details -->
+                                        <a asp-action="Details"
+                                           asp-route-id="@comment.Id"
+                                           class="btn btn-sm btn-outline-info"
+                                           title="جزئیات">
+
+                                            <i class="bx bx-show"></i>
+
+                                        </a>
+
+                                        @if (!comment.IsApproved)
+                                        {
+                                            <!-- Approve -->
+                                            <form asp-action="Approve"
+                                                  method="post"
+                                                  class="d-inline">
+
+                                                @Html.AntiForgeryToken()
+
+                                                <input type="hidden"
+                                                       name="id"
+                                                       value="@comment.Id" />
+
+                                                <button type="submit"
+                                                        class="btn btn-sm btn-outline-success"
+                                                        title="تایید">
+
+                                                    <i class="bx bx-check"></i>
+
+                                                </button>
+
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            <!-- Reject -->
+                                            <form asp-action="Reject"
+                                                  method="post"
+                                                  class="d-inline">
+
+                                                @Html.AntiForgeryToken()
+
+                                                <input type="hidden"
+                                                       name="id"
+                                                       value="@comment.Id" />
+
+                                                <button type="submit"
+                                                        class="btn btn-sm btn-outline-warning"
+                                                        title="لغو تایید">
+
+                                                    <i class="bx bx-x"></i>
+
+                                                </button>
+
+                                            </form>
+                                        }
+
+                                        <!-- Delete -->
+                                        <form asp-action="Delete"
+                                              method="post"
+                                              class="d-inline"
+                                              onsubmit="return confirm('آیا از حذف این کامنت مطمئن هستید؟');">
+
+                                            @Html.AntiForgeryToken()
+
+                                            <input type="hidden"
+                                                   name="id"
+                                                   value="@comment.Id" />
+
+                                            <button type="submit"
+                                                    class="btn btn-sm btn-outline-danger"
+                                                    title="حذف">
+
+                                                <i class="bx bx-trash"></i>
+
+                                            </button>
+
+                                        </form>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

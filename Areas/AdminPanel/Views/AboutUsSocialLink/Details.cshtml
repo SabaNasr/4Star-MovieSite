@@ -1,0 +1,207 @@
+﻿@model Service.Admin.Content.AboutUsSocialLink.AboutUsSocialLinkDetailsDto
+
+
+<div class="card border-0 shadow-sm">
+
+    <div class="card-header">
+
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+
+            <div class="d-flex align-items-center">
+
+                <div class="avatar me-3">
+                    <span class="avatar-initial rounded bg-label-info">
+                        <i class="bx bx-share-alt fs-4"></i>
+                    </span>
+                </div>
+
+                <div>
+
+                    <h5 class="mb-1">
+                        جزئیات شبکه اجتماعی
+                    </h5>
+
+                    <small class="text-muted">
+                        مشاهده اطلاعات کامل لینک
+                    </small>
+
+                </div>
+
+            </div>
+
+            <div class="d-flex gap-2">
+
+                <a asp-action="Edit"
+                   asp-route-id="@Model.Id"
+                   class="btn btn-info">
+
+                    <i class="bx bx-edit-alt me-1"></i>
+                    ویرایش
+
+                </a>
+
+                <a asp-action="Index"
+                   class="btn btn-outline-secondary">
+
+                    <i class="bx bx-arrow-back me-1"></i>
+                    بازگشت
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="text-center mb-5">
+
+            <div class="avatar avatar-xl mx-auto mb-3">
+
+                <span class="avatar-initial rounded bg-label-info">
+
+                    <i class="@Model.Icon"
+                       style="font-size:40px;">
+                    </i>
+
+                </span>
+
+            </div>
+
+            <h5>
+                @Model.TeamMemberName
+            </h5>
+
+            <small class="text-muted">
+                شبکه اجتماعی عضو تیم
+            </small>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-6 mb-4">
+
+                <div class="border rounded-3 p-3">
+
+                    <small class="text-muted d-block mb-1">
+                        کلاس آیکون
+                    </small>
+
+                    <div class="d-flex align-items-center">
+
+                        <i class="@Model.Icon fs-4 me-2"></i>
+
+                        <span>
+                            @Model.Icon
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-6 mb-4">
+
+                <div class="border rounded-3 p-3">
+
+                    <small class="text-muted d-block mb-1">
+                        ترتیب نمایش
+                    </small>
+
+                    <strong>
+                        @Model.Order
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="border rounded-3 p-4 mb-4">
+
+            <small class="text-muted d-block mb-2">
+                آدرس شبکه اجتماعی
+            </small>
+
+            <a href="@Model.Url"
+               target="_blank"
+               rel="noopener noreferrer"
+               class="text-break">
+
+                <i class="bx bx-link-external me-1"></i>
+                @Model.Url
+
+            </a>
+
+        </div>
+
+        <div class="mb-4">
+
+            <strong>
+                وضعیت:
+            </strong>
+
+            @if (Model.IsActive)
+            {
+                <span class="badge bg-label-success ms-2">
+                    <i class="bx bx-check-circle me-1"></i>
+                    فعال
+                </span>
+            }
+            else
+            {
+                <span class="badge bg-label-secondary ms-2">
+                    غیرفعال
+                </span>
+            }
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+
+                <small class="text-muted d-block mb-1">
+                    تاریخ ثبت
+                </small>
+
+                <span>
+                    <i class="bx bx-calendar me-1"></i>
+
+                    @Model.CreatedAt
+                    .ToLocalTime()
+                    .ToString("yyyy/MM/dd HH:mm")
+                </span>
+
+            </div>
+
+            <div class="col-md-6 mb-3">
+
+                <small class="text-muted d-block mb-1">
+                    آخرین ویرایش
+                </small>
+
+                <span>
+
+                    <i class="bx bx-edit me-1"></i>
+
+                    @(Model.UpdatedAt.HasValue
+                        ? Model.UpdatedAt.Value
+                            .ToLocalTime()
+                            .ToString("yyyy/MM/dd HH:mm")
+                        : "ویرایش نشده")
+
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

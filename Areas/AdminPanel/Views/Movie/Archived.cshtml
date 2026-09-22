@@ -1,0 +1,231 @@
+﻿@model List<MovieListDto>
+
+@{
+    ViewData["Title"] = "فیلم‌های آرشیو شده";
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h4 class="fw-bold py-3 mb-0">
+                فیلم‌های آرشیو شده
+            </h4>
+
+            <p class="text-muted mb-0">
+                لیست تمام فیلم‌هایی که آرشیو شده‌اند
+            </p>
+
+        </div>
+
+        <div>
+
+            <a asp-area="AdminPanel"
+               asp-controller="Movie"
+               asp-action="Index"
+               class="btn btn-outline-secondary">
+
+                <i class="bx bx-arrow-back"></i>
+
+                بازگشت به لیست فیلم‌ها
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="card-body">
+
+            @if (Model != null && Model.Any())
+            {
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    پوستر
+                                </th>
+
+                                <th>
+                                    نام فیلم
+                                </th>
+
+                                <th>
+                                    سال ساخت
+                                </th>
+
+                                <th>
+                                    امتیاز IMDb
+                                </th>
+
+                                <th>
+                                    تاریخ آرشیو
+                                </th>
+
+                                <th class="text-center">
+                                    عملیات
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            @foreach (var movie in Model)
+                            {
+                                <tr>
+
+                                    <!-- پوستر -->
+                                    <td>
+
+                                        @if (!string.IsNullOrWhiteSpace(movie.PosterPath))
+                                        {
+                                            <img src="@movie.PosterPath"
+                                                 alt="@movie.Title"
+                                                 class="rounded"
+                                                 style="width:60px; height:80px; object-fit:cover;" />
+                                        }
+                                        else
+                                        {
+                                            <div class="d-flex align-items-center justify-content-center bg-light rounded"
+                                                 style="width:60px; height:80px;">
+
+                                                <i class="bx bx-movie-play fs-3 text-muted"></i>
+
+                                            </div>
+                                        }
+
+                                    </td>
+
+
+                                    <!-- نام فیلم -->
+                                    <td>
+
+                                        <strong>
+                                            @movie.Title
+                                        </strong>
+
+                                    </td>
+
+
+                                    <!-- سال ساخت -->
+                                    <td>
+
+                                        @movie.Year
+
+                                    </td>
+
+
+                                    <!-- امتیاز -->
+                                    <td>
+
+                                        <span class="badge bg-label-warning">
+
+                                            <i class="bx bx-star"></i>
+
+                                            @movie.ImdbRating
+
+                                        </span>
+
+                                    </td>
+
+
+                                    <!-- تاریخ آرشیو -->
+                                    <td>
+
+                                        @if (movie.ArchivedAt.HasValue)
+                                        {
+                                            <span>
+                                                @movie.ArchivedAt.Value.ToLocalTime().ToString("yyyy/MM/dd HH:mm")
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">
+                                                نامشخص
+                                            </span>
+                                        }
+
+                                    </td>
+
+
+                                    <!-- عملیات -->
+                                    <td class="text-center">
+
+                                        <a asp-area="AdminPanel"
+                                           asp-controller="Movie"
+                                           asp-action="Details"
+                                           asp-route-id="@movie.Id"
+                                           class="btn btn-sm btn-outline-info">
+
+                                            <i class="bx bx-show"></i>
+
+                                        </a>
+
+
+                                        <form asp-area="AdminPanel"
+                                              asp-controller="Movie"
+                                              asp-action="Unarchive"
+                                              asp-route-id="@movie.Id"
+                                              method="post"
+                                              class="d-inline">
+
+                                            <button type="submit"
+                                                    class="btn btn-sm btn-outline-success">
+
+                                                <i class="bx bx-archive-in"></i>
+
+                                                بازگردانی
+
+                                            </button>
+
+                                        </form>
+
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+
+                    <i class="bx bx-archive fs-1 text-muted"></i>
+
+                    <h5 class="mt-3">
+                        فیلم آرشیو شده‌ای وجود ندارد
+                    </h5>
+
+                    <p class="text-muted">
+                        در حال حاضر هیچ فیلمی در آرشیو قرار ندارد.
+                    </p>
+
+                </div>
+            }
+
+        </div>
+
+    </div>
+   
+
+</div>

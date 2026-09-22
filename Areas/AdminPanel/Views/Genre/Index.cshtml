@@ -1,0 +1,246 @@
+﻿@* ==================================================
+   View - Genre Index
+   Areas/AdminPanel/Views/Genre/Index.cshtml
+   ================================================== *@
+
+@model List<Service.Admin.Movies.Genre.GenreListDto>
+
+@{
+    ViewData["Title"] = "ژانرها";
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    @* ==================================================
+       Header
+       ================================================== *@
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h4 class="fw-bold mb-1">ژانرها</h4>
+            <p class="text-muted mb-0">
+                مدیریت ژانرهای فیلم‌ها
+            </p>
+        </div>
+
+        <a asp-area="AdminPanel"
+           asp-controller="Genre"
+           asp-action="Create"
+           class="btn btn-primary">
+
+            <i class="bx bx-plus me-1"></i>
+            افزودن ژانر
+
+        </a>
+
+    </div>
+
+
+    @* ==================================================
+       Messages
+       ================================================== *@
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible mb-4" role="alert">
+
+            @TempData["SuccessMessage"]
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible mb-4" role="alert">
+
+            @TempData["ErrorMessage"]
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+
+        </div>
+    }
+
+
+    @* ==================================================
+       Genre Table
+       ================================================== *@
+
+    <div class="card">
+
+        <div class="card-header d-flex justify-content-between align-items-center">
+
+            <h5 class="mb-0">
+                لیست ژانرها
+            </h5>
+
+            <span class="badge bg-label-primary">
+                @Model.Count ژانر
+            </span>
+
+        </div>
+
+        <div class="table-responsive text-nowrap">
+
+            <table class="table">
+
+                <thead>
+
+                    <tr>
+                        <th>#</th>
+                        <th>نام ژانر</th>
+                        <th>وضعیت</th>
+                        <th>تاریخ ایجاد</th>
+                        <th>آخرین بروزرسانی</th>
+                        <th>عملیات</th>
+                    </tr>
+
+                </thead>
+
+                <tbody class="table-border-bottom-0">
+
+                    @if (Model.Count == 0)
+                    {
+                        <tr>
+
+                            <td colspan="6" class="text-center py-5">
+
+                                <div class="text-muted">
+
+                                    <i class="bx bx-category fs-1 d-block mb-2"></i>
+
+                                    هنوز هیچ ژانری ثبت نشده است.
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+                    }
+                    else
+                    {
+                        var row = 1;
+
+                        foreach (var genre in Model)
+                        {
+                            <tr>
+
+                                <td>
+                                    @row
+                                </td>
+
+                                <td>
+                                    <strong>
+                                        @genre.Name
+                                    </strong>
+                                </td>
+
+                                <td>
+
+                                    @if (genre.IsActive)
+                                    {
+                                        <span class="badge bg-label-success">
+                                            فعال
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-label-secondary">
+                                            غیرفعال
+                                        </span>
+                                    }
+
+                                </td>
+
+                                <td>
+                                    @genre.CreatedAt.ToString("yyyy/MM/dd HH:mm")
+                                </td>
+
+                                <td>
+
+                                    @if (genre.UpdatedAt.HasValue)
+                                    {
+                                        @genre.UpdatedAt.Value.ToString("yyyy/MM/dd HH:mm")
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">
+                                            -
+                                        </span>
+                                    }
+
+                                </td>
+
+                                <td>
+
+                                    <div class="d-flex gap-2">
+
+                                        <a asp-area="AdminPanel"
+                                           asp-controller="Genre"
+                                           asp-action="Edit"
+                                           asp-route-id="@genre.Id"
+                                           class="btn btn-sm btn-outline-primary">
+
+                                            <i class="bx bx-edit-alt me-1"></i>
+                                            ویرایش
+
+                                        </a>
+
+                                        <form asp-area="AdminPanel"
+                                              asp-controller="Genre"
+                                              asp-action="ChangeStatus"
+                                              asp-route-id="@genre.Id"
+                                              method="post">
+
+                                            @Html.AntiForgeryToken()
+
+                                            @if (genre.IsActive)
+                                            {
+                                                <button type="submit"
+                                                        class="btn btn-sm btn-outline-warning">
+
+                                                    <i class="bx bx-block me-1"></i>
+                                                    غیرفعال کردن
+
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <button type="submit"
+                                                        class="btn btn-sm btn-outline-success">
+
+                                                    <i class="bx bx-check me-1"></i>
+                                                    فعال کردن
+
+                                                </button>
+                                            }
+
+                                        </form>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                            row++;
+                        }
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

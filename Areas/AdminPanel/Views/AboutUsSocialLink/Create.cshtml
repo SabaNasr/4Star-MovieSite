@@ -1,0 +1,208 @@
+﻿@model Service.Admin.Content.AboutUsSocialLink.AboutUsSocialLinkCreateDto
+
+
+<div class="card border-0 shadow-sm">
+
+    <div class="card-header">
+
+        <div class="d-flex align-items-center">
+
+            <div class="avatar me-3">
+                <span class="avatar-initial rounded bg-label-info">
+                    <i class="bx bx-share-alt fs-4"></i>
+                </span>
+            </div>
+
+            <div>
+
+                <h5 class="mb-1">
+                    افزودن شبکه اجتماعی
+                </h5>
+
+                <small class="text-muted">
+                    آیکون و لینک شبکه اجتماعی عضو تیم را ثبت کنید.
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <form asp-action="Create"
+              method="post">
+
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger mb-4">
+            </div>
+
+            <div class="mb-4">
+
+                <label asp-for="TeamMemberId"
+                       class="form-label">
+                    عضو تیم
+                </label>
+
+                <select asp-for="TeamMemberId"
+                        class="form-select">
+
+                    <option value="">
+                        انتخاب عضو تیم
+                    </option>
+
+                    @foreach (var member in Model.TeamMembers)
+                    {
+                        <option value="@member.Id">
+                            @member.FullName
+                        </option>
+                    }
+
+                </select>
+
+                <span asp-validation-for="TeamMemberId"
+                      class="text-danger">
+                </span>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-6 mb-4">
+
+                    <label asp-for="Icon"
+                           class="form-label">
+                        کلاس آیکون
+                    </label>
+
+                    <div class="input-group">
+
+                        <span class="input-group-text">
+                            <i id="iconPreview"
+                               class="bx bx-link-alt">
+                            </i>
+                        </span>
+
+                        <input asp-for="Icon"
+                               id="iconInput"
+                               class="form-control"
+                               placeholder="bx bxl-instagram" />
+
+                    </div>
+
+                    <span asp-validation-for="Icon"
+                          class="text-danger">
+                    </span>
+
+                    <small class="text-muted">
+                        کلاس آیکون Boxicons را وارد کنید.
+                    </small>
+
+                </div>
+
+                <div class="col-md-6 mb-4">
+
+                    <label asp-for="Order"
+                           class="form-label">
+                        ترتیب نمایش
+                    </label>
+
+                    <input asp-for="Order"
+                           type="number"
+                           min="0"
+                           class="form-control" />
+
+                    <span asp-validation-for="Order"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="mb-4">
+
+                <label asp-for="Url"
+                       class="form-label">
+                    آدرس شبکه اجتماعی
+                </label>
+
+                <input asp-for="Url"
+                       type="url"
+                       class="form-control"
+                       placeholder="https://..." />
+
+                <span asp-validation-for="Url"
+                      class="text-danger">
+                </span>
+
+            </div>
+
+            <div class="form-check mb-4">
+
+                <input asp-for="IsActive"
+                       class="form-check-input" />
+
+                <label asp-for="IsActive"
+                       class="form-check-label">
+                    فعال
+                </label>
+
+            </div>
+
+            <div class="d-flex justify-content-end gap-2">
+
+                <a asp-action="Index"
+                   class="btn btn-outline-secondary">
+
+                    <i class="bx bx-arrow-back me-1"></i>
+                    بازگشت
+
+                </a>
+
+                <button type="submit"
+                        class="btn btn-info">
+
+                    <i class="bx bx-save me-1"></i>
+                    ثبت لینک
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+@section Scripts {
+
+    @{
+        await Html.RenderPartialAsync(
+            "_ValidationScriptsPartial");
+    }
+
+    <script>
+
+        const iconInput =
+            document.getElementById('iconInput');
+
+        const iconPreview =
+            document.getElementById('iconPreview');
+
+        iconInput.addEventListener('input', function() {
+
+            const value =
+                this.value.trim();
+
+            iconPreview.className =
+                value || 'bx bx-link-alt';
+
+        });
+
+    </script>
+}

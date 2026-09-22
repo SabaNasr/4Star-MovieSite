@@ -1,0 +1,270 @@
+﻿@model Service.Admin.Content.AboutUsComment.AboutUsCommentDetailsDto
+
+
+<div class="card border-0 shadow-sm">
+
+    <div class="card-header">
+
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+
+            <div class="d-flex align-items-center">
+
+                <div class="avatar me-3">
+
+                    <span class="avatar-initial rounded bg-label-warning">
+
+                        <i class="bx bx-message-detail fs-4"></i>
+
+                    </span>
+
+                </div>
+
+                <div>
+
+                    <h5 class="mb-1">
+                        جزئیات نظر
+                    </h5>
+
+                    <small class="text-muted">
+                        مشاهده کامل نظر ثبت شده توسط کاربر
+                    </small>
+
+                </div>
+
+            </div>
+
+            <a asp-action="Index"
+               class="btn btn-outline-secondary">
+
+                <i class="bx bx-arrow-back me-1"></i>
+                بازگشت
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row">
+
+            <div class="col-md-6 mb-4">
+
+                <div class="border rounded-3 p-3">
+
+                    <small class="text-muted d-block mb-1">
+                        نام و نام خانوادگی
+                    </small>
+
+                    <h6 class="mb-0">
+                        @Model.FullName
+                    </h6>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-6 mb-4">
+
+                <div class="border rounded-3 p-3">
+
+                    <small class="text-muted d-block mb-1">
+                        عنوان شغلی
+                    </small>
+
+                    <h6 class="mb-0">
+                        @Model.JobTitle
+                    </h6>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="border rounded-3 p-3 mb-4">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+
+                <h6 class="mb-0">
+                    امتیاز
+                </h6>
+
+                <span class="badge bg-label-warning">
+                    @((int)Model.StarRating) از 5
+                </span>
+
+            </div>
+
+            <div>
+
+                @{
+                    var rating =
+                        (int)Model.StarRating;
+                }
+
+                @for (var i = 1; i <= 5; i++)
+                {
+                    if (i <= rating)
+                    {
+                        <i class="bx bxs-star text-warning fs-4"></i>
+                    }
+                    else
+                    {
+                        <i class="bx bx-star text-muted fs-4"></i>
+                    }
+                }
+
+            </div>
+
+        </div>
+
+        <div class="border rounded-3 p-4 mb-4">
+
+            <div class="d-flex align-items-center mb-3">
+
+                <i class="bx bx-comment-detail text-primary fs-4 me-2"></i>
+
+                <h6 class="mb-0">
+                    متن نظر
+                </h6>
+
+            </div>
+
+            <div style="white-space: pre-line;">
+                @Model.Content
+            </div>
+
+        </div>
+
+        <div class="mb-4">
+
+            <strong>
+                وضعیت:
+            </strong>
+
+            @if (Model.IsApproved)
+            {
+                <span class="badge bg-label-success ms-2">
+
+                    <i class="bx bx-check-circle me-1"></i>
+                    تایید شده
+
+                </span>
+            }
+            else
+            {
+                <span class="badge bg-label-warning ms-2">
+
+                    <i class="bx bx-time-five me-1"></i>
+                    تایید نشده
+
+                </span>
+            }
+
+        </div>
+
+        <div class="row mb-4">
+
+            <div class="col-md-6 mb-3">
+
+                <small class="text-muted d-block mb-1">
+                    تاریخ ثبت
+                </small>
+
+                <span>
+
+                    <i class="bx bx-calendar me-1"></i>
+
+                    @Model.CreatedAt
+                    .ToLocalTime()
+                    .ToString("yyyy/MM/dd HH:mm")
+
+                </span>
+
+            </div>
+
+            <div class="col-md-6 mb-3">
+
+                <small class="text-muted d-block mb-1">
+                    آخرین ویرایش
+                </small>
+
+                <span>
+
+                    <i class="bx bx-edit me-1"></i>
+
+                    @(Model.UpdatedAt.HasValue
+                        ? Model.UpdatedAt.Value
+                            .ToLocalTime()
+                            .ToString("yyyy/MM/dd HH:mm")
+                        : "ویرایش نشده")
+
+                </span>
+
+            </div>
+
+        </div>
+
+        <div class="d-flex flex-wrap gap-2">
+
+            @if (!Model.IsApproved)
+            {
+                <form asp-action="Approve"
+                      asp-route-id="@Model.Id"
+                      method="post">
+
+                    @Html.AntiForgeryToken()
+
+                    <button type="submit"
+                            class="btn btn-success">
+
+                        <i class="bx bx-check me-1"></i>
+                        تایید نظر
+
+                    </button>
+
+                </form>
+            }
+            else
+            {
+                <form asp-action="Reject"
+                      asp-route-id="@Model.Id"
+                      method="post">
+
+                    @Html.AntiForgeryToken()
+
+                    <button type="submit"
+                            class="btn btn-outline-secondary">
+
+                        <i class="bx bx-x me-1"></i>
+                        لغو تایید
+
+                    </button>
+
+                </form>
+            }
+
+            <form asp-action="Delete"
+                  asp-route-id="@Model.Id"
+                  method="post"
+                  onsubmit="return confirm('آیا از حذف این نظر مطمئن هستید؟');">
+
+                @Html.AntiForgeryToken()
+
+                <button type="submit"
+                        class="btn btn-outline-danger">
+
+                    <i class="bx bx-trash me-1"></i>
+                    حذف نظر
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>

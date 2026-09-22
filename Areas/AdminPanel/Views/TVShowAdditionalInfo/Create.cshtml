@@ -1,0 +1,130 @@
+﻿@model Service.Admin.TVShows.TVShowAdditionalInfo.TVShowAdditionalInfoCreateDto
+
+@{
+    ViewData["Title"] = "افزودن اطلاعات تکمیلی تی‌وی شو";
+}
+
+@section Styles {
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css"
+          rel="stylesheet" />
+}
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">
+            افزودن اطلاعات تکمیلی تی‌وی شو
+        </h5>
+    </div>
+
+    <div class="card-body">
+
+        <form asp-area="AdminPanel"
+              asp-controller="TVShowAdditionalInfo"
+              asp-action="Create"
+              method="post">
+
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger mb-3">
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="TVShowId"
+                       class="form-label">
+                    تی‌وی شو
+                </label>
+
+                <select asp-for="TVShowId"
+                        class="form-select">
+
+                    <option value="">
+                        -- انتخاب تی‌وی شو --
+                    </option>
+
+                    @foreach (var tvShow in Model.TVShows)
+                    {
+                        <option value="@tvShow.Id">
+                            @tvShow.Title
+                        </option>
+                    }
+                </select>
+
+                <span asp-validation-for="TVShowId"
+                      class="text-danger">
+                </span>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label">
+                    اطلاعات تکمیلی
+                </label>
+
+                <div id="editor"
+                     style="min-height: 350px;">
+                </div>
+
+                <textarea asp-for="Content"
+                          id="Content"
+                          class="d-none">
+                </textarea>
+
+                <span asp-validation-for="Content"
+                      class="text-danger">
+                </span>
+            </div>
+
+            <div class="d-flex gap-2">
+
+                <button type="submit"
+                        class="btn btn-primary">
+                    <i class="bx bx-save"></i>
+                    ذخیره
+                </button>
+
+                <a asp-area="AdminPanel"
+                   asp-controller="TVShowAdditionalInfo"
+                   asp-action="Index"
+                   class="btn btn-secondary">
+                    بازگشت
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+
+    <script>
+        const toolbarOptions = [
+            [{ header: [1, 2, 3, 4, 5, 6, false] }],
+            ['bold', 'italic', 'underline'],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            [{ align: [] }],
+            ['link', 'image'],
+            ['clean']
+        ];
+
+        const quill = new Quill('#editor', {
+            theme: 'snow',
+            modules: {
+                toolbar: toolbarOptions
+            }
+        });
+
+        const form = document.querySelector('form');
+        const contentInput =
+            document.getElementById('Content');
+
+        form.addEventListener('submit', function() {
+            contentInput.value = quill.root.innerHTML;
+        });
+    </script>
+}

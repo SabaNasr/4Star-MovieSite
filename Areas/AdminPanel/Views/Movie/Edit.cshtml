@@ -1,0 +1,837 @@
+﻿@model MovieEditDto
+
+@using DataBase.Enum
+
+@{
+    ViewData["Title"] = "ویرایش فیلم";
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+
+    <!-- ==================================================
+         Header
+    ================================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h4 class="fw-bold py-3 mb-0">
+                ویرایش فیلم
+            </h4>
+
+            <p class="text-muted mb-0">
+                اطلاعات فیلم و عوامل آن را ویرایش کنید.
+            </p>
+
+        </div>
+
+
+        <div>
+
+            <a asp-area="AdminPanel"
+               asp-controller="Movie"
+               asp-action="Details"
+               asp-route-id="@Model.Id"
+               class="btn btn-outline-info me-2">
+
+                <i class="bx bx-show"></i>
+
+                مشاهده
+
+            </a>
+
+
+            <a asp-area="AdminPanel"
+               asp-controller="Movie"
+               asp-action="Index"
+               class="btn btn-outline-secondary">
+
+                <i class="bx bx-arrow-back"></i>
+
+                بازگشت
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==================================================
+         Form
+    ================================================== -->
+
+    <form asp-area="AdminPanel"
+          asp-controller="Movie"
+          asp-action="Edit"
+          method="post"
+          enctype="multipart/form-data">
+
+        @Html.AntiForgeryToken()
+
+        <input asp-for="Id"
+               type="hidden" />
+
+
+        <div class="row">
+
+
+            <!-- ==================================================
+                 ستون اصلی
+            ================================================== -->
+
+            <div class="col-lg-8">
+
+
+                <!-- ==================================================
+                     اطلاعات اصلی
+                ================================================== -->
+
+                <div class="card mb-4">
+
+                    <div class="card-header">
+
+                        <h5 class="mb-0">
+                            اطلاعات اصلی فیلم
+                        </h5>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+
+                        <!-- عنوان -->
+
+                        <div class="mb-3">
+
+                            <label asp-for="Title"
+                                   class="form-label"></label>
+
+                            <input asp-for="Title"
+                                   class="form-control"
+                                   placeholder="نام فیلم را وارد کنید" />
+
+                            <span asp-validation-for="Title"
+                                  class="text-danger"></span>
+
+                        </div>
+
+
+                        <!-- خلاصه -->
+
+                        <div class="mb-3">
+
+                            <label asp-for="ShortDescription"
+                                   class="form-label"></label>
+
+                            <textarea asp-for="ShortDescription"
+                                      rows="5"
+                                      class="form-control"
+                                      placeholder="خلاصه کوتاهی از فیلم بنویسید"></textarea>
+
+                            <span asp-validation-for="ShortDescription"
+                                  class="text-danger"></span>
+
+                        </div>
+
+
+                        <!-- لینک دانلود -->
+
+                        <div class="mb-3">
+
+                            <label asp-for="DownloadLink"
+                                   class="form-label">
+                                لینک دانلود
+                            </label>
+
+                            <input asp-for="DownloadLink"
+                                   type="url"
+                                   class="form-control"
+                                   placeholder="https://example.com/download/movie" />
+
+                            <span asp-validation-for="DownloadLink"
+                                  class="text-danger"></span>
+
+                            <small class="form-text text-muted">
+                                این فیلد اختیاری است.
+                            </small>
+
+                        </div>
+
+
+                        <div class="row">
+
+
+                            <!-- مدت زمان -->
+
+                            <div class="col-md-6 mb-3">
+
+                                <label asp-for="DurationMinutes"
+                                       class="form-label"></label>
+
+                                <div class="input-group">
+
+                                    <input asp-for="DurationMinutes"
+                                           type="number"
+                                           min="1"
+                                           class="form-control" />
+
+                                    <span class="input-group-text">
+                                        دقیقه
+                                    </span>
+
+                                </div>
+
+                                <span asp-validation-for="DurationMinutes"
+                                      class="text-danger"></span>
+
+                            </div>
+
+
+                            <!-- سال -->
+
+                            <div class="col-md-6 mb-3">
+
+                                <label asp-for="Year"
+                                       class="form-label"></label>
+
+                                <input asp-for="Year"
+                                       type="number"
+                                       class="form-control" />
+
+                                <span asp-validation-for="Year"
+                                      class="text-danger"></span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="row">
+
+
+                            <!-- IMDb -->
+
+                            <div class="col-md-6 mb-3">
+
+                                <label asp-for="ImdbRating"
+                                       class="form-label"></label>
+
+                                <div class="input-group">
+
+                                    <span class="input-group-text">
+
+                                        <i class="bx bx-star"></i>
+
+                                    </span>
+
+                                    <input asp-for="ImdbRating"
+                                           type="number"
+                                           step="0.1"
+                                           min="0"
+                                           max="10"
+                                           class="form-control" />
+
+                                </div>
+
+                                <span asp-validation-for="ImdbRating"
+                                      class="text-danger"></span>
+
+                            </div>
+
+
+                            <!-- بازدید -->
+
+                            <div class="col-md-6 mb-3">
+
+                                <label asp-for="ViewCount"
+                                       class="form-label"></label>
+
+                                <input asp-for="ViewCount"
+                                       type="number"
+                                       min="0"
+                                       class="form-control" />
+
+                                <span asp-validation-for="ViewCount"
+                                      class="text-danger"></span>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+                <!-- ==================================================
+                     ژانرها
+                ================================================== -->
+
+                <div class="card mb-4">
+
+                    <div class="card-header">
+
+                        <h5 class="mb-0">
+                            ژانرهای فیلم
+                        </h5>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+                        @if (Model.Genres.Any())
+                        {
+                            <div class="row">
+
+                                @foreach (var genre in Model.Genres)
+                                {
+                                    <div class="col-md-4 mb-3">
+
+                                        <div class="form-check">
+
+                                            <input type="checkbox"
+                                                   class="form-check-input"
+                                                   name="SelectedGenreIds"
+                                                   value="@genre.Id"
+                                                   id="edit-genre-@genre.Id"
+                                                   checked="@genre.IsSelected" />
+
+                                            <label class="form-check-label"
+                                                   for="edit-genre-@genre.Id">
+
+                                                @genre.Name
+
+                                            </label>
+
+                                        </div>
+
+                                    </div>
+                                }
+
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-warning mb-0">
+
+                                هنوز ژانری در سیستم ثبت نشده است.
+
+                            </div>
+                        }
+
+                    </div>
+
+                </div>
+
+
+                <!-- ==================================================
+                     زبان‌ها
+                ================================================== -->
+
+                <div class="card mb-4">
+
+                    <div class="card-header">
+
+                        <h5 class="mb-0">
+                            زبان‌های فیلم
+                        </h5>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+                        @if (Model.Languages.Any())
+                        {
+                            <div class="row">
+
+                                @foreach (var language in Model.Languages)
+                                {
+                                    <div class="col-md-4 mb-3">
+
+                                        <div class="form-check">
+
+                                            <input type="checkbox"
+                                                   class="form-check-input"
+                                                   name="SelectedLanguageIds"
+                                                   value="@language.Id"
+                                                   id="edit-language-@language.Id"
+                                                   checked="@language.IsSelected" />
+
+                                            <label class="form-check-label"
+                                                   for="edit-language-@language.Id">
+
+                                                @language.Name
+
+                                            </label>
+
+                                        </div>
+
+                                    </div>
+                                }
+
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-warning mb-0">
+
+                                هنوز زبانی در سیستم ثبت نشده است.
+
+                            </div>
+                        }
+
+                    </div>
+
+                </div>
+
+
+                <!-- ==================================================
+                     کیفیت‌ها
+                ================================================== -->
+
+                <div class="card mb-4">
+
+                    <div class="card-header">
+
+                        <h5 class="mb-0">
+                            کیفیت‌های موجود
+                        </h5>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+                        <div class="row">
+
+                            @foreach (var quality in Enum.GetValues<Quality>())
+                            {
+                                <div class="col-md-3 mb-3">
+
+                                    <div class="form-check">
+
+                                        <input type="checkbox"
+                                               class="form-check-input"
+                                               name="AvailableQualities"
+                                               value="@quality"
+                                               id="edit-quality-@quality"
+                                               checked="@Model.AvailableQualities.Contains(quality)" />
+
+                                        <label class="form-check-label"
+                                               for="edit-quality-@quality">
+
+                                            @quality
+
+                                        </label>
+
+                                    </div>
+
+                                </div>
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ==================================================
+                     عوامل فیلم
+                ================================================== -->
+
+                <div class="card mb-4">
+
+                    <div class="card-header d-flex justify-content-between align-items-center">
+
+                        <h5 class="mb-0">
+                            عوامل فیلم
+                        </h5>
+
+
+                        <a asp-area="AdminPanel"
+                           asp-controller="CastMember"
+                           asp-action="Create"
+                           class="btn btn-sm btn-outline-primary">
+
+                            <i class="bx bx-plus"></i>
+
+                            افزودن شخص جدید
+
+                        </a>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+                        @if (Model.CastMembers.Any())
+                        {
+                            <div class="row">
+
+                                @for (var i = 0; i < Model.CastMembers.Count; i++)
+                                {
+                                    var castMember = Model.CastMembers[i];
+
+                                    <input type="hidden"
+                                           name="CastMembers[@i].Id"
+                                           value="@castMember.Id" />
+
+
+                                    <input type="hidden"
+                                           name="CastMembers[@i].FullName"
+                                           value="@castMember.FullName" />
+
+
+                                    <input type="hidden"
+                                           name="CastMembers[@i].PhotoPath"
+                                           value="@castMember.PhotoPath" />
+
+
+                                    <div class="col-md-6 mb-3">
+
+                                        <div class="border rounded p-3 h-100">
+
+                                            <div class="d-flex align-items-center gap-3">
+
+
+                                                <!-- عکس شخص -->
+                                                @if (!string.IsNullOrWhiteSpace(castMember.PhotoPath))
+                                                {
+                                                    <img src="@castMember.PhotoPath"
+                                                         alt="@castMember.FullName"
+                                                         class="rounded-circle"
+                                                         style="width:60px;height:60px;object-fit:cover;" />
+                                                }
+                                                else
+                                                {
+                                                    <div class="rounded-circle bg-label-secondary d-flex align-items-center justify-content-center"
+                                                         style="width:60px;height:60px;">
+
+                                                        <i class="bx bx-user fs-3"></i>
+
+                                                    </div>
+                                                }
+
+
+                                                <div class="flex-grow-1">
+
+
+                                                    <!-- انتخاب شخص -->
+
+                                                    <div class="form-check">
+
+                                                        <input type="checkbox"
+                                                               class="form-check-input cast-member-checkbox"
+                                                               name="CastMembers[@i].IsSelected"
+                                                               value="true"
+                                                               id="edit-cast-member-@castMember.Id"
+                                                               checked="@castMember.IsSelected" />
+
+                                                        <input type="hidden"
+                                                               name="CastMembers[@i].IsSelected"
+                                                               value="false" />
+
+
+                                                        <label class="form-check-label fw-bold"
+                                                               for="edit-cast-member-@castMember.Id">
+
+                                                            @castMember.FullName
+
+                                                        </label>
+
+                                                    </div>
+
+
+                                                    <!-- نقش در این فیلم -->
+
+                                                    <select class="form-select form-select-sm mt-2 cast-member-type"
+                                                            name="CastMembers[@i].CastType"
+                                                            disabled="@(!castMember.IsSelected)">
+
+                                                        @foreach (var castType in Enum.GetValues<CastType>())
+                                                        {
+                                                            <option value="@castType"
+                                                                    selected="@(castMember.CastType == castType)">
+
+                                                                @switch (castType)
+                                                                {
+                                                                    case CastType.Actor:
+                                                                        <text>بازیگر</text>
+                                                                        break;
+
+                                                                    case CastType.Director:
+                                                                        <text>کارگردان</text>
+                                                                        break;
+
+                                                                    case CastType.Writer:
+                                                                        <text>نویسنده</text>
+                                                                        break;
+
+                                                                    case CastType.Producer:
+                                                                        <text>تهیه‌کننده</text>
+                                                                        break;
+
+                                                                    case CastType.AssistantDirector:
+                                                                        <text>دستیار کارگردان</text>
+                                                                        break;
+                                                                }
+
+                                                            </option>
+                                                        }
+
+                                                    </select>
+
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                }
+
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-warning mb-0">
+
+                                هنوز شخصی در بخش عوامل فیلم ثبت نشده است.
+
+                                <a asp-area="AdminPanel"
+                                   asp-controller="CastMember"
+                                   asp-action="Create"
+                                   class="alert-link">
+
+                                    افزودن شخص
+
+                                </a>
+
+                            </div>
+                        }
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- ==================================================
+                 ستون کناری
+            ================================================== -->
+
+            <div class="col-lg-4">
+
+
+                <!-- ==================================================
+                     پوستر
+                ================================================== -->
+
+                <div class="card mb-4">
+
+                    <div class="card-header">
+
+                        <h5 class="mb-0">
+                            پوستر فیلم
+                        </h5>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+
+                        <!-- پوستر فعلی -->
+
+                        <div class="text-center mb-4">
+
+                            <p class="text-muted mb-2">
+                                پوستر فعلی
+                            </p>
+
+
+                            @if (!string.IsNullOrWhiteSpace(Model.ExistingPosterPath))
+                            {
+                                <img src="@Model.ExistingPosterPath"
+                                     alt="@Model.Title"
+                                     class="img-fluid rounded"
+                                     style="max-height:350px;object-fit:cover;" />
+                            }
+                            else
+                            {
+                                <div class="avatar avatar-xl mx-auto">
+
+                                    <span class="avatar-initial rounded bg-label-secondary">
+
+                                        <i class="bx bx-movie fs-2"></i>
+
+                                    </span>
+
+                                </div>
+                            }
+
+                        </div>
+
+
+                        <hr />
+
+
+                        <!-- پوستر جدید -->
+
+                        <div class="mb-3">
+
+                            <label asp-for="Poster"
+                                   class="form-label"></label>
+
+                            <input asp-for="Poster"
+                                   type="file"
+                                   class="form-control"
+                                   accept="image/*"
+                                   id="posterInput" />
+
+                            <span asp-validation-for="Poster"
+                                  class="text-danger"></span>
+
+                        </div>
+
+
+                        <!-- Preview -->
+
+                        <div class="text-center">
+
+                            <p id="previewTitle"
+                               class="text-muted d-none mb-2">
+
+                                پیش‌نمایش پوستر جدید
+
+                            </p>
+
+
+                            <img id="posterPreview"
+                                 src=""
+                                 class="img-fluid rounded d-none"
+                                 style="max-height:350px;object-fit:cover;" />
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+                <!-- ==================================================
+                     ذخیره
+                ================================================== -->
+
+                <div class="card">
+
+                    <div class="card-body">
+
+                        <button type="submit"
+                                class="btn btn-primary w-100">
+
+                            <i class="bx bx-save"></i>
+
+                            ذخیره تغییرات
+
+                        </button>
+
+
+                        <a asp-area="AdminPanel"
+                           asp-controller="Movie"
+                           asp-action="Index"
+                           class="btn btn-outline-secondary w-100 mt-2">
+
+                            انصراف
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+
+
+    <script>
+
+        // ==================================================
+        // Preview Poster
+        // ==================================================
+
+        document
+            .getElementById("posterInput")
+            ?.addEventListener("change", function(event) {
+
+                const file = event.target.files[0];
+
+                const preview =
+                    document.getElementById("posterPreview");
+
+                const previewTitle =
+                    document.getElementById("previewTitle");
+
+
+                if (file) {
+
+                    preview.src =
+                        URL.createObjectURL(file);
+
+                    preview.classList.remove("d-none");
+
+                    previewTitle.classList.remove("d-none");
+
+                }
+
+            });
+
+
+        // ==================================================
+        // فعال و غیرفعال کردن Select نقش
+        // ==================================================
+
+        document
+            .querySelectorAll(".cast-member-checkbox")
+            .forEach(function(checkbox) {
+
+                checkbox.addEventListener("change", function() {
+
+                    const card =
+                        checkbox.closest(".border");
+
+                    const select =
+                        card.querySelector(".cast-member-type");
+
+
+                    select.disabled = !checkbox.checked;
+
+                });
+
+            });
+
+    </script>
+}

@@ -1,0 +1,201 @@
+﻿@model List<Service.Admin.Blog.BlogPost.BlogPostListDto>
+
+@{
+    ViewData["Title"] = "مدیریت پست‌های وبلاگ";
+}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h4 class="mb-1">
+                مدیریت پست‌های وبلاگ
+            </h4>
+
+            <p class="text-muted mb-0">
+                مدیریت مطالب و پست‌های وبلاگ
+            </p>
+        </div>
+
+        <a asp-action="Create"
+           class="btn btn-primary">
+            افزودن پست جدید
+        </a>
+
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <div class="card">
+
+        <div class="card-body">
+
+            @if (Model.Count == 0)
+            {
+                <div class="alert alert-info mb-0">
+                    هنوز هیچ پستی ثبت نشده است.
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+
+                    <table class="table table-bordered table-hover align-middle">
+
+                        <thead>
+                            <tr>
+                                <th>
+                                    تصویر
+                                </th>
+
+                                <th>
+                                    عنوان
+                                </th>
+
+                                <th>
+                                    Slug
+                                </th>
+
+                                <th>
+                                    تاریخ انتشار
+                                </th>
+
+                                <th>
+                                    لایک
+                                </th>
+
+                                <th>
+                                    وضعیت
+                                </th>
+
+                                <th>
+                                    عملیات
+                                </th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+
+                                    <td style="width: 100px;">
+
+                                        <img src="@item.ImagePath"
+                                             alt="@item.Title"
+                                             class="img-thumbnail"
+                                             style="width: 80px; height: 60px; object-fit: cover;" />
+
+                                    </td>
+
+                                    <td>
+                                        @item.Title
+                                    </td>
+
+                                    <td>
+                                        @item.Slug
+                                    </td>
+
+                                    <td>
+                                        @item.PublishDate.ToString("yyyy/MM/dd HH:mm")
+                                    </td>
+
+                                    <td>
+                                        @item.LikeCount
+                                    </td>
+
+                                    <td>
+
+                                        @if (item.IsActive)
+                                        {
+                                            <span class="badge bg-success">
+                                                فعال
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">
+                                                غیرفعال
+                                            </span>
+                                        }
+
+                                    </td>
+
+                                    <td>
+
+                                        <a asp-action="Details"
+                                           asp-route-id="@item.Id"
+                                           class="btn btn-sm btn-info">
+                                            جزئیات
+                                        </a>
+
+                                        <a asp-action="Edit"
+                                           asp-route-id="@item.Id"
+                                           class="btn btn-sm btn-warning">
+                                            ویرایش
+                                        </a>
+
+                                        <form asp-action="ChangeStatus"
+                                              asp-route-id="@item.Id"
+                                              method="post"
+                                              class="d-inline">
+
+                                            @Html.AntiForgeryToken()
+
+                                            <button type="submit"
+                                                    class="btn btn-sm @(item.IsActive ? "btn-secondary" : "btn-success")">
+
+                                                @(item.IsActive
+                                                    ? "غیرفعال"
+                                                    : "فعال")
+
+                                            </button>
+
+                                        </form>
+
+                                        <form asp-action="Delete"
+                                              asp-route-id="@item.Id"
+                                              method="post"
+                                              class="d-inline">
+
+                                            @Html.AntiForgeryToken()
+
+                                            <button type="submit"
+                                                    class="btn btn-sm btn-danger"
+                                                    onclick="return confirm('آیا از حذف این پست اطمینان دارید؟');">
+                                                حذف
+                                            </button>
+
+                                        </form>
+
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+</div>

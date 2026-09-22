@@ -1,0 +1,130 @@
+﻿@* ==================================================
+   View - Language Create
+   Areas/AdminPanel/Views/Language/Create.cshtml
+   ================================================== *@
+
+@model Service.Admin.Movies.Language.LanguageCreateDto
+
+@{
+    ViewData["Title"] = "افزودن زبان";
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    @* ==================================================
+       Header
+       ================================================== *@
+
+    <div class="d-flex align-items-center mb-4">
+
+        <a asp-area="AdminPanel"
+           asp-controller="Language"
+           asp-action="Index"
+           class="btn btn-outline-secondary me-3">
+
+            <i class="bx bx-arrow-back"></i>
+
+        </a>
+
+        <div>
+
+            <h4 class="fw-bold mb-1">
+                افزودن زبان
+            </h4>
+
+            <p class="text-muted mb-0">
+                ثبت یک زبان جدید
+            </p>
+
+        </div>
+
+    </div>
+
+
+    @* ==================================================
+       Form
+       ================================================== *@
+
+    <div class="row">
+
+        <div class="col-md-8 col-lg-6">
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <h5 class="mb-0">
+                        اطلاعات زبان
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <form asp-area="AdminPanel"
+                          asp-controller="Language"
+                          asp-action="Create"
+                          method="post">
+
+                        @Html.AntiForgeryToken()
+
+                        <div asp-validation-summary="ModelOnly"
+                             class="text-danger mb-3">
+                        </div>
+
+
+                        <div class="mb-3">
+
+                            <label asp-for="Name"
+                                   class="form-label">
+                                نام زبان
+                            </label>
+
+                            <input asp-for="Name"
+                                   class="form-control"
+                                   placeholder="مثلاً فارسی" />
+
+                            <span asp-validation-for="Name"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+
+                        <div class="d-flex gap-2">
+
+                            <button type="submit"
+                                    class="btn btn-primary">
+
+                                <i class="bx bx-save me-1"></i>
+                                ذخیره زبان
+
+                            </button>
+
+                            <a asp-area="AdminPanel"
+                               asp-controller="Language"
+                               asp-action="Index"
+                               class="btn btn-outline-secondary">
+
+                                انصراف
+
+                            </a>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+}

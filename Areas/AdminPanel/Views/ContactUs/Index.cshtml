@@ -1,0 +1,197 @@
+﻿@model List<Service.Admin.Content.ContactUs.ContactUsListDto>
+
+@{
+    ViewData["Title"] = "تماس با ما";
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <!-- ==================================================
+         Header
+    ================================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h4 class="fw-bold mb-1">
+                تماس با ما
+            </h4>
+
+            <p class="text-muted mb-0">
+                مدیریت پیام‌های دریافتی و اطلاعات تماس
+            </p>
+
+        </div>
+
+        <a asp-area="AdminPanel"
+           asp-controller="ContactUsCard"
+           asp-action="Index"
+           class="btn btn-primary">
+
+            <i class="bx bx-id-card me-1"></i>
+
+            مدیریت کارت‌های تماس
+
+        </a>
+
+    </div>
+
+
+    <!-- ==================================================
+         Messages
+    ================================================== -->
+
+    <div class="card">
+
+        <div class="card-header">
+
+            <h5 class="mb-0">
+                پیام‌های دریافتی
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            @if (Model.Count == 0)
+            {
+                <div class="text-center py-5">
+
+                    <i class="bx bx-envelope"
+                       style="font-size: 50px;">
+                    </i>
+
+                    <h5 class="mt-3">
+                        هنوز پیامی دریافت نشده است.
+                    </h5>
+
+                    <p class="text-muted mb-0">
+                        پیام‌های ارسال‌شده از فرم تماس با ما
+                        در این قسمت نمایش داده می‌شوند.
+                    </p>
+
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    نام
+                                </th>
+
+                                <th>
+                                    ایمیل
+                                </th>
+
+                                <th>
+                                    تلفن
+                                </th>
+
+                                <th>
+                                    پیام
+                                </th>
+
+                                <th>
+                                    تاریخ
+                                </th>
+
+                                <th>
+                                    عملیات
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+
+                                    <td>
+                                        @item.FullName
+                                    </td>
+
+                                    <td>
+                                        @item.Email
+                                    </td>
+
+                                    <td>
+                                        @item.Phone
+                                    </td>
+
+                                    <td>
+
+                                        @if (item.Message.Length > 60)
+                                        {
+                                            @item.Message[..60]
+                                            <span>...</span>
+                                        }
+                                        else
+                                        {
+                                            @item.Message
+                                        }
+
+                                    </td>
+
+                                    <td>
+                                        @item.CreatedAt.ToString(
+                                            "yyyy/MM/dd HH:mm")
+                                    </td>
+
+                                    <td>
+
+                                        <div class="d-flex gap-2">
+
+                                            <a asp-action="Details"
+                                               asp-route-id="@item.Id"
+                                               class="btn btn-sm btn-info">
+
+                                                <i class="bx bx-show"></i>
+
+                                            </a>
+
+                                            <form asp-action="Delete"
+                                                  asp-route-id="@item.Id"
+                                                  method="post">
+
+                                                @Html.AntiForgeryToken()
+
+                                                <button type="submit"
+                                                        class="btn btn-sm btn-danger"
+                                                        onclick="return confirm('آیا از حذف این پیام مطمئن هستید؟');">
+
+                                                    <i class="bx bx-trash"></i>
+
+                                                </button>
+
+                                            </form>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+</div>

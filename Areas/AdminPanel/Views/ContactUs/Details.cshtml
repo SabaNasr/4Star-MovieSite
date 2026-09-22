@@ -1,0 +1,172 @@
+﻿@model Service.Admin.Content.ContactUs.ContactUsDetailsDto
+
+@{
+    ViewData["Title"] = "جزئیات پیام تماس";
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <!-- ==================================================
+         Header
+    ================================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h4 class="fw-bold mb-0">
+            جزئیات پیام تماس
+        </h4>
+
+        <a asp-action="Index"
+           class="btn btn-secondary">
+
+            <i class="bx bx-arrow-back me-1"></i>
+
+            بازگشت
+
+        </a>
+
+    </div>
+
+
+    <!-- ==================================================
+         Message Details
+    ================================================== -->
+
+    <div class="card">
+
+        <div class="card-body">
+
+            <div class="row g-4">
+
+                <!-- نام -->
+
+                <div class="col-md-6">
+
+                    <label class="form-label text-muted">
+                        نام و نام خانوادگی
+                    </label>
+
+                    <div class="fw-semibold">
+                        @Model.FullName
+                    </div>
+
+                </div>
+
+
+                <!-- ایمیل -->
+
+                <div class="col-md-6">
+
+                    <label class="form-label text-muted">
+                        ایمیل
+                    </label>
+
+                    <div class="fw-semibold">
+                        @Model.Email
+                    </div>
+
+                </div>
+
+
+                <!-- تلفن -->
+
+                <div class="col-md-6">
+
+                    <label class="form-label text-muted">
+                        تلفن
+                    </label>
+
+                    <div class="fw-semibold">
+                        @Model.Phone
+                    </div>
+
+                </div>
+
+
+                <!-- تاریخ ایجاد -->
+
+                <div class="col-md-6">
+
+                    <label class="form-label text-muted">
+                        تاریخ ارسال
+                    </label>
+
+                    <div class="fw-semibold">
+                        @Model.CreatedAt.ToString(
+                            "yyyy/MM/dd HH:mm")
+                    </div>
+
+                </div>
+
+
+                <!-- پیام -->
+
+                <div class="col-12">
+
+                    <label class="form-label text-muted">
+                        متن پیام
+                    </label>
+
+                    <div class="border rounded p-3"
+                         style="white-space: pre-wrap;">
+
+                        @Model.Message
+
+                    </div>
+
+                </div>
+
+
+                <!-- آخرین ویرایش -->
+                @if (Model.UpdatedAt.HasValue)
+                {
+                    <div class="col-md-6">
+
+                        <label class="form-label text-muted">
+                            آخرین ویرایش
+                        </label>
+
+                        <div class="fw-semibold">
+
+                            @Model.UpdatedAt.Value.ToString(
+                                "yyyy/MM/dd HH:mm")
+
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+
+
+            <!-- ==================================================
+                 Delete
+            ================================================== -->
+
+            <div class="d-flex justify-content-end mt-4">
+
+                <form asp-action="Delete"
+                      asp-route-id="@Model.Id"
+                      method="post">
+
+                    @Html.AntiForgeryToken()
+
+                    <button type="submit"
+                            class="btn btn-danger"
+                            onclick="return confirm('آیا از حذف این پیام مطمئن هستید؟');">
+
+                        <i class="bx bx-trash me-1"></i>
+
+                        حذف پیام
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

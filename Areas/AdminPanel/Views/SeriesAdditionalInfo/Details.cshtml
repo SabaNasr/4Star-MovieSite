@@ -1,0 +1,184 @@
+﻿@model Service.Admin.TvSeries.SeriesAdditionalInfo.SeriesAdditionalInfoDetailsDto
+
+@{
+    ViewData["Title"] = "جزئیات اطلاعات تکمیلی سریال";
+}
+
+<div class="container-fluid">
+
+    <!-- ==================================================
+         Header
+         ================================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h4 class="mb-1">
+                جزئیات اطلاعات تکمیلی سریال
+            </h4>
+
+            <p class="text-muted mb-0">
+                مشاهده اطلاعات تکمیلی سریال
+            </p>
+
+        </div>
+
+        <div class="d-flex gap-2">
+
+            <a asp-action="Edit"
+               asp-route-id="@Model.Id"
+               class="btn btn-warning">
+
+                <i class="bx bx-edit me-1"></i>
+                ویرایش
+
+            </a>
+
+            <a asp-action="Index"
+               class="btn btn-secondary">
+
+                <i class="bx bx-arrow-back me-1"></i>
+                بازگشت
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==================================================
+         Information
+         ================================================== -->
+
+    <div class="card mb-4">
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <!-- Series -->
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label text-muted">
+                        سریال
+                    </label>
+
+                    <div class="fw-bold">
+                        @Model.SeriesTitle
+                    </div>
+
+                </div>
+
+
+                <!-- Status -->
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label text-muted">
+                        وضعیت
+                    </label>
+
+                    <div>
+
+                        @if (Model.IsActive)
+                        {
+                            <span class="badge bg-success">
+                                فعال
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">
+                                غیرفعال
+                            </span>
+                        }
+
+                    </div>
+
+                </div>
+
+
+                <!-- Created -->
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label text-muted">
+                        تاریخ ایجاد
+                    </label>
+
+                    <div>
+
+                        @Model.CreatedAt
+                        .ToLocalTime()
+                        .ToString("yyyy/MM/dd HH:mm")
+
+                    </div>
+
+                </div>
+
+
+                <!-- Updated -->
+
+                <div class="col-md-6 mb-3">
+
+                    <label class="form-label text-muted">
+                        آخرین ویرایش
+                    </label>
+
+                    <div>
+
+                        @if (Model.UpdatedAt.HasValue)
+                        {
+                                @Model.UpdatedAt.Value.ToLocalTime().ToString("yyyy/MM/dd HH:mm")
+                        }
+                        else
+                        {
+                            <span class="text-muted">
+                                هنوز ویرایش نشده است
+                            </span>
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==================================================
+         Additional Information
+         ================================================== -->
+
+    <div class="card">
+
+        <div class="card-header">
+
+            <h5 class="mb-0">
+                اطلاعات تکمیلی سریال
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <div style="
+                direction: rtl;
+                text-align: right;
+                line-height: 2;">
+
+                @Html.Raw(Model.Content)
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

@@ -1,0 +1,89 @@
+﻿@model Service.Admin.Content.FAQ.FAQDetailsDto
+
+
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">جزئیات سوال متداول</h5>
+
+        <div class="d-flex gap-2">
+            <a asp-action="Edit"
+               asp-route-id="@Model.Id"
+               class="btn btn-warning">
+                ویرایش
+            </a>
+
+            <a asp-action="Index"
+               class="btn btn-secondary">
+                بازگشت
+            </a>
+        </div>
+    </div>
+
+    <div class="card-body">
+
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <strong>سوال:</strong>
+                <p class="mt-2">
+                    @Model.Question
+                </p>
+            </div>
+
+            <div class="col-md-3">
+                <strong>ترتیب:</strong>
+                <p class="mt-2">
+                    @Model.Order
+                </p>
+            </div>
+
+            <div class="col-md-3">
+                <strong>وضعیت:</strong>
+                <p class="mt-2">
+                    @if (Model.IsActive)
+                    {
+                        <span class="badge bg-success">
+                            فعال
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">
+                            غیرفعال
+                        </span>
+                    }
+                </p>
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="mb-4">
+            <strong>پاسخ:</strong>
+
+            <div class="border rounded p-3 mt-2">
+                @Model.Answer
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <strong>تاریخ ثبت:</strong>
+                <p class="mt-2">
+                    @Model.CreatedAt.ToLocalTime()
+                    .ToString("yyyy/MM/dd HH:mm")
+                </p>
+            </div>
+
+            <div class="col-md-6">
+                <strong>آخرین ویرایش:</strong>
+                <p class="mt-2">
+                    @(Model.UpdatedAt.HasValue
+                        ? Model.UpdatedAt.Value
+                            .ToLocalTime()
+                            .ToString("yyyy/MM/dd HH:mm")
+                        : "ویرایش نشده")
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

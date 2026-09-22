@@ -1,0 +1,298 @@
+﻿@model Service.Admin.TVShows.TVShowEpisode.TVShowEpisodeDetailsDto
+
+@{
+    ViewData["Title"] = "جزئیات قسمت تی‌وی شو";
+}
+
+<!-- ==================================================
+     Details - TVShowEpisode
+================================================== -->
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h4 class="fw-bold mb-1">
+                جزئیات قسمت
+            </h4>
+
+            <p class="text-muted mb-0">
+                @Model.TVShowTitle
+            </p>
+
+        </div>
+
+
+        <div class="d-flex gap-2">
+
+            <a asp-action="Edit"
+               asp-route-id="@Model.Id"
+               class="btn btn-primary">
+
+                <i class="bx bx-edit"></i>
+                ویرایش
+
+            </a>
+
+
+            <a asp-action="Index"
+               class="btn btn-outline-secondary">
+
+                <i class="bx bx-arrow-back"></i>
+                بازگشت
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="row">
+
+        <!-- تصویر -->
+
+        <div class="col-lg-4">
+
+            <div class="card mb-4">
+
+                <div class="card-header">
+
+                    <h5 class="mb-0">
+                        تصویر قسمت
+                    </h5>
+
+                </div>
+
+
+                <div class="card-body text-center">
+
+                    @if (!string.IsNullOrWhiteSpace(
+                        Model.ImagePath))
+                    {
+                        <img src="@Model.ImagePath"
+                             alt="@Model.Name"
+                             style="max-width:100%;max-height:500px;object-fit:contain;border-radius:8px;" />
+                    }
+                    else
+                    {
+                        <div class="text-muted py-5">
+                            تصویری ثبت نشده است.
+                        </div>
+                    }
+
+                </div>
+
+            </div>
+
+
+            <!-- وضعیت -->
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <h5 class="mb-0">
+                        وضعیت
+                    </h5>
+
+                </div>
+
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <span>
+                            وضعیت فعالیت
+                        </span>
+
+
+                        @if (Model.IsActive)
+                        {
+                            <span class="badge bg-label-success">
+                                فعال
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-label-secondary">
+                                غیرفعال
+                            </span>
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- اطلاعات -->
+
+        <div class="col-lg-8">
+
+            <div class="card mb-4">
+
+                <div class="card-header">
+
+                    <h5 class="mb-0">
+                        اطلاعات قسمت
+                    </h5>
+
+                </div>
+
+
+                <div class="card-body">
+
+                    <h3 class="mb-4">
+                        @Model.Name
+                    </h3>
+
+
+                    <div class="row">
+
+                        <div class="col-md-6 mb-4">
+
+                            <small class="text-muted d-block">
+                                تی‌وی شو
+                            </small>
+
+                            <strong>
+                                @Model.TVShowTitle
+                            </strong>
+
+                        </div>
+
+
+                        <div class="col-md-6 mb-4">
+
+                            <small class="text-muted d-block">
+                                فصل
+                            </small>
+
+                            <span class="badge bg-label-primary">
+                                فصل @Model.SeasonNumber
+                            </span>
+
+                        </div>
+
+
+                        <div class="col-md-6 mb-4">
+
+                            <small class="text-muted d-block">
+                                قسمت
+                            </small>
+
+                            <span class="badge bg-label-info">
+                                قسمت @Model.EpisodeNumber
+                            </span>
+
+                        </div>
+
+
+                        <div class="col-md-6 mb-4">
+
+                            <small class="text-muted d-block">
+                                لینک دانلود
+                            </small>
+
+                            @if (!string.IsNullOrWhiteSpace(
+                                Model.DownloadLink))
+                            {
+                                <a href="@Model.DownloadLink"
+                                   target="_blank"
+                                   rel="noopener noreferrer"
+                                   class="btn btn-sm btn-outline-primary">
+
+                                    <i class="bx bx-download"></i>
+                                    دانلود
+
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="text-muted">
+                                    ثبت نشده
+                                </span>
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- تاریخ‌ها -->
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <h5 class="mb-0">
+                        اطلاعات ثبت
+                    </h5>
+
+                </div>
+
+
+                <div class="card-body">
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+
+                            <small class="text-muted d-block">
+                                تاریخ ایجاد
+                            </small>
+
+                            <strong>
+                                @Model.CreatedAt
+                                .ToLocalTime()
+                                .ToString("yyyy/MM/dd HH:mm")
+                            </strong>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <small class="text-muted d-block">
+                                آخرین بروزرسانی
+                            </small>
+
+                            @if (Model.UpdatedAt.HasValue)
+                            {
+                                <strong>
+                                    @Model.UpdatedAt.Value
+                                    .ToLocalTime()
+                                    .ToString("yyyy/MM/dd HH:mm")
+                                </strong>
+                            }
+                            else
+                            {
+                                <span class="text-muted">
+                                    هنوز بروزرسانی نشده است.
+                                </span>
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

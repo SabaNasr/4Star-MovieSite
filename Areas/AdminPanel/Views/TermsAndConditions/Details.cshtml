@@ -1,0 +1,95 @@
+﻿@model Service.Admin.Content.TermsAndConditions.TermsAndConditionsDetailsDto
+
+@{
+    ViewData["Title"] = "جزئیات شرایط و ضوابط";
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <!-- ==================================================
+         Header
+    ================================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h4 class="fw-bold mb-0">
+            شرایط و ضوابط
+        </h4>
+
+        <div class="d-flex gap-2">
+
+            <a asp-action="Edit"
+               asp-route-id="@Model.Id"
+               class="btn btn-warning">
+
+                <i class="bx bx-edit me-1"></i>
+
+                ویرایش
+
+            </a>
+
+            <a asp-action="Index"
+               class="btn btn-secondary">
+
+                بازگشت
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==================================================
+         Content
+    ================================================== -->
+
+    <div class="card">
+
+        <div class="card-body">
+
+            <div class="mb-4">
+
+                <small class="text-muted">
+                    تاریخ ایجاد:
+                </small>
+
+                <span>
+                    @Model.CreatedAt.ToString(
+                        "yyyy/MM/dd HH:mm")
+                </span>
+
+            </div>
+
+
+            @if (Model.UpdatedAt.HasValue)
+            {
+                <div class="mb-4">
+
+                    <small class="text-muted">
+                        آخرین ویرایش:
+                    </small>
+
+                    <span>
+                        @Model.UpdatedAt.Value.ToString(
+                            "yyyy/MM/dd HH:mm")
+                    </span>
+
+                </div>
+            }
+
+
+            <hr />
+
+
+            <div class="terms-content">
+
+                @Html.Raw(Model.Content)
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

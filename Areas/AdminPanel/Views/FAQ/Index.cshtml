@@ -1,0 +1,123 @@
+﻿@model List<Service.Admin.Content.FAQ.FAQListDto>
+
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">مدیریت سوالات متداول</h5>
+
+        <div>
+            <a asp-area="AdminPanel"
+               asp-controller="UserQuestion"
+               asp-action="Index"
+               class="btn btn-outline-primary me-2">
+                سوالات کاربران
+            </a>
+
+            <a asp-area="AdminPanel"
+               asp-controller="FAQ"
+               asp-action="Create"
+               class="btn btn-primary">
+                افزودن سوال متداول
+            </a>
+        </div>
+    </div>
+
+    <div class="card-body">
+        @if (Model.Count == 0)
+        {
+            <div class="alert alert-info">
+                هنوز سوال متداولی ثبت نشده است.
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>ردیف</th>
+                            <th>سوال</th>
+                            <th>پاسخ</th>
+                            <th>وضعیت</th>
+                            <th>تاریخ ثبت</th>
+                            <th>عملیات</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var faq in Model)
+                        {
+                            <tr>
+                                <td>@faq.Order</td>
+
+                                <td>
+                                    @faq.Question
+                                </td>
+
+                                <td>
+                                    @(faq.Answer.Length > 100
+                                        ? faq.Answer.Substring(0, 100) + "..."
+                                        : faq.Answer)
+                                </td>
+
+                                <td>
+                                    @if (faq.IsActive)
+                                    {
+                                        <span class="badge bg-success">
+                                            فعال
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">
+                                            غیرفعال
+                                        </span>
+                                    }
+                                </td>
+
+                                <td>
+                                    @faq.CreatedAt.ToLocalTime()
+                                    .ToString("yyyy/MM/dd HH:mm")
+                                </td>
+
+                                <td>
+                                    <div class="d-flex gap-1">
+                                        <a asp-area="AdminPanel"
+                                           asp-controller="FAQ"
+                                           asp-action="Details"
+                                           asp-route-id="@faq.Id"
+                                           class="btn btn-sm btn-info">
+                                            جزئیات
+                                        </a>
+
+                                        <a asp-area="AdminPanel"
+                                           asp-controller="FAQ"
+                                           asp-action="Edit"
+                                           asp-route-id="@faq.Id"
+                                           class="btn btn-sm btn-warning">
+                                            ویرایش
+                                        </a>
+
+                                        <form asp-area="AdminPanel"
+                                              asp-controller="FAQ"
+                                              asp-action="ChangeStatus"
+                                              asp-route-id="@faq.Id"
+                                              method="post">
+                                            @Html.AntiForgeryToken()
+
+                                            <button type="submit"
+                                                    class="btn btn-sm btn-secondary">
+                                                @(faq.IsActive
+                                                    ? "غیرفعال"
+                                                    : "فعال")
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

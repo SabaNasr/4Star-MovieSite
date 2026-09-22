@@ -1,0 +1,618 @@
+﻿@model Service.Admin.TvSeries.Series.SeriesCreateDto
+
+@using DataBase.Enum
+
+@{
+    ViewData["Title"] = "افزودن سریال";
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h4 class="fw-bold mb-1">افزودن سریال</h4>
+            <p class="text-muted mb-0">
+                اطلاعات سریال جدید را وارد کنید.
+            </p>
+        </div>
+
+        <a asp-action="Index"
+           class="btn btn-outline-secondary">
+
+            <i class="bx bx-arrow-back"></i>
+            بازگشت
+
+        </a>
+
+    </div>
+
+
+    <form asp-action="Create"
+          method="post"
+          enctype="multipart/form-data">
+
+        @Html.AntiForgeryToken()
+
+        <div asp-validation-summary="ModelOnly"
+             class="text-danger mb-3">
+        </div>
+
+
+        <div class="row">
+
+            <!-- =============================== -->
+            <!-- اطلاعات اصلی -->
+            <!-- =============================== -->
+
+            <div class="col-lg-8">
+
+                <div class="card mb-4">
+
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            اطلاعات اصلی سریال
+                        </h5>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="mb-3">
+
+                            <label asp-for="Title"
+                                   class="form-label">
+                                عنوان سریال
+                            </label>
+
+                            <input asp-for="Title"
+                                   class="form-control"
+                                   placeholder="مثلاً Breaking Bad" />
+
+                            <span asp-validation-for="Title"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+
+                        <div class="mb-3">
+
+                            <label asp-for="ShortDescription"
+                                   class="form-label">
+                                توضیح کوتاه
+                            </label>
+
+                            <textarea asp-for="ShortDescription"
+                                      class="form-control"
+                                      rows="4"
+                                      placeholder="توضیح کوتاه سریال...">
+                            </textarea>
+
+                            <span asp-validation-for="ShortDescription"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+
+                        <div class="mb-3">
+
+                            <label asp-for="DownloadLink"
+                                   class="form-label">
+                                لینک دانلود
+                            </label>
+
+                            <input asp-for="DownloadLink"
+                                   type="url"
+                                   class="form-control"
+                                   placeholder="https://example.com/download/series" />
+
+                            <span asp-validation-for="DownloadLink"
+                                  class="text-danger">
+                            </span>
+
+                            <small class="text-muted">
+                                این فیلد اختیاری است.
+                            </small>
+
+                        </div>
+
+
+                        <div class="row">
+
+                            <div class="col-md-4 mb-3">
+
+                                <label asp-for="DurationMinutes"
+                                       class="form-label">
+                                    مدت هر قسمت
+                                </label>
+
+                                <input asp-for="DurationMinutes"
+                                       type="number"
+                                       class="form-control" />
+
+                                <span asp-validation-for="DurationMinutes"
+                                      class="text-danger">
+                                </span>
+
+                            </div>
+
+
+                            <div class="col-md-4 mb-3">
+
+                                <label asp-for="Year"
+                                       class="form-label">
+                                    سال
+                                </label>
+
+                                <input asp-for="Year"
+                                       type="number"
+                                       class="form-control" />
+
+                                <span asp-validation-for="Year"
+                                      class="text-danger">
+                                </span>
+
+                            </div>
+
+
+                            <div class="col-md-4 mb-3">
+
+                                <label asp-for="ImdbRating"
+                                       class="form-label">
+                                    IMDb
+                                </label>
+
+                                <input asp-for="ImdbRating"
+                                       type="number"
+                                       step="0.1"
+                                       class="form-control" />
+
+                                <span asp-validation-for="ImdbRating"
+                                      class="text-danger">
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="mb-3">
+
+                            <label asp-for="ViewCount"
+                                   class="form-label">
+                                تعداد بازدید
+                            </label>
+
+                            <input asp-for="ViewCount"
+                                   type="number"
+                                   class="form-control" />
+
+                            <span asp-validation-for="ViewCount"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =============================== -->
+                <!-- Genre -->
+                <!-- =============================== -->
+
+                <div class="card mb-4">
+
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            ژانرها
+                        </h5>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="row">
+
+                            @foreach (var genre in Model.Genres)
+                            {
+                                <div class="col-md-4 mb-2">
+
+                                    <div class="form-check">
+
+                                        <input class="form-check-input"
+                                               type="checkbox"
+                                               name="SelectedGenreIds"
+                                               value="@genre.Id"
+                                               id="genre_@genre.Id"
+                                        @(genre.IsSelected ? "checked" : "") />
+
+                                        <label class="form-check-label"
+                                               for="genre_@genre.Id">
+
+                                            @genre.Name
+
+                                        </label>
+
+                                    </div>
+
+                                </div>
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =============================== -->
+                <!-- Language -->
+                <!-- =============================== -->
+
+                <div class="card mb-4">
+
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            زبان‌ها
+                        </h5>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="row">
+
+                            @foreach (var language in Model.Languages)
+                            {
+                                <div class="col-md-4 mb-2">
+
+                                    <div class="form-check">
+
+                                        <input class="form-check-input"
+                                               type="checkbox"
+                                               name="SelectedLanguageIds"
+                                               value="@language.Id"
+                                               id="language_@language.Id"
+                                        @(language.IsSelected ? "checked" : "") />
+
+                                        <label class="form-check-label"
+                                               for="language_@language.Id">
+
+                                            @language.Name
+
+                                        </label>
+
+                                    </div>
+
+                                </div>
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =============================== -->
+                <!-- Quality -->
+                <!-- =============================== -->
+
+                <div class="card mb-4">
+
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            کیفیت‌های موجود
+                        </h5>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="row">
+
+                            @foreach (var quality in Enum.GetValues<Quality>())
+                            {
+                                <div class="col-md-3 mb-2">
+
+                                    <div class="form-check">
+
+                                        <input class="form-check-input"
+                                               type="checkbox"
+                                               name="AvailableQualities"
+                                               value="@quality"
+                                               id="quality_@quality"
+                                        @(Model.AvailableQualities.Contains(quality)
+                                            ? "checked"
+                                            : "") />
+
+                                        <label class="form-check-label"
+                                               for="quality_@quality">
+
+                                            @quality
+
+                                        </label>
+
+                                    </div>
+
+                                </div>
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =============================== -->
+                <!-- Cast -->
+                <!-- =============================== -->
+
+                <div class="card mb-4">
+
+                    <div class="card-header">
+
+                        <h5 class="mb-0">
+                            عوامل و بازیگران
+                        </h5>
+
+                    </div>
+
+                    <div class="card-body">
+
+                        @if (Model.CastMembers.Count == 0)
+                        {
+                            <div class="alert alert-warning mb-0">
+                                هنوز فردی در بخش عوامل ثبت نشده است.
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="table-responsive">
+
+                                <table class="table align-middle">
+
+                                    <thead>
+                                        <tr>
+
+                                            <th>
+                                                انتخاب
+                                            </th>
+
+                                            <th>
+                                                فرد
+                                            </th>
+
+                                            <th>
+                                                نقش
+                                            </th>
+
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+
+                                        @for (var i = 0; i < Model.CastMembers.Count; i++)
+                                        {
+                                            var cast = Model.CastMembers[i];
+
+                                            <tr>
+
+                                                <td>
+
+                                                    <input type="hidden"
+                                                           name="SelectedCastMembers.Index"
+                                                           value="@i" />
+
+                                                    <input type="hidden"
+                                                           name="SelectedCastMembers[@i].CastMemberId"
+                                                           value="@cast.Id" />
+
+                                                    <input type="checkbox"
+                                                           class="form-check-input cast-checkbox"
+                                                           data-index="@i"
+                                                           name="SelectedCastMembers[@i].IsSelected"
+                                                           value="true"
+                                                    @(cast.IsSelected ? "checked" : "") />
+
+                                                </td>
+
+
+                                                <td>
+
+                                                    <div class="d-flex align-items-center gap-2">
+
+                                                        @if (!string.IsNullOrWhiteSpace(cast.PhotoPath))
+                                                        {
+                                                            <img src="@cast.PhotoPath"
+                                                                 style="width:40px;height:40px;object-fit:cover;border-radius:50%;" />
+                                                        }
+
+                                                        <span>
+                                                            @cast.FullName
+                                                        </span>
+
+                                                    </div>
+
+                                                </td>
+
+
+                                                <td>
+
+                                                    <select name="SelectedCastMembers[@i].CastType"
+                                                            class="form-select cast-role"
+                                                            data-index="@i"
+                                                        @(cast.IsSelected ? "" : "disabled")>
+
+                                                        @foreach (var castType in Enum.GetValues<CastType>())
+                                                        {
+                                                            <option value="@castType"
+                                                                    selected="@(cast.CastType == castType)">
+
+                                                                @switch (castType)
+                                                                {
+                                                                    case CastType.Actor:
+                                                                        @:بازیگر
+                                                                        break;
+
+                                                                    case CastType.Director:
+                                                                        @:کارگردان
+                                                                        break;
+
+                                                                    case CastType.Writer:
+                                                                        @:نویسنده
+                                                                        break;
+
+                                                                    case CastType.Producer:
+                                                                        @:تهیه‌کننده
+                                                                        break;
+
+                                                                    case CastType.AssistantDirector:
+                                                                        @:دستیار کارگردان
+                                                                        break;
+                                                                }
+
+                                                            </option>
+                                                        }
+
+                                                    </select>
+
+                                                </td>
+
+                                            </tr>
+                                        }
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =============================== -->
+            <!-- Sidebar -->
+            <!-- =============================== -->
+
+            <div class="col-lg-4">
+
+                <div class="card mb-4">
+
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            پوستر سریال
+                        </h5>
+                    </div>
+
+                    <div class="card-body">
+
+                        <input asp-for="Poster"
+                               type="file"
+                               class="form-control"
+                               accept="image/*"
+                               id="posterInput" />
+
+                        <span asp-validation-for="Poster"
+                              class="text-danger">
+                        </span>
+
+                        <div class="mt-3 text-center">
+
+                            <img id="posterPreview"
+                                 src="#"
+                                 alt="پیش‌نمایش پوستر"
+                                 style="display:none;max-width:100%;max-height:350px;object-fit:contain;border-radius:8px;" />
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="card">
+
+                    <div class="card-body">
+
+                        <button type="submit"
+                                class="btn btn-primary w-100">
+
+                            <i class="bx bx-save"></i>
+                            ذخیره سریال
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+
+        document
+            .getElementById('posterInput')
+            ?.addEventListener('change', function(event) {
+
+                const file = event.target.files[0];
+
+                const preview =
+                    document.getElementById('posterPreview');
+
+                if (!file) {
+                    preview.style.display = 'none';
+                    return;
+                }
+
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+
+                reader.readAsDataURL(file);
+            });
+
+
+        document
+            .querySelectorAll('.cast-checkbox')
+            .forEach(function(checkbox) {
+
+                checkbox.addEventListener('change', function() {
+
+                    const index = this.dataset.index;
+
+                    const role =
+                        document.querySelector(
+                            '.cast-role[data-index="' + index + '"]'
+                        );
+
+                    if (role) {
+                        role.disabled = !this.checked;
+                    }
+
+                });
+
+            });
+
+    </script>
+}

@@ -1,0 +1,244 @@
+﻿@model Service.Admin.Movies.MovieDescription.MovieDescriptionDetailsDto
+
+@{
+    ViewData["Title"] = "جزئیات شرح فیلم";
+}
+
+<!-- ==================================================
+     View - MovieDescription Details
+================================================== -->
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h4 class="fw-bold py-3 mb-0">
+                شرح کامل فیلم
+            </h4>
+
+            <p class="text-muted mb-0">
+                @Model.MovieTitle
+            </p>
+
+        </div>
+
+
+        <div>
+
+            <a asp-area="AdminPanel"
+               asp-controller="MovieDescription"
+               asp-action="Edit"
+               asp-route-id="@Model.Id"
+               class="btn btn-primary me-2">
+
+                <i class="bx bx-edit-alt"></i>
+
+                ویرایش
+
+            </a>
+
+
+            <a asp-area="AdminPanel"
+               asp-controller="MovieDescription"
+               asp-action="Index"
+               class="btn btn-outline-secondary">
+
+                <i class="bx bx-arrow-back"></i>
+
+                بازگشت
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="row">
+
+        <!-- اطلاعات -->
+        <div class="col-lg-4">
+
+            <div class="card mb-4">
+
+                <div class="card-header">
+
+                    <h5 class="mb-0">
+                        اطلاعات شرح فیلم
+                    </h5>
+
+                </div>
+
+
+                <div class="card-body">
+
+                    <div class="mb-3">
+
+                        <small class="text-muted d-block">
+                            فیلم
+                        </small>
+
+                        <strong>
+                            @Model.MovieTitle
+                        </strong>
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <small class="text-muted d-block">
+                            وضعیت
+                        </small>
+
+                        @if (Model.IsActive)
+                        {
+                            <span class="badge bg-label-success">
+                                فعال
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-label-secondary">
+                                غیرفعال
+                            </span>
+                        }
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <small class="text-muted d-block">
+                            تاریخ ایجاد
+                        </small>
+
+                        @Model.CreatedAt
+                        .ToLocalTime()
+                        .ToString("yyyy/MM/dd HH:mm")
+
+                    </div>
+
+
+                    // تاریخ ویرایش
+                    <div>
+                        <strong>تاریخ ویرایش:</strong>
+
+                        @if (Model.UpdatedAt.HasValue)
+                        {
+                            @Model.UpdatedAt.Value.ToLocalTime().ToString("yyyy/MM/dd HH:mm")
+                        }
+                        else
+                        {
+                            <span>-</span>
+                        }
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- محتوای مقاله -->
+        <div class="col-lg-8">
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <h5 class="mb-0">
+                        محتوای کامل فیلم
+                    </h5>
+
+                </div>
+
+
+                <div class="card-body">
+
+                    <article class="movie-description-content">
+
+                        @Html.Raw(Model.Content)
+
+                    </article>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+@section Styles {
+
+    <style>
+
+        .movie-description-content {
+            direction: rtl;
+            text-align: right;
+            line-height: 2;
+            font-size: 16px;
+        }
+
+            .movie-description-content h1,
+            .movie-description-content h2,
+            .movie-description-content h3,
+            .movie-description-content h4,
+            .movie-description-content h5,
+            .movie-description-content h6 {
+                margin-top: 1.5rem;
+                margin-bottom: 1rem;
+                font-weight: 700;
+            }
+
+            .movie-description-content p {
+                margin-bottom: 1rem;
+            }
+
+            .movie-description-content img {
+                max-width: 100%;
+                height: auto;
+                display: block;
+                margin: 1rem auto;
+                border-radius: .5rem;
+            }
+
+            .movie-description-content ul,
+            .movie-description-content ol {
+                padding-right: 2rem;
+                margin-bottom: 1rem;
+            }
+
+            .movie-description-content a {
+                word-break: break-word;
+            }
+
+            .movie-description-content blockquote {
+                border-right: 4px solid #696cff;
+                padding: .75rem 1rem;
+                margin: 1rem 0;
+                background: #f8f8f8;
+            }
+
+            .movie-description-content .ql-align-center {
+                text-align: center;
+            }
+
+            .movie-description-content .ql-align-right {
+                text-align: right;
+            }
+
+            .movie-description-content .ql-align-justify {
+                text-align: justify;
+            }
+
+    </style>
+}

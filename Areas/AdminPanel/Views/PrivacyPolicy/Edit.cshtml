@@ -1,0 +1,157 @@
+﻿@model Service.Admin.Content.PrivacyPolicies.PrivacyPolicyEditDto
+
+@{
+    ViewData["Title"] = "ویرایش سیاست حفظ حریم خصوصی";
+}
+
+@section Styles
+{
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css"
+          rel="stylesheet" />
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h4 class="fw-bold mb-1">
+                ویرایش سیاست حفظ حریم خصوصی
+            </h4>
+
+            <p class="text-muted mb-0">
+                محتوای صفحه را ویرایش کنید.
+            </p>
+        </div>
+
+        <a asp-action="Index"
+           class="btn btn-secondary">
+            <i class="bx bx-arrow-back me-1"></i>
+            بازگشت
+        </a>
+
+    </div>
+
+    <form asp-action="Edit"
+          method="post">
+
+        @Html.AntiForgeryToken()
+
+        <input asp-for="Id" type="hidden" />
+
+        <div asp-validation-summary="ModelOnly"
+             class="text-danger mb-3">
+        </div>
+
+        <div class="card">
+
+            <div class="card-header">
+                <h5 class="mb-0">
+                    متن سیاست حفظ حریم خصوصی
+                </h5>
+            </div>
+
+            <div class="card-body">
+
+                <div id="editor"
+                     style="min-height: 450px;">
+                </div>
+
+                <textarea asp-for="Content"
+                          id="Content"
+                          class="d-none">
+                </textarea>
+
+                <span asp-validation-for="Content"
+                      class="text-danger">
+                </span>
+
+            </div>
+
+            <div class="card-footer d-flex justify-content-end">
+
+                <a asp-action="Index"
+                   class="btn btn-secondary me-2">
+                    انصراف
+                </a>
+
+                <button type="submit"
+                        class="btn btn-primary">
+                    <i class="bx bx-save me-1"></i>
+                    ذخیره تغییرات
+                </button>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+
+    <script>
+
+        const quill = new Quill('#editor', {
+            theme: 'snow',
+            placeholder: 'متن سیاست حفظ حریم خصوصی را وارد کنید...',
+            modules: {
+                toolbar: [
+                    [
+                        {
+                            header: [1, 2, 3, 4, 5, 6, false]
+                        }
+                    ],
+                    [
+                        'bold',
+                        'italic',
+                        'underline'
+                    ],
+                    [
+                        {
+                            list: 'ordered'
+                        },
+                        {
+                            list: 'bullet'
+                        }
+                    ],
+                    [
+                        {
+                            align: []
+                        }
+                    ],
+                    [
+                        'link',
+                        'image'
+                    ],
+                    [
+                        'clean'
+                    ]
+                ]
+            }
+        });
+
+        const existingContent =
+            document.getElementById('Content').value;
+
+        quill.root.innerHTML =
+            existingContent;
+
+        const contentInput =
+            document.getElementById('Content');
+
+        document.querySelector('form')
+            .addEventListener('submit', function() {
+
+                contentInput.value =
+                    quill.root.innerHTML;
+
+            });
+
+    </script>
+}

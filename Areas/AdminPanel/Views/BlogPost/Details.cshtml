@@ -1,0 +1,289 @@
+﻿@model Service.Admin.Blog.BlogPost.BlogPostDetailsDto
+
+@{
+    ViewData["Title"] = "جزئیات پست وبلاگ";
+}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h4 class="mb-1">
+                جزئیات پست وبلاگ
+            </h4>
+
+            <p class="text-muted mb-0">
+                @Model.Title
+            </p>
+        </div>
+
+        <div>
+
+            <a asp-action="Edit"
+               asp-route-id="@Model.Id"
+               class="btn btn-warning">
+                ویرایش
+            </a>
+
+            <a asp-action="Index"
+               class="btn btn-secondary">
+                بازگشت
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-lg-4">
+
+            <div class="card mb-4">
+
+                <div class="card-body text-center">
+
+                    <img src="@Model.ImagePath"
+                         alt="@Model.Title"
+                         class="img-fluid rounded"
+                         style="max-height: 350px;" />
+
+                </div>
+
+            </div>
+
+            <div class="card mb-4">
+
+                <div class="card-header">
+                    وضعیت
+                </div>
+
+                <div class="card-body">
+
+                    <div class="mb-3">
+
+                        <strong>
+                            وضعیت:
+                        </strong>
+
+                        @if (Model.IsActive)
+                        {
+                            <span class="badge bg-success">
+                                فعال
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">
+                                غیرفعال
+                            </span>
+                        }
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <strong>
+                            وضعیت آرشیو:
+                        </strong>
+
+                        @if (Model.IsArchived)
+                        {
+                            <span class="badge bg-warning">
+                                آرشیو شده
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-success">
+                                عادی
+                            </span>
+                        }
+
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            تعداد لایک:
+                        </strong>
+
+                        @Model.LikeCount
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-8">
+
+            <div class="card mb-4">
+
+                <div class="card-header">
+                    اطلاعات پست
+                </div>
+
+                <div class="card-body">
+
+                    <div class="row">
+
+                        <div class="col-md-6 mb-3">
+
+                            <strong>
+                                عنوان:
+                            </strong>
+
+                            <div>
+                                @Model.Title
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+
+                            <strong>
+                                Slug:
+                            </strong>
+
+                            <div>
+                                @Model.Slug
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+
+                            <strong>
+                                تاریخ انتشار:
+                            </strong>
+
+                            <div>
+                                @Model.PublishDate.ToString("yyyy/MM/dd HH:mm")
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+
+                            <strong>
+                                تعداد لایک:
+                            </strong>
+
+                            <div>
+                                @Model.LikeCount
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="card mb-4">
+
+                <div class="card-header">
+                    دسته‌بندی‌ها
+                </div>
+
+                <div class="card-body">
+
+                    @if (Model.Categories.Count == 0)
+                    {
+                        <span class="text-muted">
+                            بدون دسته‌بندی
+                        </span>
+                    }
+                    else
+                    {
+                        @foreach (var category in Model.Categories)
+                        {
+                            <span class="badge bg-primary me-1 mb-1">
+                                @category
+                            </span>
+                        }
+                    }
+
+                </div>
+
+            </div>
+
+            <div class="card mb-4">
+
+                <div class="card-header">
+                    توضیح کوتاه
+                </div>
+
+                <div class="card-body">
+
+                    @Model.ShortDescription
+
+                </div>
+
+            </div>
+
+            <div class="card mb-4">
+
+                <div class="card-header">
+                    محتوای کامل
+                </div>
+
+                <div class="card-body">
+
+                    <div class="blog-content">
+
+                        @Html.Raw(Model.Content)
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="card">
+
+                <div class="card-header">
+                    اطلاعات ثبت
+                </div>
+
+                <div class="card-body">
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+
+                            <strong>
+                                تاریخ ایجاد:
+                            </strong>
+
+                            @Model.CreatedAt.ToString("yyyy/MM/dd HH:mm")
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <strong>
+                                آخرین ویرایش:
+                            </strong>
+
+                            @(Model.UpdatedAt.HasValue
+                                ? Model.UpdatedAt.Value.ToString("yyyy/MM/dd HH:mm")
+                                : "بدون ویرایش")
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

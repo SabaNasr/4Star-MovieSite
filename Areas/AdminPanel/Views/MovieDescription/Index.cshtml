@@ -1,0 +1,164 @@
+﻿@model List<Service.Admin.Movies.MovieDescription.MovieDescriptionListDto>
+
+@{
+    ViewData["Title"] = "شرح کامل فیلم‌ها";
+}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h4 class="mb-1">
+                شرح کامل فیلم‌ها
+            </h4>
+
+            <p class="text-muted mb-0">
+                مدیریت متن و محتوای اصلی و توضیحات کامل فیلم‌ها
+            </p>
+        </div>
+
+        <a asp-action="Create"
+           class="btn btn-primary">
+            افزودن اولین شرح فیلم
+        </a>
+
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (Model.Count == 0)
+    {
+        <div class="card">
+
+            <div class="card-body text-center py-5">
+
+                <h5 class="mb-3">
+                    هنوز شرح کاملی برای هیچ فیلمی ثبت نشده است.
+                </h5>
+
+                <a asp-action="Create"
+                   class="btn btn-primary">
+                    افزودن اولین شرح فیلم
+                </a>
+
+            </div>
+
+        </div>
+    }
+    else
+    {
+        <div class="card">
+
+            <div class="card-body">
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle">
+
+                        <thead>
+                            <tr>
+                                <th>
+                                    فیلم
+                                </th>
+
+                                <th>
+                                    وضعیت
+                                </th>
+
+                                <th>
+                                    تاریخ ثبت
+                                </th>
+
+                                <th>
+                                    تاریخ ویرایش
+                                </th>
+
+                                <th>
+                                    عملیات
+                                </th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+
+                                    <td>
+                                        <strong>
+                                            @item.MovieTitle
+                                        </strong>
+                                    </td>
+
+                                    <td>
+
+                                        @if (item.IsActive)
+                                        {
+                                            <span class="badge bg-success">
+                                                فعال
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">
+                                                غیرفعال
+                                            </span>
+                                        }
+
+                                    </td>
+
+                                    <td>
+                                        @item.CreatedAt.ToLocalTime().ToString("yyyy/MM/dd HH:mm")
+                                    </td>
+
+                                    <td>
+
+                                        @if (item.UpdatedAt.HasValue)
+                                        {
+                                            @item.UpdatedAt.Value.ToLocalTime().ToString("yyyy/MM/dd HH:mm")
+                                        }
+                                        else
+                                        {
+                                            <span>-</span>
+                                        }
+
+                                    </td>
+
+                                    <td>
+
+                                        <a asp-action="Details"
+                                           asp-route-id="@item.Id"
+                                           class="btn btn-sm btn-info">
+                                            جزئیات
+                                        </a>
+
+                                        <a asp-action="Edit"
+                                           asp-route-id="@item.Id"
+                                           class="btn btn-sm btn-warning">
+                                            ویرایش
+                                        </a>
+
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+    }
+
+</div>

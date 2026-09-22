@@ -1,0 +1,278 @@
+﻿@model Service.Admin.TvSeries.SeriesDescription.SeriesDescriptionCreateDto
+
+@{
+    ViewData["Title"] = "افزودن شرح کامل سریال";
+}
+
+@section Styles
+{
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css"
+          rel="stylesheet" />
+
+    <style>
+        #editor {
+            min-height: 400px;
+            direction: rtl;
+            text-align: right;
+        }
+
+            #editor .ql-editor {
+                min-height: 400px;
+                direction: rtl;
+                text-align: right;
+            }
+
+        .ql-toolbar {
+            direction: ltr;
+        }
+    </style>
+}
+
+<div class="container-fluid">
+
+    <!-- ==================================================
+         Header
+         ================================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h4 class="mb-1">
+                افزودن شرح کامل سریال
+            </h4>
+
+            <p class="text-muted mb-0">
+                ثبت محتوای کامل سریال
+            </p>
+        </div>
+
+        <a asp-action="Index"
+           class="btn btn-secondary">
+
+            <i class="bx bx-arrow-back me-1"></i>
+            بازگشت
+
+        </a>
+
+    </div>
+
+
+    <!-- ==================================================
+         Form
+         ================================================== -->
+
+    <div class="card">
+
+        <div class="card-body">
+
+            <form asp-action="Create"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger mb-3">
+                </div>
+
+
+                <!-- ==================================================
+                     Series
+                     ================================================== -->
+
+                <div class="mb-4">
+
+                    <label asp-for="SeriesId"
+                           class="form-label">
+                        سریال
+                    </label>
+
+                    <select asp-for="SeriesId"
+                            class="form-select">
+
+                        <option value="">
+                            -- انتخاب سریال --
+                        </option>
+
+                        @foreach (var series in Model.Series)
+                        {
+                            <option value="@series.Id">
+                                @series.Title
+                            </option>
+                        }
+
+                    </select>
+
+                    <span asp-validation-for="SeriesId"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+
+                <!-- ==================================================
+                     Content
+                     ================================================== -->
+
+                <div class="mb-4">
+
+                    <label class="form-label">
+                        شرح کامل سریال
+                    </label>
+
+                    <div id="toolbar">
+
+                        <span class="ql-formats">
+
+                            <select class="ql-header">
+                                <option selected></option>
+                                <option value="1"></option>
+                                <option value="2"></option>
+                                <option value="3"></option>
+                                <option value="4"></option>
+                                <option value="5"></option>
+                                <option value="6"></option>
+                            </select>
+
+                        </span>
+
+                        <span class="ql-formats">
+
+                            <button class="ql-bold"></button>
+                            <button class="ql-italic"></button>
+                            <button class="ql-underline"></button>
+
+                        </span>
+
+                        <span class="ql-formats">
+
+                            <button class="ql-list"
+                                    value="ordered">
+                            </button>
+
+                            <button class="ql-list"
+                                    value="bullet">
+                            </button>
+
+                        </span>
+
+                        <span class="ql-formats">
+
+                            <select class="ql-align">
+                            </select>
+
+                        </span>
+
+                        <span class="ql-formats">
+
+                            <button class="ql-link"></button>
+                            <button class="ql-image"></button>
+
+                        </span>
+
+                        <span class="ql-formats">
+
+                            <button class="ql-clean"></button>
+
+                        </span>
+
+                    </div>
+
+                    <div id="editor"></div>
+
+                    <textarea asp-for="Content"
+                              id="Content"
+                              hidden>
+                    </textarea>
+
+                    <span asp-validation-for="Content"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+
+                <!-- ==================================================
+                     Buttons
+                     ================================================== -->
+
+                <div class="d-flex gap-2">
+
+                    <button type="submit"
+                            class="btn btn-primary">
+
+                        <i class="bx bx-save me-1"></i>
+                        ذخیره
+
+                    </button>
+
+                    <a asp-action="Index"
+                       class="btn btn-secondary">
+
+                        انصراف
+
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const textarea =
+                document.getElementById("Content");
+
+            const quill =
+                new Quill("#editor", {
+
+                    theme: "snow",
+
+                    modules: {
+                        toolbar: "#toolbar"
+                    },
+
+                    formats: [
+                        "header",
+                        "bold",
+                        "italic",
+                        "underline",
+                        "list",
+                        "align",
+                        "link",
+                        "image"
+                    ]
+
+                });
+
+            if (textarea.value) {
+                quill.root.innerHTML =
+                    textarea.value;
+            }
+
+            const form =
+                document.querySelector("form");
+
+            form.addEventListener("submit", function () {
+
+                textarea.value =
+                    quill.root.innerHTML;
+
+            });
+
+        });
+
+    </script>
+}

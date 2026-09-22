@@ -1,0 +1,142 @@
+﻿@model List<Service.Admin.Movies.CastMember.CastMemberListDto>
+
+@{
+    ViewData["Title"] = "عوامل فیلم";
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="fw-bold mb-1">عوامل فیلم</h4>
+            <p class="text-muted mb-0">
+                مدیریت بازیگران، کارگردانان و سایر عوامل
+            </p>
+        </div>
+
+        <a asp-area="AdminPanel"
+           asp-controller="CastMember"
+           asp-action="Create"
+           class="btn btn-primary">
+            <i class="bx bx-plus me-1"></i>
+            افزودن شخص
+        </a>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <div class="card">
+        <div class="card-body">
+
+            @if (!Model.Any())
+            {
+                <div class="text-center py-5">
+                    <h5>هنوز شخصی ثبت نشده است.</h5>
+                </div>
+            }
+            else
+            {
+                <div class="row g-4">
+
+                    @foreach (var item in Model)
+                    {
+                        <div class="col-md-6 col-lg-4">
+
+                            <div class="card h-100 shadow-sm">
+
+                                <div class="text-center pt-4">
+
+                                    @if (!string.IsNullOrEmpty(item.PhotoPath))
+                                    {
+                                        <img src="@item.PhotoPath"
+                                             alt="@item.FullName"
+                                             class="rounded-circle"
+                                             style="width:120px;height:120px;object-fit:cover;" />
+                                    }
+                                    else
+                                    {
+                                        <div class="rounded-circle bg-label-secondary d-inline-flex align-items-center justify-content-center"
+                                             style="width:120px;height:120px;">
+                                            <i class="bx bx-user fs-1"></i>
+                                        </div>
+                                    }
+
+                                </div>
+
+                                <div class="card-body text-center">
+
+                                    <h5 class="card-title mb-2">
+                                        @item.FullName
+                                    </h5>
+
+                                    @if (item.IsActive)
+                                    {
+                                        <span class="badge bg-label-success">
+                                            فعال
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-label-secondary">
+                                            غیرفعال
+                                        </span>
+                                    }
+
+                                    <div class="d-flex justify-content-center gap-2 mt-4">
+
+                                        <a asp-action="Details"
+                                           asp-route-id="@item.Id"
+                                           class="btn btn-sm btn-outline-info">
+                                            جزئیات
+                                        </a>
+
+                                        <a asp-action="Edit"
+                                           asp-route-id="@item.Id"
+                                           class="btn btn-sm btn-outline-primary">
+                                            ویرایش
+                                        </a>
+
+                                        <form asp-action="ChangeStatus"
+                                              method="post">
+
+                                            @Html.AntiForgeryToken()
+
+                                            <input type="hidden"
+                                                   name="id"
+                                                   value="@item.Id" />
+
+                                            <button type="submit"
+                                                    class="btn btn-sm btn-outline-warning">
+                                                @(item.IsActive ? "غیرفعال" : "فعال")
+                                            </button>
+
+                                        </form>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    }
+
+                </div>
+            }
+
+        </div>
+    </div>
+
+</div>

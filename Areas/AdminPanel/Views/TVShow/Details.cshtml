@@ -1,0 +1,616 @@
+﻿@model Service.Admin.TVShows.TvShow.TVShowDetailsDto
+
+@using DataBase.Enum
+
+@{
+    ViewData["Title"] = "جزئیات برنامه تلویزیونی";
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <!-- ==================================================
+         Header
+    ================================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h4 class="fw-bold mb-1">
+                جزئیات برنامه تلویزیونی
+            </h4>
+
+            <p class="text-muted mb-0">
+                @Model.Title
+            </p>
+
+        </div>
+
+
+        <div class="d-flex gap-2">
+
+            <a asp-action="Edit"
+               asp-route-id="@Model.Id"
+               class="btn btn-primary">
+
+                <i class="bx bx-edit me-1"></i>
+
+                ویرایش
+
+            </a>
+
+            <a asp-action="Index"
+               class="btn btn-outline-secondary">
+
+                بازگشت
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="row">
+
+        <!-- ==================================================
+             Poster + Status
+        ================================================== -->
+
+        <div class="col-lg-4">
+
+            <div class="card mb-4">
+
+                <div class="card-body text-center">
+
+                    @if (!string.IsNullOrWhiteSpace(
+                        Model.PosterPath))
+                    {
+                        <img src="@Model.PosterPath"
+                             alt="@Model.Title"
+                             class="img-fluid rounded"
+                             style="max-height:500px;" />
+                    }
+                    else
+                    {
+                        <div class="alert alert-secondary">
+                            پوستر ثبت نشده است.
+                        </div>
+                    }
+
+                </div>
+
+            </div>
+
+
+            <!-- ==================================================
+                 Status
+            ================================================== -->
+
+            <div class="card mb-4">
+
+                <div class="card-header">
+
+                    <h5 class="mb-0">
+                        وضعیت
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <div class="mb-3">
+
+                        <span class="text-muted">
+                            وضعیت فعال بودن:
+                        </span>
+
+                        @if (Model.IsActive)
+                        {
+                            <span class="badge bg-success">
+                                فعال
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">
+                                غیرفعال
+                            </span>
+                        }
+
+                    </div>
+
+
+                    <div>
+
+                        <span class="text-muted">
+                            وضعیت آرشیو:
+                        </span>
+
+                        @if (Model.IsArchived)
+                        {
+                            <span class="badge bg-warning">
+                                آرشیو شده
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-success">
+                                عادی
+                            </span>
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ==================================================
+             Main Information
+        ================================================== -->
+
+        <div class="col-lg-8">
+
+            <div class="card mb-4">
+
+                <div class="card-header">
+
+                    <h5 class="mb-0">
+                        اطلاعات برنامه تلویزیونی
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <div class="row">
+
+                        <div class="col-md-6 mb-3">
+
+                            <small class="text-muted">
+                                عنوان
+                            </small>
+
+                            <div class="fw-semibold">
+                                @Model.Title
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-3 mb-3">
+
+                            <small class="text-muted">
+                                سال
+                            </small>
+
+                            <div class="fw-semibold">
+                                @Model.Year
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-3 mb-3">
+
+                            <small class="text-muted">
+                                IMDb
+                            </small>
+
+                            <div>
+
+                                <span class="badge bg-label-warning">
+                                    @Model.ImdbRating
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-4 mb-3">
+
+                            <small class="text-muted">
+                                مدت
+                            </small>
+
+                            <div class="fw-semibold">
+                                @Model.DurationMinutes دقیقه
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-4 mb-3">
+
+                            <small class="text-muted">
+                                بازدید
+                            </small>
+
+                            <div class="fw-semibold">
+                                @Model.ViewCount
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-4 mb-3">
+
+                            <small class="text-muted">
+                                تعداد قسمت
+                            </small>
+
+                            <div class="fw-semibold">
+
+                                <span class="badge bg-label-info">
+                                    @Model.EpisodeCount قسمت
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <hr />
+
+
+                    <div class="mb-4">
+
+                        <h6>
+                            توضیح کوتاه
+                        </h6>
+
+                        <p class="mb-0">
+                            @Model.ShortDescription
+                        </p>
+
+                    </div>
+
+
+                    @if (!string.IsNullOrWhiteSpace(
+                        Model.DownloadLink))
+                    {
+                        <div>
+
+                            <h6>
+                                لینک دانلود
+                            </h6>
+
+                            <a href="@Model.DownloadLink"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               class="btn btn-outline-primary">
+
+                                <i class="bx bx-download me-1"></i>
+
+                                دانلود
+
+                            </a>
+
+                        </div>
+                    }
+
+                </div>
+
+            </div>
+
+
+            <!-- ==================================================
+                 Genres
+            ================================================== -->
+
+            <div class="card mb-4">
+
+                <div class="card-header">
+
+                    <h5 class="mb-0">
+                        ژانرها
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    @if (Model.Genres.Any())
+                    {
+                        @foreach (var genre in Model.Genres)
+                        {
+                            <span class="badge bg-label-primary me-1 mb-1">
+                                @genre
+                            </span>
+                        }
+                    }
+                    else
+                    {
+                        <span class="text-muted">
+                            ژانری ثبت نشده است.
+                        </span>
+                    }
+
+                </div>
+
+            </div>
+
+
+            <!-- ==================================================
+                 Languages
+            ================================================== -->
+
+            <div class="card mb-4">
+
+                <div class="card-header">
+
+                    <h5 class="mb-0">
+                        زبان‌ها
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    @if (Model.Languages.Any())
+                    {
+                        @foreach (var language in Model.Languages)
+                        {
+                            <span class="badge bg-label-info me-1 mb-1">
+                                @language
+                            </span>
+                        }
+                    }
+                    else
+                    {
+                        <span class="text-muted">
+                            زبانی ثبت نشده است.
+                        </span>
+                    }
+
+                </div>
+
+            </div>
+
+
+            <!-- ==================================================
+                 Quality
+            ================================================== -->
+
+            <div class="card mb-4">
+
+                <div class="card-header">
+
+                    <h5 class="mb-0">
+                        کیفیت‌های موجود
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    @if (Model.AvailableQualities.Any())
+                    {
+                        @foreach (var quality
+                                 in Model.AvailableQualities)
+                        {
+                            <span class="badge bg-label-success me-1 mb-1">
+                                @quality
+                            </span>
+                        }
+                    }
+                    else
+                    {
+                        <span class="text-muted">
+                            کیفیتی ثبت نشده است.
+                        </span>
+                    }
+
+                </div>
+
+            </div>
+
+
+            <!-- ==================================================
+                 Cast
+            ================================================== -->
+
+            <div class="card mb-4">
+
+                <div class="card-header">
+
+                    <h5 class="mb-0">
+                        بازیگران و عوامل
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    @if (Model.CastMembers.Any())
+                    {
+                        <div class="table-responsive">
+
+                            <table class="table table-hover align-middle mb-0">
+
+                                <thead>
+
+                                    <tr>
+
+                                        <th>
+                                            شخص
+                                        </th>
+
+                                        <th>
+                                            نقش
+                                        </th>
+
+                                    </tr>
+
+                                </thead>
+
+                                <tbody>
+
+                                    @foreach (var cast
+                                             in Model.CastMembers)
+                                    {
+                                        <tr>
+
+                                            <td>
+
+                                                <div class="d-flex align-items-center">
+
+                                                    @if (!string.IsNullOrWhiteSpace(
+                                                        cast.PhotoPath))
+                                                    {
+                                                        <img src="@cast.PhotoPath"
+                                                             style="width:45px;height:45px;object-fit:cover;"
+                                                             class="rounded-circle me-2" />
+                                                    }
+
+                                                    <span>
+                                                        @cast.FullName
+                                                    </span>
+
+                                                </div>
+
+                                            </td>
+
+
+                                            <td>
+
+                                                @switch (cast.CastType)
+                                                {
+                                                    case CastType.Actor:
+
+                                                        <span class="badge bg-label-primary">
+                                                            بازیگر
+                                                        </span>
+
+                                                        break;
+
+                                                    case CastType.Director:
+
+                                                        <span class="badge bg-label-info">
+                                                            کارگردان
+                                                        </span>
+
+                                                        break;
+
+                                                    case CastType.Writer:
+
+                                                        <span class="badge bg-label-success">
+                                                            نویسنده
+                                                        </span>
+
+                                                        break;
+
+                                                    case CastType.Producer:
+
+                                                        <span class="badge bg-label-warning">
+                                                            تهیه‌کننده
+                                                        </span>
+
+                                                        break;
+
+                                                    case CastType.AssistantDirector:
+
+                                                        <span class="badge bg-label-secondary">
+                                                            دستیار کارگردان
+                                                        </span>
+
+                                                        break;
+                                                }
+
+                                            </td>
+
+                                        </tr>
+                                    }
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+                    }
+                    else
+                    {
+                        <span class="text-muted">
+                            بازیگر یا عاملی ثبت نشده است.
+                        </span>
+                    }
+
+                </div>
+
+            </div>
+
+
+            <!-- ==================================================
+                 Dates
+            ================================================== -->
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <h5 class="mb-0">
+                        اطلاعات ثبت
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+
+                            <small class="text-muted d-block">
+                                تاریخ ایجاد
+                            </small>
+
+                            <strong>
+                                @Model.CreatedAt
+                                .ToLocalTime()
+                                .ToString("yyyy/MM/dd HH:mm")
+                            </strong>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <small class="text-muted d-block">
+                                آخرین بروزرسانی
+                            </small>
+
+                            @if (Model.UpdatedAt.HasValue)
+                            {
+                                <strong>
+                                    @Model.UpdatedAt.Value
+                                    .ToLocalTime()
+                                    .ToString("yyyy/MM/dd HH:mm")
+                                </strong>
+                            }
+                            else
+                            {
+                                <span class="text-muted">
+                                    هنوز بروزرسانی نشده است.
+                                </span>
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

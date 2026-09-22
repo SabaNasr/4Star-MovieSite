@@ -1,0 +1,190 @@
+﻿@model Service.Admin.TvSeries.Episodes.EpisodeCreateDto
+@{
+    ViewData["Title"] = "افزودن قسمت";
+}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h4 class="mb-1">
+                افزودن قسمت
+            </h4>
+
+            <p class="text-muted mb-0">
+                افزودن قسمت جدید به یک فصل
+            </p>
+
+        </div>
+
+        <a asp-action="Index"
+           class="btn btn-secondary">
+
+            <i class="bx bx-arrow-back"></i>
+            بازگشت
+
+        </a>
+
+    </div>
+
+    <div asp-validation-summary="ModelOnly"
+         class="text-danger mb-3">
+    </div>
+
+    <form asp-action="Create"
+          method="post">
+
+        @Html.AntiForgeryToken()
+
+        <div class="row">
+
+            <div class="col-md-8">
+
+                <div class="card mb-4">
+
+                    <div class="card-header">
+
+                        <h5 class="mb-0">
+                            اطلاعات قسمت
+                        </h5>
+
+                    </div>
+
+                    <div class="card-body">
+
+                        <!-- فصل -->
+                        <div class="mb-3">
+
+                            <label asp-for="SeasonId"
+                                   class="form-label">
+
+                                فصل
+
+                            </label>
+
+                            <select asp-for="SeasonId"
+                                    class="form-select">
+
+                                <option value="">
+                                    انتخاب فصل
+                                </option>
+
+                                @foreach (var season in Model.Seasons)
+                                {
+                                    <option value="@season.Id">
+
+                                        @season.SeriesTitle -
+                                        @season.Name
+
+                                    </option>
+                                }
+
+                            </select>
+
+                            <span asp-validation-for="SeasonId"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+                        <!-- نام قسمت -->
+                        <div class="mb-3">
+
+                            <label asp-for="Name"
+                                   class="form-label">
+
+                                نام قسمت
+
+                            </label>
+
+                            <input asp-for="Name"
+                                   class="form-control"
+                                   placeholder="مثلاً قسمت ۱" />
+
+                            <span asp-validation-for="Name"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+                        <!-- لینک دانلود -->
+                        <div class="mb-3">
+
+                            <label asp-for="DownloadLink"
+                                   class="form-label">
+
+                                لینک دانلود
+
+                            </label>
+
+                            <input asp-for="DownloadLink"
+                                   type="url"
+                                   class="form-control"
+                                   placeholder="https://example.com/download/episode" />
+
+                            <span asp-validation-for="DownloadLink"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <div class="card mb-4">
+
+                    <div class="card-header">
+
+                        <h5 class="mb-0">
+                            وضعیت
+                        </h5>
+
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="form-check form-switch">
+
+                            <input asp-for="IsActive"
+                                   class="form-check-input"
+                                   type="checkbox" />
+
+                            <label asp-for="IsActive"
+                                   class="form-check-label">
+
+                                قسمت فعال باشد
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <button type="submit"
+                        class="btn btn-primary w-100">
+
+                    <i class="bx bx-save"></i>
+                    ذخیره قسمت
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

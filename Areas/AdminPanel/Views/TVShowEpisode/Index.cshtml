@@ -1,0 +1,258 @@
+﻿@model List<Service.Admin.TVShows.TVShowEpisode.TVShowEpisodeListDto>
+
+@{
+    ViewData["Title"] = "قسمت‌های تی‌وی شو";
+}
+
+<!-- ==================================================
+     Index - TVShowEpisode
+================================================== -->
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h4 class="fw-bold mb-1">
+                قسمت‌های تی‌وی شو
+            </h4>
+
+            <p class="text-muted mb-0">
+                مدیریت قسمت‌های تی‌وی شو
+            </p>
+        </div>
+
+        <a asp-action="Create"
+           class="btn btn-primary">
+
+            <i class="bx bx-plus"></i>
+            افزودن قسمت
+
+        </a>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="card-header">
+
+            <h5 class="mb-0">
+                لیست قسمت‌ها
+            </h5>
+
+        </div>
+
+
+        <div class="card-body">
+
+            @if (Model.Count == 0)
+            {
+                <div class="alert alert-info mb-0">
+                    هنوز قسمتی برای تی‌وی شوها ثبت نشده است.
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    تصویر
+                                </th>
+
+                                <th>
+                                    تی‌وی شو
+                                </th>
+
+                                <th>
+                                    فصل
+                                </th>
+
+                                <th>
+                                    قسمت
+                                </th>
+
+                                <th>
+                                    نام قسمت
+                                </th>
+
+                                <th>
+                                    وضعیت
+                                </th>
+
+                                <th>
+                                    تاریخ ایجاد
+                                </th>
+
+                                <th>
+                                    عملیات
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            @foreach (var episode in Model)
+                            {
+                                <tr>
+
+                                    <td>
+
+                                        @if (!string.IsNullOrWhiteSpace(
+                                            episode.ImagePath))
+                                        {
+                                            <img src="@episode.ImagePath"
+                                                 alt="@episode.Name"
+                                                 style="width:60px;height:60px;object-fit:cover;border-radius:8px;" />
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">
+                                                بدون تصویر
+                                            </span>
+                                        }
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <strong>
+                                            @episode.TVShowTitle
+                                        </strong>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <span class="badge bg-label-primary">
+                                            فصل @episode.SeasonNumber
+                                        </span>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <span class="badge bg-label-info">
+                                            قسمت @episode.EpisodeNumber
+                                        </span>
+
+                                    </td>
+
+
+                                    <td>
+                                        @episode.Name
+                                    </td>
+
+
+                                    <td>
+
+                                        @if (episode.IsActive)
+                                        {
+                                            <span class="badge bg-label-success">
+                                                فعال
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-label-secondary">
+                                                غیرفعال
+                                            </span>
+                                        }
+
+                                    </td>
+
+
+                                    <td>
+
+                                        @episode.CreatedAt
+                                        .ToLocalTime()
+                                        .ToString("yyyy/MM/dd HH:mm")
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <div class="d-flex gap-1">
+
+                                            <a asp-action="Details"
+                                               asp-route-id="@episode.Id"
+                                               class="btn btn-sm btn-outline-info">
+
+                                                <i class="bx bx-show"></i>
+
+                                            </a>
+
+
+                                            <a asp-action="Edit"
+                                               asp-route-id="@episode.Id"
+                                               class="btn btn-sm btn-outline-primary">
+
+                                                <i class="bx bx-edit"></i>
+
+                                            </a>
+
+
+                                            <form asp-action="ChangeStatus"
+                                                  asp-route-id="@episode.Id"
+                                                  method="post">
+
+                                                @Html.AntiForgeryToken()
+
+                                                <button type="submit"
+                                                        class="btn btn-sm btn-outline-warning">
+
+                                                    <i class="bx bx-power-off"></i>
+
+                                                </button>
+
+                                            </form>
+
+
+                                            <form asp-action="Delete"
+                                                  asp-route-id="@episode.Id"
+                                                  method="post"
+                                                  onsubmit="return confirm('آیا از حذف این قسمت مطمئن هستید؟');">
+
+                                                @Html.AntiForgeryToken()
+
+                                                <button type="submit"
+                                                        class="btn btn-sm btn-outline-danger">
+
+                                                    <i class="bx bx-trash"></i>
+
+                                                </button>
+
+                                            </form>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+</div>
