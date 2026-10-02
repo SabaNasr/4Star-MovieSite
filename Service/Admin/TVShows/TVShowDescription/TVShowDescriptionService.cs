@@ -1,46 +1,40 @@
 ﻿using DataBase.Context;
-using DataBase.Entity;
 using Ganss.Xss;
 using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
 namespace Service.Admin.TVShows.TVShowDescription;
 
-// ==================================================
-// Interface
-// ==================================================
 public interface ITVShowDescriptionService
 {
-    Task<List<TVShowDescriptionListDto>> GetAllAsync();
+    Task<List<TVShowDescriptionListDto>>GetAllAsync();
 
-    Task<TVShowDescriptionCreateDto> GetCreateDataAsync();
+    Task<TVShowDescriptionCreateDto>GetCreateDataAsync();
 
-    Task FillCreateFormDataAsync(
-        TVShowDescriptionCreateDto dto);
+    Task FillCreateFormDataAsync(TVShowDescriptionCreateDto dto);
 
-    Task<bool> CreateAsync(
-        TVShowDescriptionCreateDto dto);
+    Task<bool> CreateAsync(TVShowDescriptionCreateDto dto);
 
-    Task<TVShowDescriptionEditDto?> GetEditDataAsync(
-        int id);
+    Task<TVShowDescriptionEditDto?>GetEditDataAsync(int id);
 
-    Task<bool> UpdateAsync(
-        TVShowDescriptionEditDto dto);
+    Task<bool> UpdateAsync(TVShowDescriptionEditDto dto);
 
-    Task<TVShowDescriptionDetailsDto?> GetDetailsAsync(
-        int id);
+    Task<TVShowDescriptionDetailsDto?>GetDetailsAsync(int id);
 }
 
 
-public class TVShowDescriptionService
-    : ITVShowDescriptionService
+public class TVShowDescriptionService: ITVShowDescriptionService
 {
     private readonly MyContext _context;
+
+    private readonly HtmlSanitizer _sanitizer;
 
 
     public TVShowDescriptionService(
         MyContext context)
     {
         _context = context;
+
+        _sanitizer = CreateSanitizer();
     }
 
 
@@ -48,8 +42,7 @@ public class TVShowDescriptionService
     // Get All
     // ==================================================
 
-    public async Task<List<TVShowDescriptionListDto>>
-        GetAllAsync()
+    public async Task<List<TVShowDescriptionListDto>>GetAllAsync()
     {
         return await _context.MovieDescriptions
             .AsNoTracking()
@@ -59,10 +52,15 @@ public class TVShowDescriptionService
             .Select(x => new TVShowDescriptionListDto
             {
                 Id = x.Id,
+
                 TVShowId = x.MovieId,
+
                 TVShowTitle = x.Movie.Title,
+
                 IsActive = x.IsActive,
+
                 CreatedAt = x.CreatedAt,
+
                 UpdatedAt = x.UpdatedAt
             })
             .ToListAsync();
@@ -73,8 +71,7 @@ public class TVShowDescriptionService
     // Get Create Data
     // ==================================================
 
-    public async Task<TVShowDescriptionCreateDto>
-        GetCreateDataAsync()
+    public async Task<TVShowDescriptionCreateDto>GetCreateDataAsync()
     {
         var dto =
             new TVShowDescriptionCreateDto();
@@ -86,21 +83,32 @@ public class TVShowDescriptionService
 
 
     // ==================================================
-    // Fill Create Form
+    // Fill Create Form Data
     // ==================================================
 
     public async Task FillCreateFormDataAsync(
         TVShowDescriptionCreateDto dto)
     {
-        dto.TVShows = await _context.TVShows
+        var tvShows = await _context.Movies
             .AsNoTracking()
+            .Where(x => !x.IsArchived)
+            .Where(x =>
+                x is DataBase.Entity.TVShow)
+            .Where(x =>
+                !_context.MovieDescriptions
+                    .Any(description =>
+                        description.MovieId == x.Id))
             .OrderBy(x => x.Title)
-            .Select(x => new TVShowDescriptionTVShowItemDto
-            {
-                Id = x.Id,
-                Title = x.Title
-            })
+            .Select(x =>
+                new TVShowDescriptionTVShowItemDto
+                {
+                    Id = x.Id,
+
+                    Title = x.Title
+                })
             .ToListAsync();
+
+        dto.TVShows = tvShows;
     }
 
 
@@ -112,8 +120,11 @@ public class TVShowDescriptionService
         TVShowDescriptionCreateDto dto)
     {
         var tvShowExists =
-            await _context.TVShows
-                .AnyAsync(x => x.Id == dto.TVShowId);
+            await _context.Movies
+                .AnyAsync(x =>
+                    x.Id == dto.TVShowId &&
+                    !x.IsArchived &&
+                    x is DataBase.Entity.TVShow);
 
         if (!tvShowExists)
             return false;
@@ -128,35 +139,24 @@ public class TVShowDescriptionService
             return false;
 
 
-        var sanitizer =
-            new HtmlSanitizer();
-
-
         var sanitizedContent =
-            sanitizer.Sanitize(dto.Content);
+            SanitizeContent(dto.Content);
 
-
-        var plainText =
-            Regex.Replace(
-                sanitizedContent,
-                "<.*?>",
-                string.Empty)
-            .Trim();
-
-
-        if (string.IsNullOrWhiteSpace(plainText))
+        if (!HasTextContent(sanitizedContent))
             return false;
 
 
         var description =
-            new MovieDescription
+            new DataBase.Entity.MovieDescription
             {
                 MovieId = dto.TVShowId,
+
                 Content = sanitizedContent
             };
 
 
-        _context.MovieDescriptions.Add(description);
+        _context.MovieDescriptions
+            .Add(description);
 
         await _context.SaveChangesAsync();
 
@@ -165,11 +165,10 @@ public class TVShowDescriptionService
 
 
     // ==================================================
-    // Get Edit Data
+    // Get Edit Data + SEO
     // ==================================================
 
-    public async Task<TVShowDescriptionEditDto?>
-        GetEditDataAsync(int id)
+    public async Task<TVShowDescriptionEditDto?>GetEditDataAsync(int id)
     {
         return await _context.MovieDescriptions
             .AsNoTracking()
@@ -179,76 +178,137 @@ public class TVShowDescriptionService
             .Select(x => new TVShowDescriptionEditDto
             {
                 Id = x.Id,
+
                 TVShowId = x.MovieId,
+
                 TVShowTitle = x.Movie.Title,
-                Content = x.Content
+
+                Content = x.Content,
+
+
+                // ==============================
+                // SEO
+                // ==============================
+
+                MetaTitle =x.Movie.MetaTitle,
+
+                MetaDescription =x.Movie.MetaDescription,
+
+                MetaKeywords =x.Movie.MetaKeywords,
+
+                Slug =x.Movie.Slug,
+
+                CanonicalUrl =x.Movie.CanonicalUrl,
+
+                OgTitle =x.Movie.OgTitle,
+
+                OgDescription =x.Movie.OgDescription,
+
+                OgImage =x.Movie.OgImage,
+
+                TwitterCard =x.Movie.TwitterCard,
+
+                NoIndex =x.Movie.NoIndex,
+
+                NoFollow =x.Movie.NoFollow
             })
             .FirstOrDefaultAsync();
     }
 
 
     // ==================================================
-    // Update
+    // Update Content + SEO
     // ==================================================
 
-    public async Task<bool> UpdateAsync(
-        TVShowDescriptionEditDto dto)
+    public async Task<bool> UpdateAsync(TVShowDescriptionEditDto dto)
     {
         var description =
             await _context.MovieDescriptions
+                .Include(x => x.Movie)
                 .FirstOrDefaultAsync(x =>
                     x.Id == dto.Id &&
                     x.Movie is DataBase.Entity.TVShow);
-
 
         if (description == null)
             return false;
 
 
-        var tvShowExists =
-            await _context.TVShows
-                .AnyAsync(x => x.Id == dto.TVShowId);
-
-        if (!tvShowExists)
+        if (description.Movie == null)
             return false;
 
 
-        var duplicateExists =
-            await _context.MovieDescriptions
-                .AnyAsync(x =>
-                    x.MovieId == dto.TVShowId &&
-                    x.Id != dto.Id);
+        // ==================================================
+        // Sanitize Content
+        // ==================================================
 
+        var sanitizedContent =SanitizeContent(dto.Content);
 
-        if (duplicateExists)
+        if (!HasTextContent(sanitizedContent))
             return false;
 
 
-        var sanitizer =
-            new HtmlSanitizer();
+        // ==================================================
+        // Slug
+        // ==================================================
+
+        var slug =
+            string.IsNullOrWhiteSpace(dto.Slug)
+                ? null: dto.Slug.Trim();
 
 
-        var sanitizedContent =
-            sanitizer.Sanitize(dto.Content);
+        if (!string.IsNullOrWhiteSpace(slug))
+        {
+            var duplicateSlug =
+                await _context.Movies
+                    .AnyAsync(x =>
+                        x.Id != description.MovieId &&
+                        x.Slug == slug);
+
+            if (duplicateSlug)
+                return false;
+        }
 
 
-        var plainText =
-            Regex.Replace(
-                sanitizedContent,
-                "<.*?>",
-                string.Empty)
-            .Trim();
+        // ==================================================
+        // Update Description
+        // ==================================================
+
+        description.Content =sanitizedContent;
 
 
-        if (string.IsNullOrWhiteSpace(plainText))
-            return false;
+        // ==================================================
+        // Update SEO
+        // ==================================================
 
+        description.Movie.MetaTitle =
+            NormalizeNullable(dto.MetaTitle);
 
-        description.MovieId =
-            dto.TVShowId;
+        description.Movie.MetaDescription =
+            NormalizeNullable(dto.MetaDescription);
 
-        description.Content =
-            sanitizedContent;
+        description.Movie.MetaKeywords =
+            NormalizeNullable(dto.MetaKeywords);
+
+        description.Movie.Slug =slug;
+
+        description.Movie.CanonicalUrl =
+            NormalizeNullable(dto.CanonicalUrl);
+
+        description.Movie.OgTitle =
+            NormalizeNullable(dto.OgTitle);
+
+        description.Movie.OgDescription =
+            NormalizeNullable(dto.OgDescription);
+
+        description.Movie.OgImage =
+            NormalizeNullable(dto.OgImage);
+
+        description.Movie.TwitterCard =
+            NormalizeTwitterCard(dto.TwitterCard);
+
+        description.Movie.NoIndex =dto.NoIndex;
+
+        description.Movie.NoFollow =dto.NoFollow;
 
 
         await _context.SaveChangesAsync();
@@ -261,8 +321,7 @@ public class TVShowDescriptionService
     // Details
     // ==================================================
 
-    public async Task<TVShowDescriptionDetailsDto?>
-        GetDetailsAsync(int id)
+    public async Task<TVShowDescriptionDetailsDto?>GetDetailsAsync(int id)
     {
         return await _context.MovieDescriptions
             .AsNoTracking()
@@ -272,13 +331,184 @@ public class TVShowDescriptionService
             .Select(x => new TVShowDescriptionDetailsDto
             {
                 Id = x.Id,
+
                 TVShowId = x.MovieId,
+
                 TVShowTitle = x.Movie.Title,
+
                 Content = x.Content,
+
                 IsActive = x.IsActive,
+
                 CreatedAt = x.CreatedAt,
-                UpdatedAt = x.UpdatedAt
+
+                UpdatedAt = x.UpdatedAt,
+
+
+                // ==============================
+                // SEO
+                // ==============================
+
+                MetaTitle =x.Movie.MetaTitle,
+
+                MetaDescription =x.Movie.MetaDescription,
+
+                MetaKeywords =x.Movie.MetaKeywords,
+
+                Slug =x.Movie.Slug,
+
+                CanonicalUrl =x.Movie.CanonicalUrl,
+
+                OgTitle =x.Movie.OgTitle,
+
+                OgDescription =x.Movie.OgDescription,
+
+                OgImage =x.Movie.OgImage,
+
+                TwitterCard =x.Movie.TwitterCard,
+
+                NoIndex =x.Movie.NoIndex,
+
+                NoFollow =x.Movie.NoFollow
             })
             .FirstOrDefaultAsync();
+    }
+
+
+    // ==================================================
+    // Sanitize
+    // ==================================================
+
+    private string SanitizeContent(string content)
+    {
+        if (string.IsNullOrWhiteSpace(content))
+            return string.Empty;
+
+        return _sanitizer.Sanitize(content);
+    }
+
+
+    // ==================================================
+    // Has Text
+    // ==================================================
+
+    private bool HasTextContent(string html)
+    {
+        var text =
+            Regex.Replace(
+                html,
+                "<.*?>",
+                string.Empty);
+
+        return !string.IsNullOrWhiteSpace(text);
+    }
+
+
+    // ==================================================
+    // Normalize
+    // ==================================================
+
+    private static string? NormalizeNullable(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return null;
+
+        return value.Trim();
+    }
+
+
+    // ==================================================
+    // Twitter Card
+    // ==================================================
+
+    private static string? NormalizeTwitterCard(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return null;
+
+        var normalized =
+            value.Trim().ToLowerInvariant();
+
+        return normalized switch
+        {
+            "summary" => "summary",
+
+            "summary_large_image" =>
+                "summary_large_image",
+
+            "app" => "app",
+
+            "player" => "player",
+
+            _ => null
+        };
+    }
+
+
+    // ==================================================
+    // Html Sanitizer
+    // ==================================================
+
+    private static HtmlSanitizer CreateSanitizer()
+    {
+        var sanitizer =new HtmlSanitizer();
+
+
+        sanitizer.AllowedTags.Clear();
+
+        sanitizer.AllowedTags.Add("p");
+        sanitizer.AllowedTags.Add("br");
+
+        sanitizer.AllowedTags.Add("h1");
+        sanitizer.AllowedTags.Add("h2");
+        sanitizer.AllowedTags.Add("h3");
+        sanitizer.AllowedTags.Add("h4");
+        sanitizer.AllowedTags.Add("h5");
+        sanitizer.AllowedTags.Add("h6");
+
+        sanitizer.AllowedTags.Add("strong");
+        sanitizer.AllowedTags.Add("em");
+        sanitizer.AllowedTags.Add("u");
+
+        sanitizer.AllowedTags.Add("ol");
+        sanitizer.AllowedTags.Add("ul");
+        sanitizer.AllowedTags.Add("li");
+
+        sanitizer.AllowedTags.Add("a");
+        sanitizer.AllowedTags.Add("img");
+
+        sanitizer.AllowedTags.Add("blockquote");
+
+
+        sanitizer.AllowedAttributes.Clear();
+
+        sanitizer.AllowedAttributes.Add("href");
+        sanitizer.AllowedAttributes.Add("src");
+        sanitizer.AllowedAttributes.Add("alt");
+        sanitizer.AllowedAttributes.Add("title");
+        sanitizer.AllowedAttributes.Add("target");
+        sanitizer.AllowedAttributes.Add("rel");
+        sanitizer.AllowedAttributes.Add("class");
+
+
+        sanitizer.AllowedClasses.Clear();
+
+        sanitizer.AllowedClasses.Add(
+            "ql-align-center");
+
+        sanitizer.AllowedClasses.Add(
+            "ql-align-right");
+
+        sanitizer.AllowedClasses.Add(
+            "ql-align-justify");
+
+
+        sanitizer.AllowedSchemes.Clear();
+
+        sanitizer.AllowedSchemes.Add("http");
+        sanitizer.AllowedSchemes.Add("https");
+
+
+        return sanitizer;
     }
 }

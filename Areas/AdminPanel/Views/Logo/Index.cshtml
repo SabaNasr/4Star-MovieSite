@@ -1,0 +1,352 @@
+﻿@model Service.Admin.Settings.Logo.LogoManageDto
+
+@{
+    ViewData["Title"] = "مدیریت لوگو";
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <!-- =====================================================
+         Page Header
+    ====================================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h4 class="fw-bold mb-1">
+                مدیریت لوگو
+            </h4>
+
+            <p class="text-muted mb-0">
+                لوگوی اصلی، لوگوی فوتر و فاوآیکون سایت را مدیریت کنید.
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         Success Message
+    ====================================================== -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show"
+             role="alert">
+
+            <i class="bx bx-check-circle me-1"></i>
+
+            @TempData["SuccessMessage"]
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="بستن">
+            </button>
+
+        </div>
+    }
+
+
+    <!-- =====================================================
+         Validation Summary
+    ====================================================== -->
+
+    <div asp-validation-summary="ModelOnly"
+         class="text-danger mb-3">
+    </div>
+
+
+    <!-- =====================================================
+         Logo Form
+    ====================================================== -->
+
+    <form asp-area="Admin"
+          asp-controller="Logo"
+          asp-action="Index"
+          method="post"
+          enctype="multipart/form-data">
+
+        @Html.AntiForgeryToken()
+
+        <input asp-for="Id" type="hidden" />
+
+
+        <div class="row">
+
+
+            <!-- =================================================
+                 Main Logo
+            ================================================== -->
+
+            <div class="col-12 col-lg-4 mb-4">
+
+                <div class="card h-100">
+
+                    <div class="card-header">
+
+                        <h5 class="card-title mb-1">
+                            لوگوی اصلی
+                        </h5>
+
+                        <small class="text-muted">
+                            لوگوی نمایش داده شده در هدر سایت
+                        </small>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+                        <!-- Preview -->
+
+                        <div class="border rounded p-4 text-center mb-4">
+
+                            @if (!string.IsNullOrWhiteSpace(Model.ExistingMainLogo))
+                            {
+                                <img src="@Model.ExistingMainLogo"
+                                     alt="لوگوی اصلی"
+                                     class="img-fluid"
+                                     style="max-height:120px; max-width:100%; object-fit:contain;" />
+                            }
+                            else
+                            {
+                                <div class="d-flex flex-column justify-content-center align-items-center"
+                                     style="height:120px;">
+
+                                    <i class="bx bx-image-alt fs-1 text-muted mb-2"></i>
+
+                                    <span class="text-muted">
+                                        لوگوی اصلی ثبت نشده است
+                                    </span>
+
+                                </div>
+                            }
+
+                        </div>
+
+
+                        <!-- File -->
+
+                        <label asp-for="MainLogo"
+                               class="form-label">
+                            انتخاب لوگوی جدید
+                        </label>
+
+                        <input asp-for="MainLogo"
+                               type="file"
+                               class="form-control"
+                               accept=".jpg,.jpeg,.png,.gif,.svg,.webp" />
+
+                        <span asp-validation-for="MainLogo"
+                              class="text-danger">
+                        </span>
+
+                        <div class="form-text mt-2">
+                            حداکثر حجم فایل ۲ مگابایت است.
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 Footer Logo
+            ================================================== -->
+
+            <div class="col-12 col-lg-4 mb-4">
+
+                <div class="card h-100">
+
+                    <div class="card-header">
+
+                        <h5 class="card-title mb-1">
+                            لوگوی فوتر
+                        </h5>
+
+                        <small class="text-muted">
+                            لوگوی نمایش داده شده در پایین سایت
+                        </small>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+                        <!-- Preview -->
+
+                        <div class="border rounded p-4 text-center mb-4">
+
+                            @if (!string.IsNullOrWhiteSpace(Model.ExistingFooterLogo))
+                            {
+                                <img src="@Model.ExistingFooterLogo"
+                                     alt="لوگوی فوتر"
+                                     class="img-fluid"
+                                     style="max-height:120px; max-width:100%; object-fit:contain;" />
+                            }
+                            else
+                            {
+                                <div class="d-flex flex-column justify-content-center align-items-center"
+                                     style="height:120px;">
+
+                                    <i class="bx bx-image-alt fs-1 text-muted mb-2"></i>
+
+                                    <span class="text-muted">
+                                        لوگوی فوتر ثبت نشده است
+                                    </span>
+
+                                </div>
+                            }
+
+                        </div>
+
+
+                        <!-- File -->
+
+                        <label asp-for="FooterLogo"
+                               class="form-label">
+                            انتخاب لوگوی جدید
+                        </label>
+
+                        <input asp-for="FooterLogo"
+                               type="file"
+                               class="form-control"
+                               accept=".jpg,.jpeg,.png,.gif,.svg,.webp" />
+
+                        <span asp-validation-for="FooterLogo"
+                              class="text-danger">
+                        </span>
+
+                        <div class="form-text mt-2">
+                            حداکثر حجم فایل ۲ مگابایت است.
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 Favicon
+            ================================================== -->
+
+            <div class="col-12 col-lg-4 mb-4">
+
+                <div class="card h-100">
+
+                    <div class="card-header">
+
+                        <h5 class="card-title mb-1">
+                            فاوآیکون
+                        </h5>
+
+                        <small class="text-muted">
+                            آیکون نمایش داده شده در تب مرورگر
+                        </small>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+                        <!-- Preview -->
+
+                        <div class="border rounded p-4 text-center mb-4">
+
+                            @if (!string.IsNullOrWhiteSpace(Model.ExistingFavicon))
+                            {
+                                <img src="@Model.ExistingFavicon"
+                                     alt="Favicon"
+                                     style="width:80px;
+                                height:80px;
+                                object-fit:contain;" />
+                            }
+                            else
+                            {
+                                <div class="d-flex flex-column justify-content-center align-items-center"
+                                     style="height:120px;">
+
+                                    <i class="bx bx-image-alt fs-1 text-muted mb-2"></i>
+
+                                    <span class="text-muted">
+                                        فاوآیکون ثبت نشده است
+                                    </span>
+
+                                </div>
+                            }
+
+                        </div>
+
+
+                        <!-- File -->
+
+                        <label asp-for="Favicon"
+                               class="form-label">
+                            انتخاب فاوآیکون جدید
+                        </label>
+
+                        <input asp-for="Favicon"
+                               type="file"
+                               class="form-control"
+                               accept=".jpg,.jpeg,.png,.gif,.svg,.webp" />
+
+                        <span asp-validation-for="Favicon"
+                              class="text-danger">
+                        </span>
+
+                        <div class="form-text mt-2">
+                            حداکثر حجم فایل ۲ مگابایت است.
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 Save
+            ================================================== -->
+
+            <div class="col-12">
+
+                <div class="card">
+
+                    <div class="card-body">
+
+                        <div class="d-flex justify-content-end">
+
+                            <button type="submit"
+                                    class="btn btn-primary">
+
+                                <i class="bx bx-save me-1"></i>
+
+                                ذخیره تغییرات
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+}

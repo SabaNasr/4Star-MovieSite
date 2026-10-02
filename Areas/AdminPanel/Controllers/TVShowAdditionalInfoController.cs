@@ -8,6 +8,7 @@ public class TVShowAdditionalInfoController : Controller
     private readonly ITVShowAdditionalInfoService
         _tvShowAdditionalInfoService;
 
+
     public TVShowAdditionalInfoController(
         ITVShowAdditionalInfoService tvShowAdditionalInfoService)
     {
@@ -15,9 +16,11 @@ public class TVShowAdditionalInfoController : Controller
             tvShowAdditionalInfoService;
     }
 
+
     // ==================================================
     // Index
     // ==================================================
+
     [HttpGet]
     public async Task<IActionResult> Index()
     {
@@ -28,9 +31,11 @@ public class TVShowAdditionalInfoController : Controller
         return View(additionalInfos);
     }
 
+
     // ==================================================
     // Create - GET
     // ==================================================
+
     [HttpGet]
     public async Task<IActionResult> Create()
     {
@@ -40,14 +45,15 @@ public class TVShowAdditionalInfoController : Controller
 
         return View(dto);
     }
+
+
     // ==================================================
     // Create - POST
     // ==================================================
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(
-        TVShowAdditionalInfoCreateDto dto)
+    public async Task<IActionResult> Create(TVShowAdditionalInfoCreateDto dto)
     {
         if (!ModelState.IsValid)
         {
@@ -57,14 +63,15 @@ public class TVShowAdditionalInfoController : Controller
             return View(dto);
         }
 
+
         var result =
             await _tvShowAdditionalInfoService
                 .CreateAsync(dto);
 
+
         if (!result)
         {
-            ModelState.AddModelError(
-                string.Empty,
+            ModelState.AddModelError(string.Empty,
                 "امکان ثبت اطلاعات تکمیلی تی‌وی شو وجود ندارد. ممکن است برای این تی‌وی شو قبلاً اطلاعات تکمیلی ثبت شده باشد.");
 
             await _tvShowAdditionalInfoService
@@ -73,15 +80,19 @@ public class TVShowAdditionalInfoController : Controller
             return View(dto);
         }
 
+
         TempData["SuccessMessage"] =
             "اطلاعات تکمیلی تی‌وی شو با موفقیت ثبت شد.";
+
 
         return RedirectToAction(nameof(Index));
     }
 
+
     // ==================================================
     // Edit - GET
     // ==================================================
+
     [HttpGet]
     public async Task<IActionResult> Edit(int id)
     {
@@ -89,47 +100,58 @@ public class TVShowAdditionalInfoController : Controller
             await _tvShowAdditionalInfoService
                 .GetEditDataAsync(id);
 
+
         if (additionalInfo == null)
             return NotFound();
+
 
         return View(additionalInfo);
     }
 
+
     // ==================================================
     // Edit - POST
     // ==================================================
+
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(
-        TVShowAdditionalInfoEditDto dto)
+    public async Task<IActionResult> Edit(TVShowAdditionalInfoEditDto dto)
     {
         if (!ModelState.IsValid)
             return View(dto);
+
 
         var result =
             await _tvShowAdditionalInfoService
                 .UpdateAsync(dto);
 
+
         if (!result)
         {
             ModelState.AddModelError(
                 string.Empty,
-                "امکان ویرایش اطلاعات تکمیلی تی‌وی شو وجود ندارد.");
+                "امکان ویرایش اطلاعات تکمیلی تی‌وی شو وجود ندارد. ممکن است Slug واردشده قبلاً استفاده شده باشد.");
 
             return View(dto);
         }
 
-        TempData["SuccessMessage"] =
-            "اطلاعات تکمیلی تی‌وی شو با موفقیت ویرایش شد.";
 
-        return RedirectToAction(
-            nameof(Details),
-            new { id = dto.Id });
+        TempData["SuccessMessage"] =
+            "اطلاعات تکمیلی تی‌وی شو و تنظیمات سئو با موفقیت ویرایش شد.";
+
+
+        return RedirectToAction(nameof(Details),
+            new
+            {
+                id = dto.Id
+            });
     }
+
 
     // ==================================================
     // Details
     // ==================================================
+
     [HttpGet]
     public async Task<IActionResult> Details(int id)
     {
@@ -137,8 +159,10 @@ public class TVShowAdditionalInfoController : Controller
             await _tvShowAdditionalInfoService
                 .GetDetailsAsync(id);
 
+
         if (additionalInfo == null)
             return NotFound();
+
 
         return View(additionalInfo);
     }

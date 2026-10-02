@@ -1,0 +1,98 @@
+﻿@model List<Service.Admin.Content.Banner.BannerListDto>
+
+@{
+    ViewData["Title"] = "مدیریت بنرها";
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-bold py-3 mb-0">مدیریت بنرهای سایت</h4>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bx bx-plus me-1"></i> بنر جدید
+        </a>
+    </div>
+
+    <ul class="nav nav-pills mb-3" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" asp-action="Index">
+                <i class="bx bx-list-ul me-1"></i> بنرهای فعال
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-action="Deleted">
+                <i class="bx bx-trash me-1"></i> سطل زباله
+            </a>
+        </li>
+    </ul>
+
+    <div class="card">
+        <div class="table-responsive text-nowrap p-3">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th style="width: 80px;">تصویر</th>
+                        <th>متن بنر</th>
+                        <th>تگ مرتبط</th>
+                        <th>ترتیب</th>
+                        <th>وضعیت</th>
+                        <th style="width: 150px;">عملیات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <img src="@item.Image" alt="Banner" class="rounded" width="60" height="40" style="object-fit: cover;" />
+                            </td>
+                            <td class="fw-bold">@(string.IsNullOrEmpty(item.Text) ? "بدون متن" : item.Text)</td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(item.TagName))
+                                {
+                                    <span class="badge bg-label-info">@item.TagName</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted small">بدون تگ</span>
+                                }
+                            </td>
+                            <td>@item.Order</td>
+                            <td>
+                                @if (item.IsActive)
+                                {
+                                    <span class="badge bg-label-success">فعال</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-label-secondary">غیرفعال</span>
+                                }
+                            </td>
+                            <td>
+                                <div class="dropdown">
+                                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                        <i class="bx bx-dots-vertical-rounded"></i>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" asp-action="Edit" asp-route-id="@item.Id">
+                                            <i class="bx bx-edit-alt me-1"></i> ویرایش
+                                        </a>
+                                        <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="return confirm('آیا از حذف این بنر اطمینان دارید؟');">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="dropdown-item text-danger">
+                                                <i class="bx bx-trash me-1"></i> حذف
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @if (!Model.Any())
+            {
+                <div class="text-center p-4 text-muted">هیچ بنری یافت نشد.</div>
+            }
+        </div>
+    </div>
+</div>

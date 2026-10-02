@@ -1,0 +1,51 @@
+﻿@model Service.Admin.Content.TagSearch.TagSearchUpdateDto
+
+@{
+    ViewData["Title"] = "ویرایش تگ";
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4">
+        <span class="text-muted fw-light">تگ‌ها /</span> ویرایش تگ
+    </h4>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <h5 class="card-header">اطلاعات تگ</h5>
+                <div class="card-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <form asp-action="Edit" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="Id" />
+
+                        <div class="mb-3">
+                            <label asp-for="Title" class="form-label"></label>
+                            <input asp-for="Title" class="form-control" />
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Slug" class="form-label"></label>
+                            <input asp-for="Slug" class="form-control" dir="ltr" />
+                            <div class="form-text">فقط حروف کوچک انگلیسی، اعداد و خط تیره (-)</div>
+                            <span asp-validation-for="Slug" class="text-danger"></span>
+                        </div>
+
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-primary me-2">ذخیره تغییرات</button>
+                            <a asp-action="Index" class="btn btn-label-secondary">انصراف</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

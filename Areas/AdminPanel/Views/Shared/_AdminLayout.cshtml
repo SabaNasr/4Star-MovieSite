@@ -87,6 +87,37 @@
 
     <script src="/admin/assets/js/config.js"></script>
 
+
+    <!-- =====================================================
+         Mobile Responsive Navbar
+    ====================================================== -->
+
+    <style>
+
+            @@media (max-width: 1199.98px) {
+
+                .layout-navbar {
+                    min-height: 62px;
+                    z-index: 1080;
+                }
+
+                    .layout-navbar .layout-menu-toggle {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 40px;
+                        height: 40px;
+                        cursor: pointer;
+                    }
+
+                        .layout-navbar .layout-menu-toggle i {
+                            font-size: 24px;
+                        }
+            }
+
+    </style>
+
+
     @await RenderSectionAsync("Styles", required: false)
 
 </head>
@@ -211,8 +242,6 @@
                         </span>
 
 
-                        <!-- نام پروژه -->
-
                         <span class="app-brand-text demo menu-text fw-bold ms-2">
                             4Star
                         </span>
@@ -280,7 +309,7 @@
 
 
                     <!-- =================================================
-                         فیلم‌ها - منوی اصلی
+                         فیلم‌ها
                     ================================================== -->
 
                     <li class="menu-item">
@@ -294,10 +323,6 @@
 
                         </a>
 
-
-                        <!-- =================================================
-                             زیرمنوی فیلم‌ها
-                        ================================================== -->
 
                         <ul class="menu-sub">
 
@@ -366,38 +391,6 @@
                             </li>
 
 
-                            <!-- شرح فیلم -->
-
-                            <li class="menu-item">
-
-                                <a asp-area="AdminPanel"
-                                   asp-controller="MovieDescription"
-                                   asp-action="Index"
-                                   class="menu-link">
-
-                                    <div>شرح فیلم</div>
-
-                                </a>
-
-                            </li>
-
-
-                            <!-- اطلاعات تکمیلی -->
-
-                            <li class="menu-item">
-
-                                <a asp-area="AdminPanel"
-                                   asp-controller="MovieAdditionalInfo"
-                                   asp-action="Index"
-                                   class="menu-link">
-
-                                    <div>اطلاعات تکمیلی</div>
-
-                                </a>
-
-                            </li>
-
-
                             <!-- نظرات فیلم -->
 
                             <li class="menu-item">
@@ -419,7 +412,7 @@
 
 
                     <!-- =================================================
-                         سریال‌ها - منوی اصلی
+                         سریال‌ها
                     ================================================== -->
 
                     <li class="menu-item">
@@ -433,10 +426,6 @@
 
                         </a>
 
-
-                        <!-- =================================================
-                             زیرمنوی سریال‌ها
-                        ================================================== -->
 
                         <ul class="menu-sub">
 
@@ -489,41 +478,7 @@
                             </li>
 
 
-                            <!-- شرح سریال -->
-
-                            <li class="menu-item">
-
-                                <a asp-area="AdminPanel"
-                                   asp-controller="SeriesDescription"
-                                   asp-action="Index"
-                                   class="menu-link">
-
-                                    <div>شرح سریال</div>
-
-                                </a>
-
-                            </li>
-
-
-                            <!-- اطلاعات تکمیلی سریال -->
-
-                            <li class="menu-item">
-
-                                <a asp-area="AdminPanel"
-                                   asp-controller="SeriesAdditionalInfo"
-                                   asp-action="Index"
-                                   class="menu-link">
-
-                                    <div>اطلاعات تکمیلی سریال</div>
-
-                                </a>
-
-                            </li>
-
-
-                            <!-- =================================================
-                                 نظرات سریال
-                            ================================================== -->
+                            <!-- نظرات سریال -->
 
                             <li class="menu-item">
 
@@ -544,7 +499,7 @@
 
 
                     <!-- =================================================
-                                     TVShow - منوی اصلی
+                         TVShow
                     ================================================== -->
 
                     <li class="menu-item">
@@ -558,10 +513,6 @@
 
                         </a>
 
-
-                        <!-- =================================================
-                                            زیرمنوی TVShow
-                        ================================================== -->
 
                         <ul class="menu-sub">
 
@@ -592,6 +543,119 @@
                                    class="menu-link">
 
                                     <div>قسمت‌های تی‌وی شو</div>
+
+                                </a>
+
+                            </li>
+
+
+                            <!-- نظرات TVShow -->
+
+                            <li class="menu-item">
+
+                                <a asp-area="AdminPanel"
+                                   asp-controller="TVShowReview"
+                                   asp-action="Index"
+                                   class="menu-link">
+
+                                    <div>نظرات تی‌وی شو</div>
+
+                                </a>
+
+                            </li>
+
+
+                        </ul>
+
+                    </li>
+
+
+                    <!-- =================================================
+                         مدیریت سئو
+                    ================================================== -->
+
+                    <li class="menu-header small text-uppercase">
+
+                        <span class="menu-header-text">
+                            مدیریت سئو
+                        </span>
+
+                    </li>
+
+
+                    <li class="menu-item">
+
+                        <a href="javascript:void(0);"
+                           class="menu-link menu-toggle">
+
+                            <i class="menu-icon tf-icons bx bx-search-alt"></i>
+
+                            <div>مدیریت سئو</div>
+
+                        </a>
+
+
+                        <ul class="menu-sub">
+
+
+                            <!-- شرح فیلم -->
+
+                            <li class="menu-item">
+
+                                <a asp-area="AdminPanel"
+                                   asp-controller="MovieDescription"
+                                   asp-action="Index"
+                                   class="menu-link">
+
+                                    <div>شرح فیلم</div>
+
+                                </a>
+
+                            </li>
+
+
+                            <!-- اطلاعات تکمیلی فیلم -->
+
+                            <li class="menu-item">
+
+                                <a asp-area="AdminPanel"
+                                   asp-controller="MovieAdditionalInfo"
+                                   asp-action="Index"
+                                   class="menu-link">
+
+                                    <div>اطلاعات تکمیلی فیلم</div>
+
+                                </a>
+
+                            </li>
+
+
+                            <!-- شرح سریال -->
+
+                            <li class="menu-item">
+
+                                <a asp-area="AdminPanel"
+                                   asp-controller="SeriesDescription"
+                                   asp-action="Index"
+                                   class="menu-link">
+
+                                    <div>شرح سریال</div>
+
+                                </a>
+
+                            </li>
+
+
+                            <!-- اطلاعات تکمیلی سریال -->
+
+                            <li class="menu-item">
+
+                                <a asp-area="AdminPanel"
+                                   asp-controller="SeriesAdditionalInfo"
+                                   asp-action="Index"
+                                   class="menu-link">
+
+                                    <div>اطلاعات تکمیلی سریال</div>
 
                                 </a>
 
@@ -630,22 +694,6 @@
                             </li>
 
 
-                            <!-- نظرات TVShow -->
-
-                            <li class="menu-item">
-
-                                <a asp-area="AdminPanel"
-                                   asp-controller="TVShowReview"
-                                   asp-action="Index"
-                                   class="menu-link">
-
-                                    <div>نظرات تی‌وی شو</div>
-
-                                </a>
-
-                            </li>
-
-
                         </ul>
 
                     </li>
@@ -664,10 +712,6 @@
                     </li>
 
 
-                    <!-- =================================================
-                         وبلاگ - منوی اصلی
-                    ================================================== -->
-
                     <li class="menu-item">
 
                         <a href="javascript:void(0);"
@@ -679,10 +723,6 @@
 
                         </a>
 
-
-                        <!-- =================================================
-                             زیرمنوی وبلاگ
-                        ================================================== -->
 
                         <ul class="menu-sub">
 
@@ -752,10 +792,6 @@
                     </li>
 
 
-                    <!-- =================================================
-                         صفحات و محتوا - منوی اصلی
-                    ================================================== -->
-
                     <li class="menu-item">
 
                         <a href="javascript:void(0);"
@@ -767,10 +803,6 @@
 
                         </a>
 
-
-                        <!-- =================================================
-                             زیرمنوی صفحات و محتوا
-                        ================================================== -->
 
                         <ul class="menu-sub">
 
@@ -861,7 +893,7 @@
 
 
                     <!-- =================================================
-                         تنظیمات اصلی
+                         تنظیمات سایت
                     ================================================== -->
 
                     <li class="menu-header small text-uppercase">
@@ -894,7 +926,7 @@
 
                                 <a asp-area="AdminPanel"
                                    asp-controller="SiteSettings"
-                                   asp-action="Manage"
+                                   asp-action="Index"
                                    class="menu-link">
 
                                     <div>تنظیمات عمومی سایت</div>
@@ -910,7 +942,7 @@
 
                                 <a asp-area="AdminPanel"
                                    asp-controller="Logo"
-                                   asp-action="Manage"
+                                   asp-action="Index"
                                    class="menu-link">
 
                                     <div>مدیریت لوگو</div>
@@ -972,6 +1004,41 @@
             ====================================================== -->
 
             <div class="layout-page">
+
+
+                <!-- =================================================
+                     Mobile Navbar
+                ================================================== -->
+
+                <nav class="layout-navbar navbar navbar-expand-xl align-items-center bg-navbar-theme d-xl-none">
+
+                    <div class="container-fluid">
+
+
+                        <!-- دکمه باز کردن Sidebar -->
+
+                        <a href="javascript:void(0);"
+                           class="layout-menu-toggle navbar-nav align-items-center me-3">
+
+                            <i class="bx bx-menu bx-sm"></i>
+
+                        </a>
+
+
+                        <!-- عنوان پنل -->
+
+                        <div class="navbar-nav-right">
+
+                            <span class="fw-bold">
+                                پنل مدیریت 4Star
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </nav>
+
 
                 <div class="content-wrapper">
 

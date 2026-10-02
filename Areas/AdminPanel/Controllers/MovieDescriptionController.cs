@@ -5,13 +5,15 @@ namespace _4Star.Areas.AdminPanel.Controllers;
 [Area("AdminPanel")]
 public class MovieDescriptionController : Controller
 {
-    private readonly IMovieDescriptionService _movieDescriptionService;
+    private readonly IMovieDescriptionService
+        _movieDescriptionService;
 
 
     public MovieDescriptionController(
         IMovieDescriptionService movieDescriptionService)
     {
-        _movieDescriptionService = movieDescriptionService;
+        _movieDescriptionService =
+            movieDescriptionService;
     }
 
 
@@ -23,7 +25,8 @@ public class MovieDescriptionController : Controller
     public async Task<IActionResult> Index()
     {
         var descriptions =
-            await _movieDescriptionService.GetAllAsync();
+            await _movieDescriptionService
+                .GetAllAsync();
 
         return View(descriptions);
     }
@@ -37,7 +40,8 @@ public class MovieDescriptionController : Controller
     public async Task<IActionResult> Create()
     {
         var dto =
-            await _movieDescriptionService.GetCreateDataAsync();
+            await _movieDescriptionService
+                .GetCreateDataAsync();
 
         return View(dto);
     }
@@ -62,7 +66,8 @@ public class MovieDescriptionController : Controller
 
 
         var result =
-            await _movieDescriptionService.CreateAsync(dto);
+            await _movieDescriptionService
+                .CreateAsync(dto);
 
 
         if (!result)
@@ -82,7 +87,8 @@ public class MovieDescriptionController : Controller
             "شرح کامل فیلم با موفقیت ثبت شد.";
 
 
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction(
+            nameof(Index));
     }
 
 
@@ -91,10 +97,12 @@ public class MovieDescriptionController : Controller
     // ==================================================
 
     [HttpGet]
-    public async Task<IActionResult> Edit(int id)
+    public async Task<IActionResult> Edit(
+        int id)
     {
         var description =
-            await _movieDescriptionService.GetEditDataAsync(id);
+            await _movieDescriptionService
+                .GetEditDataAsync(id);
 
 
         if (description == null)
@@ -119,26 +127,30 @@ public class MovieDescriptionController : Controller
 
 
         var result =
-            await _movieDescriptionService.UpdateAsync(dto);
+            await _movieDescriptionService
+                .UpdateAsync(dto);
 
 
         if (!result)
         {
             ModelState.AddModelError(
                 string.Empty,
-                "امکان ویرایش شرح فیلم وجود ندارد.");
+                "امکان ویرایش شرح فیلم وجود ندارد. ممکن است Slug واردشده قبلاً استفاده شده باشد.");
 
             return View(dto);
         }
 
 
         TempData["SuccessMessage"] =
-            "شرح کامل فیلم با موفقیت ویرایش شد.";
+            "شرح کامل فیلم و تنظیمات سئو با موفقیت ویرایش شد.";
 
 
         return RedirectToAction(
             nameof(Details),
-            new { id = dto.Id });
+            new
+            {
+                id = dto.Id
+            });
     }
 
 
@@ -147,10 +159,12 @@ public class MovieDescriptionController : Controller
     // ==================================================
 
     [HttpGet]
-    public async Task<IActionResult> Details(int id)
+    public async Task<IActionResult> Details(
+        int id)
     {
         var description =
-            await _movieDescriptionService.GetDetailsAsync(id);
+            await _movieDescriptionService
+                .GetDetailsAsync(id);
 
 
         if (description == null)

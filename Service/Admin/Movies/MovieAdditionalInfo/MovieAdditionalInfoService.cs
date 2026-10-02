@@ -6,33 +6,52 @@ namespace Service.Admin.Movies.MovieAdditionalInfo;
 
 public interface IMovieAdditionalInfoService
 {
-    Task<List<MovieAdditionalInfoListDto>> GetAllAsync();
+    Task<List<MovieAdditionalInfoListDto>>
+        GetAllAsync();
 
-    Task<MovieAdditionalInfoCreateDto> GetCreateDataAsync();
+    Task<MovieAdditionalInfoCreateDto>
+        GetCreateDataAsync();
 
-    Task FillCreateFormDataAsync(MovieAdditionalInfoCreateDto dto);
+    Task FillCreateFormDataAsync(
+        MovieAdditionalInfoCreateDto dto);
 
-    Task<bool> CreateAsync(MovieAdditionalInfoCreateDto dto);
+    Task<bool> CreateAsync(
+        MovieAdditionalInfoCreateDto dto);
 
-    Task<MovieAdditionalInfoEditDto?> GetEditDataAsync(int id);
+    Task<MovieAdditionalInfoEditDto?>
+        GetEditDataAsync(int id);
 
-    Task<bool> UpdateAsync(MovieAdditionalInfoEditDto dto);
+    Task<bool> UpdateAsync(
+        MovieAdditionalInfoEditDto dto);
 
-    Task<MovieAdditionalInfoDetailsDto?> GetDetailsAsync(int id);
+    Task<MovieAdditionalInfoDetailsDto?>
+        GetDetailsAsync(int id);
 }
 
-public class MovieAdditionalInfoService : IMovieAdditionalInfoService
+
+public class MovieAdditionalInfoService
+    : IMovieAdditionalInfoService
 {
     private readonly MyContext _context;
+
     private readonly HtmlSanitizer _sanitizer;
 
-    public MovieAdditionalInfoService(MyContext context)
+
+    public MovieAdditionalInfoService(
+        MyContext context)
     {
         _context = context;
+
         _sanitizer = CreateSanitizer();
     }
 
-    public async Task<List<MovieAdditionalInfoListDto>> GetAllAsync()
+
+    // ==================================================
+    // Get All
+    // ==================================================
+
+    public async Task<List<MovieAdditionalInfoListDto>>
+        GetAllAsync()
     {
         return await _context.MovieAdditionalInfos
             .AsNoTracking()
@@ -40,23 +59,40 @@ public class MovieAdditionalInfoService : IMovieAdditionalInfoService
             .Select(x => new MovieAdditionalInfoListDto
             {
                 Id = x.Id,
+
                 MovieId = x.MovieId,
+
                 MovieTitle = x.Movie.Title,
+
                 IsActive = x.IsActive,
+
                 CreatedAt = x.CreatedAt,
+
                 UpdatedAt = x.UpdatedAt
             })
             .ToListAsync();
     }
 
-    public async Task<MovieAdditionalInfoCreateDto> GetCreateDataAsync()
+
+    // ==================================================
+    // Get Create Data
+    // ==================================================
+
+    public async Task<MovieAdditionalInfoCreateDto>
+        GetCreateDataAsync()
     {
-        var dto = new MovieAdditionalInfoCreateDto();
+        var dto =
+            new MovieAdditionalInfoCreateDto();
 
         await FillCreateFormDataAsync(dto);
 
         return dto;
     }
+
+
+    // ==================================================
+    // Fill Create Form Data
+    // ==================================================
 
     public async Task FillCreateFormDataAsync(
         MovieAdditionalInfoCreateDto dto)
@@ -64,56 +100,81 @@ public class MovieAdditionalInfoService : IMovieAdditionalInfoService
         var movies = await _context.Movies
             .AsNoTracking()
             .Where(x => !x.IsArchived)
-            .Where(x => !_context.MovieAdditionalInfos
-                .Any(info => info.MovieId == x.Id))
+            .Where(x =>
+                !_context.MovieAdditionalInfos
+                    .Any(info =>
+                        info.MovieId == x.Id))
             .OrderBy(x => x.Title)
-            .Select(x => new MovieAdditionalInfoMovieItemDto
-            {
-                Id = x.Id,
-                Title = x.Title
-            })
+            .Select(x =>
+                new MovieAdditionalInfoMovieItemDto
+                {
+                    Id = x.Id,
+
+                    Title = x.Title
+                })
             .ToListAsync();
 
         dto.Movies = movies;
     }
 
+
+    // ==================================================
+    // Create
+    // ==================================================
+
     public async Task<bool> CreateAsync(
         MovieAdditionalInfoCreateDto dto)
     {
-        var movieExists = await _context.Movies
-            .AnyAsync(x =>
-                x.Id == dto.MovieId &&
-                !x.IsArchived);
+        var movieExists =
+            await _context.Movies
+                .AnyAsync(x =>
+                    x.Id == dto.MovieId &&
+                    !x.IsArchived);
 
         if (!movieExists)
             return false;
 
-        var additionalInfoExists = await _context.MovieAdditionalInfos
-            .AnyAsync(x => x.MovieId == dto.MovieId);
+
+        var additionalInfoExists =
+            await _context.MovieAdditionalInfos
+                .AnyAsync(x =>
+                    x.MovieId == dto.MovieId);
 
         if (additionalInfoExists)
             return false;
 
-        var sanitizedContent = SanitizeContent(dto.Content);
+
+        var sanitizedContent =
+            SanitizeContent(dto.Content);
 
         if (!HasTextContent(sanitizedContent))
             return false;
 
-        var additionalInfo = new DataBase.Entity.MovieAdditionalInfo
-        {
-            MovieId = dto.MovieId,
-            Content = sanitizedContent
-        };
 
-        _context.MovieAdditionalInfos.Add(additionalInfo);
+        var additionalInfo =
+            new DataBase.Entity.MovieAdditionalInfo
+            {
+                MovieId = dto.MovieId,
+
+                Content = sanitizedContent
+            };
+
+
+        _context.MovieAdditionalInfos
+            .Add(additionalInfo);
 
         await _context.SaveChangesAsync();
 
         return true;
     }
 
-    public async Task<MovieAdditionalInfoEditDto?> GetEditDataAsync(
-        int id)
+
+    // ==================================================
+    // Get Edit Data + SEO
+    // ==================================================
+
+    public async Task<MovieAdditionalInfoEditDto?>
+        GetEditDataAsync(int id)
     {
         return await _context.MovieAdditionalInfos
             .AsNoTracking()
@@ -121,36 +182,168 @@ public class MovieAdditionalInfoService : IMovieAdditionalInfoService
             .Select(x => new MovieAdditionalInfoEditDto
             {
                 Id = x.Id,
+
                 MovieId = x.MovieId,
+
                 MovieTitle = x.Movie.Title,
-                Content = x.Content
+
+                Content = x.Content,
+
+
+                // ==============================
+                // SEO
+                // ==============================
+
+                MetaTitle =
+                    x.Movie.MetaTitle,
+
+                MetaDescription =
+                    x.Movie.MetaDescription,
+
+                MetaKeywords =
+                    x.Movie.MetaKeywords,
+
+                Slug =
+                    x.Movie.Slug,
+
+                CanonicalUrl =
+                    x.Movie.CanonicalUrl,
+
+                OgTitle =
+                    x.Movie.OgTitle,
+
+                OgDescription =
+                    x.Movie.OgDescription,
+
+                OgImage =
+                    x.Movie.OgImage,
+
+                TwitterCard =
+                    x.Movie.TwitterCard,
+
+                NoIndex =
+                    x.Movie.NoIndex,
+
+                NoFollow =
+                    x.Movie.NoFollow
             })
             .FirstOrDefaultAsync();
     }
 
+
+    // ==================================================
+    // Update Content + SEO
+    // ==================================================
+
     public async Task<bool> UpdateAsync(
         MovieAdditionalInfoEditDto dto)
     {
-        var additionalInfo = await _context.MovieAdditionalInfos
-            .FirstOrDefaultAsync(x => x.Id == dto.Id);
+        var additionalInfo =
+            await _context.MovieAdditionalInfos
+                .Include(x => x.Movie)
+                .FirstOrDefaultAsync(x =>
+                    x.Id == dto.Id);
 
         if (additionalInfo == null)
             return false;
 
-        var sanitizedContent = SanitizeContent(dto.Content);
+
+        if (additionalInfo.Movie == null)
+            return false;
+
+
+        // ==================================================
+        // Sanitize Content
+        // ==================================================
+
+        var sanitizedContent =
+            SanitizeContent(dto.Content);
 
         if (!HasTextContent(sanitizedContent))
             return false;
 
-        additionalInfo.Content = sanitizedContent;
+
+        // ==================================================
+        // Slug
+        // ==================================================
+
+        var slug =
+            string.IsNullOrWhiteSpace(dto.Slug)
+                ? null
+                : dto.Slug.Trim();
+
+
+        if (!string.IsNullOrWhiteSpace(slug))
+        {
+            var duplicateSlug =
+                await _context.Movies
+                    .AnyAsync(x =>
+                        x.Id != additionalInfo.MovieId &&
+                        x.Slug == slug);
+
+            if (duplicateSlug)
+                return false;
+        }
+
+
+        // ==================================================
+        // Update Content
+        // ==================================================
+
+        additionalInfo.Content =
+            sanitizedContent;
+
+
+        // ==================================================
+        // Update SEO
+        // ==================================================
+
+        additionalInfo.Movie.MetaTitle =
+            NormalizeNullable(dto.MetaTitle);
+
+        additionalInfo.Movie.MetaDescription =
+            NormalizeNullable(dto.MetaDescription);
+
+        additionalInfo.Movie.MetaKeywords =
+            NormalizeNullable(dto.MetaKeywords);
+
+        additionalInfo.Movie.Slug =
+            slug;
+
+        additionalInfo.Movie.CanonicalUrl =
+            NormalizeNullable(dto.CanonicalUrl);
+
+        additionalInfo.Movie.OgTitle =
+            NormalizeNullable(dto.OgTitle);
+
+        additionalInfo.Movie.OgDescription =
+            NormalizeNullable(dto.OgDescription);
+
+        additionalInfo.Movie.OgImage =
+            NormalizeNullable(dto.OgImage);
+
+        additionalInfo.Movie.TwitterCard =
+            NormalizeTwitterCard(dto.TwitterCard);
+
+        additionalInfo.Movie.NoIndex =
+            dto.NoIndex;
+
+        additionalInfo.Movie.NoFollow =
+            dto.NoFollow;
+
 
         await _context.SaveChangesAsync();
 
         return true;
     }
 
-    public async Task<MovieAdditionalInfoDetailsDto?> GetDetailsAsync(
-        int id)
+
+    // ==================================================
+    // Details
+    // ==================================================
+
+    public async Task<MovieAdditionalInfoDetailsDto?>
+        GetDetailsAsync(int id)
     {
         return await _context.MovieAdditionalInfos
             .AsNoTracking()
@@ -158,17 +351,67 @@ public class MovieAdditionalInfoService : IMovieAdditionalInfoService
             .Select(x => new MovieAdditionalInfoDetailsDto
             {
                 Id = x.Id,
+
                 MovieId = x.MovieId,
+
                 MovieTitle = x.Movie.Title,
+
                 Content = x.Content,
+
                 IsActive = x.IsActive,
+
                 CreatedAt = x.CreatedAt,
-                UpdatedAt = x.UpdatedAt
+
+                UpdatedAt = x.UpdatedAt,
+
+
+                // ==============================
+                // SEO
+                // ==============================
+
+                MetaTitle =
+                    x.Movie.MetaTitle,
+
+                MetaDescription =
+                    x.Movie.MetaDescription,
+
+                MetaKeywords =
+                    x.Movie.MetaKeywords,
+
+                Slug =
+                    x.Movie.Slug,
+
+                CanonicalUrl =
+                    x.Movie.CanonicalUrl,
+
+                OgTitle =
+                    x.Movie.OgTitle,
+
+                OgDescription =
+                    x.Movie.OgDescription,
+
+                OgImage =
+                    x.Movie.OgImage,
+
+                TwitterCard =
+                    x.Movie.TwitterCard,
+
+                NoIndex =
+                    x.Movie.NoIndex,
+
+                NoFollow =
+                    x.Movie.NoFollow
             })
             .FirstOrDefaultAsync();
     }
 
-    private string SanitizeContent(string content)
+
+    // ==================================================
+    // Sanitize
+    // ==================================================
+
+    private string SanitizeContent(
+        string content)
     {
         if (string.IsNullOrWhiteSpace(content))
             return string.Empty;
@@ -176,19 +419,77 @@ public class MovieAdditionalInfoService : IMovieAdditionalInfoService
         return _sanitizer.Sanitize(content);
     }
 
-    private bool HasTextContent(string html)
+
+    // ==================================================
+    // Has Text
+    // ==================================================
+
+    private bool HasTextContent(
+        string html)
     {
-        var text = Regex.Replace(
-            html,
-            "<.*?>",
-            string.Empty);
+        var text =
+            Regex.Replace(
+                html,
+                "<.*?>",
+                string.Empty);
 
         return !string.IsNullOrWhiteSpace(text);
     }
 
-    private static HtmlSanitizer CreateSanitizer()
+
+    // ==================================================
+    // Normalize
+    // ==================================================
+
+    private static string? NormalizeNullable(
+        string? value)
     {
-        var sanitizer = new HtmlSanitizer();
+        if (string.IsNullOrWhiteSpace(value))
+            return null;
+
+        return value.Trim();
+    }
+
+
+    // ==================================================
+    // Twitter Card
+    // ==================================================
+
+    private static string? NormalizeTwitterCard(
+        string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return null;
+
+        var normalized =
+            value.Trim().ToLowerInvariant();
+
+        return normalized switch
+        {
+            "summary" => "summary",
+
+            "summary_large_image" =>
+                "summary_large_image",
+
+            "app" => "app",
+
+            "player" => "player",
+
+            _ => null
+        };
+    }
+
+
+    // ==================================================
+    // Html Sanitizer
+    // ==================================================
+
+    private static HtmlSanitizer
+        CreateSanitizer()
+    {
+        var sanitizer =
+            new HtmlSanitizer();
+
 
         sanitizer.AllowedTags.Clear();
 
@@ -215,6 +516,7 @@ public class MovieAdditionalInfoService : IMovieAdditionalInfoService
 
         sanitizer.AllowedTags.Add("blockquote");
 
+
         sanitizer.AllowedAttributes.Clear();
 
         sanitizer.AllowedAttributes.Add("href");
@@ -225,16 +527,24 @@ public class MovieAdditionalInfoService : IMovieAdditionalInfoService
         sanitizer.AllowedAttributes.Add("rel");
         sanitizer.AllowedAttributes.Add("class");
 
+
         sanitizer.AllowedClasses.Clear();
 
-        sanitizer.AllowedClasses.Add("ql-align-center");
-        sanitizer.AllowedClasses.Add("ql-align-right");
-        sanitizer.AllowedClasses.Add("ql-align-justify");
+        sanitizer.AllowedClasses.Add(
+            "ql-align-center");
+
+        sanitizer.AllowedClasses.Add(
+            "ql-align-right");
+
+        sanitizer.AllowedClasses.Add(
+            "ql-align-justify");
+
 
         sanitizer.AllowedSchemes.Clear();
 
         sanitizer.AllowedSchemes.Add("http");
         sanitizer.AllowedSchemes.Add("https");
+
 
         return sanitizer;
     }

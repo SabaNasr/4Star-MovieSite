@@ -32,14 +32,14 @@ public class MyContext : DbContext
     public DbSet<ContactUsCard> ContactUsCards => Set<ContactUsCard>();
     public DbSet<FAQ> FAQs => Set<FAQ>();
     public DbSet<UserQuestion> UserQuestions => Set<UserQuestion>();
-
     public DbSet<AboutUs> AboutUs => Set<AboutUs>();
-
     public DbSet<AboutUsComment> AboutUsComments =>Set<AboutUsComment>();
-
+    public DbSet<AboutUsSocialLink> AboutUsSocialLinks => Set<AboutUsSocialLink>();
     public DbSet<AboutUsTeamMember> AboutUsTeamMembers =>Set<AboutUsTeamMember>();
-
-    public DbSet<AboutUsSocialLink> AboutUsSocialLinks =>Set<AboutUsSocialLink>();
+    public DbSet<SiteSetting> SiteSettings =>Set<SiteSetting>();
+    public DbSet<Banner> Banners =>Set<Banner>();
+    public DbSet<Logo> Logos =>Set<Logo>();
+    public DbSet<TagSearch> TagSearches =>Set<TagSearch>();
 
 
 

@@ -16,6 +16,7 @@ public class TVShowAdditionalInfoListDto
     public DateTime? UpdatedAt { get; set; }
 }
 
+
 public class TVShowAdditionalInfoCreateDto
 {
     [Required(ErrorMessage = "انتخاب تی‌وی شو الزامی است.")]
@@ -24,8 +25,9 @@ public class TVShowAdditionalInfoCreateDto
     [Required(ErrorMessage = "اطلاعات تکمیلی تی‌وی شو الزامی است.")]
     public string Content { get; set; } = string.Empty;
 
-    public List<TVShowAdditionalInfoTVShowItemDto> TVShows { get; set; } = new();
+    public List<TVShowAdditionalInfoTVShowItemDto>TVShows{ get; set; } = new();
 }
+
 
 public class TVShowAdditionalInfoEditDto
 {
@@ -37,7 +39,35 @@ public class TVShowAdditionalInfoEditDto
 
     [Required(ErrorMessage = "اطلاعات تکمیلی تی‌وی شو الزامی است.")]
     public string Content { get; set; } = string.Empty;
+
+
+    // ==================================================
+    // SEO
+    // ==================================================
+
+    public string? MetaTitle { get; set; }
+
+    public string? MetaDescription { get; set; }
+
+    public string? MetaKeywords { get; set; }
+
+    public string? Slug { get; set; }
+
+    public string? CanonicalUrl { get; set; }
+
+    public string? OgTitle { get; set; }
+
+    public string? OgDescription { get; set; }
+
+    public string? OgImage { get; set; }
+
+    public string? TwitterCard { get; set; }
+
+    public bool NoIndex { get; set; }
+
+    public bool NoFollow { get; set; }
 }
+
 
 public class TVShowAdditionalInfoDetailsDto
 {
@@ -54,7 +84,35 @@ public class TVShowAdditionalInfoDetailsDto
     public DateTime CreatedAt { get; set; }
 
     public DateTime? UpdatedAt { get; set; }
+
+
+    // ==================================================
+    // SEO
+    // ==================================================
+
+    public string? MetaTitle { get; set; }
+
+    public string? MetaDescription { get; set; }
+
+    public string? MetaKeywords { get; set; }
+
+    public string? Slug { get; set; }
+
+    public string? CanonicalUrl { get; set; }
+
+    public string? OgTitle { get; set; }
+
+    public string? OgDescription { get; set; }
+
+    public string? OgImage { get; set; }
+
+    public string? TwitterCard { get; set; }
+
+    public bool NoIndex { get; set; }
+
+    public bool NoFollow { get; set; }
 }
+
 
 public class TVShowAdditionalInfoTVShowItemDto
 {

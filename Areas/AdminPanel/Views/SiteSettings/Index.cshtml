@@ -1,0 +1,81 @@
+﻿@model List<Service.Admin.Settings.SiteSettings.SiteSettingGroupDto>
+
+@{
+    ViewData["Title"] = "تنظیمات سایت";
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4">مدیریت تنظیمات سایت</h4>
+
+    <div class="nav-align-top mb-4">
+        <ul class="nav nav-pills mb-3" role="tablist">
+            @foreach (var group in Model.Where(x => x.GroupName != "Contact"))
+            {
+                <li class="nav-item">
+                    <button type="button"
+                            class="nav-link @(group == Model.Where(x => x.GroupName != "Contact").First() ? "active" : "")"
+                            data-bs-toggle="tab"
+                            data-bs-target="#tab-@group.GroupName">
+                        @group.GroupDisplayName
+                    </button>
+                </li>
+            }
+        </ul>
+
+        <div class="tab-content">
+            @foreach (var group in Model.Where(x => x.GroupName != "Contact"))
+            {
+                <div class="tab-pane fade @(group == Model.Where(x => x.GroupName != "Contact").First() ? "show active" : "")"
+                     id="tab-@group.GroupName">
+
+                    <div class="card">
+                        <div class="card-body">
+
+                            <form asp-action="SaveGroup" method="post">
+                                @Html.AntiForgeryToken()
+
+                                <input type="hidden"
+                                       name="groupName"
+                                       value="@group.GroupName" />
+
+                                <div class="row">
+                                    @foreach (var item in group.Items)
+                                    {
+                                        <div class="col-md-6 mb-3">
+
+                                            <label class="form-label fw-bold">
+                                                @item.Key
+                                            </label>
+
+                                            @if (item.Description != null)
+                                            {
+                                                <small class="d-block text-muted mb-2">
+                                                    @item.Description
+                                                </small>
+                                            }
+
+                                            <input type="text"
+                                                   name="settings[@item.Key]"
+                                                   value="@item.Value"
+                                                   class="form-control" />
+
+                                        </div>
+                                    }
+                                </div>
+
+                                <button type="submit"
+                                        class="btn btn-primary mt-3">
+                                    <i class="bx bx-save me-1"></i>
+                                    ذخیره تنظیمات @group.GroupDisplayName
+                                </button>
+
+                            </form>
+
+                        </div>
+                    </div>
+
+                </div>
+            }
+        </div>
+    </div>
+</div>

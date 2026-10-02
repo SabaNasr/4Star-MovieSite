@@ -4,126 +4,782 @@
     ViewData["Title"] = "ویرایش اطلاعات تکمیلی تی‌وی شو";
 }
 
-@section Styles {
+@section Styles
+{
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css"
           rel="stylesheet" />
+
+    <style>
+
+        #editor {
+            min-height: 350px;
+        }
+
+        .ql-editor {
+            min-height: 350px;
+            direction: rtl;
+            text-align: right;
+        }
+
+        .edit-tabs {
+            display: flex;
+            align-items: stretch;
+            border-bottom: 1px solid #dee2e6;
+            margin-bottom: 0;
+            direction: rtl;
+        }
+
+        .edit-tab {
+            border: 0;
+            background: transparent;
+            color: #6c757d;
+            padding: 14px 24px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all .2s ease;
+        }
+
+            .edit-tab:hover {
+                color: #0d6efd;
+                background-color: #f8f9fa;
+            }
+
+            .edit-tab.active {
+                color: #0d6efd;
+                background-color: #fff;
+                border-bottom-color: #0d6efd;
+            }
+
+        .edit-tab-panel {
+            display: none;
+        }
+
+            .edit-tab-panel.active {
+                display: block;
+            }
+
+        .seo-description {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 14px 16px;
+            color: #6c757d;
+            font-size: 13px;
+            line-height: 1.8;
+            margin-bottom: 24px;
+        }
+
+        .seo-form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 22px 24px;
+        }
+
+        .seo-field {
+            min-width: 0;
+        }
+
+            .seo-field.full-width {
+                grid-column: 1 / -1;
+            }
+
+        .seo-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #343a40;
+        }
+
+        .seo-help {
+            display: block;
+            margin-top: 7px;
+            font-size: 12px;
+            line-height: 1.7;
+            color: #8a8f98;
+        }
+
+        .seo-input,
+        .seo-select,
+        .seo-textarea {
+            width: 100%;
+            border: 1px solid #dee2e6;
+            border-radius: 7px;
+            background: #fff;
+            color: #212529;
+            font-size: 14px;
+            padding: 10px 12px;
+            transition: border-color .2s ease, box-shadow .2s ease;
+        }
+
+            .seo-input:focus,
+            .seo-select:focus,
+            .seo-textarea:focus {
+                border-color: #86b7fe;
+                outline: 0;
+                box-shadow: 0 0 0 .2rem rgba(13, 110, 253, .08);
+            }
+
+        .seo-textarea {
+            min-height: 130px;
+            resize: vertical;
+            line-height: 1.8;
+        }
+
+        .seo-index-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 24px;
+            margin-top: 24px;
+        }
+
+        .seo-toggle-card {
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 16px;
+            background: #fff;
+        }
+
+        .seo-toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .seo-toggle-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #343a40;
+            margin-bottom: 5px;
+        }
+
+        .seo-toggle-description {
+            margin: 0;
+            font-size: 12px;
+            line-height: 1.7;
+            color: #8a8f98;
+        }
+
+        .seo-switch {
+            position: relative;
+            display: inline-block;
+            width: 46px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+            .seo-switch input {
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
+
+        .seo-slider {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background-color: #ced4da;
+            border-radius: 24px;
+            transition: .2s;
+        }
+
+            .seo-slider:before {
+                position: absolute;
+                content: "";
+                height: 18px;
+                width: 18px;
+                right: 3px;
+                top: 3px;
+                background-color: white;
+                border-radius: 50%;
+                transition: .2s;
+                box-shadow: 0 1px 3px rgba(0,0,0,.15);
+            }
+
+        .seo-switch input:checked + .seo-slider {
+            background-color: #0d6efd;
+        }
+
+            .seo-switch input:checked + .seo-slider:before {
+                transform: translateX(-22px);
+            }
+
+        @@media (max-width: 768px) {
+
+            .seo-form-grid,
+            .seo-index-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .seo-field.full-width {
+                grid-column: auto;
+            }
+
+            .edit-tab {
+                flex: 1;
+                padding: 12px 10px;
+            }
+        }
+
+    </style>
 }
 
-<div class="card">
-    <div class="card-header">
-        <h5 class="mb-0">
+<div class="container-fluid">
+
+    <div class="mb-4">
+
+        <h4>
             ویرایش اطلاعات تکمیلی تی‌وی شو
-        </h5>
+        </h4>
+
+        <p class="text-muted mb-0">
+            تی‌وی شو:
+            <strong>
+                @Model.TVShowTitle
+            </strong>
+        </p>
+
     </div>
 
-    <div class="card-body">
+    <div class="card">
 
-        <form asp-area="AdminPanel"
-              asp-controller="TVShowAdditionalInfo"
-              asp-action="Edit"
-              method="post">
+        <div class="card-body p-0">
 
-            @Html.AntiForgeryToken()
+            <form asp-action="Edit"
+                  method="post"
+                  id="additionalInfoForm">
 
-            <input asp-for="Id" type="hidden" />
+                @Html.AntiForgeryToken()
 
-            <input asp-for="TVShowId" type="hidden" />
+                <input asp-for="Id"
+                       type="hidden" />
 
-            <div asp-validation-summary="ModelOnly"
-                 class="text-danger mb-3">
-            </div>
+                <input asp-for="TVShowId"
+                       type="hidden" />
 
-            <div class="mb-4">
-                <label class="form-label">
-                    تی‌وی شو
-                </label>
-
-                <input type="text"
-                       class="form-control"
-                       value="@Model.TVShowTitle"
-                       readonly />
-            </div>
-
-            <div class="mb-4">
-                <label class="form-label">
-                    اطلاعات تکمیلی
-                </label>
-
-                <div id="editor"
-                     style="min-height: 350px;">
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger mx-4 mt-4">
                 </div>
 
-                <textarea asp-for="Content"
-                          id="Content"
-                          class="d-none">
-                </textarea>
+                <div class="edit-tabs px-4">
 
-                <span asp-validation-for="Content"
-                      class="text-danger">
-                </span>
-            </div>
+                    <button type="button"
+                            class="edit-tab active"
+                            data-tab="contentTab">
+                        محتوای صفحه
+                    </button>
 
-            <div class="d-flex gap-2">
+                    <button type="button"
+                            class="edit-tab"
+                            data-tab="seoTab">
+                        تنظیمات سئو (SEO)
+                    </button>
 
-                <button type="submit"
-                        class="btn btn-primary">
-                    <i class="bx bx-save"></i>
-                    ذخیره تغییرات
-                </button>
+                </div>
 
-                <a asp-area="AdminPanel"
-                   asp-controller="TVShowAdditionalInfo"
-                   asp-action="Details"
-                   asp-route-id="@Model.Id"
-                   class="btn btn-secondary">
-                    انصراف
-                </a>
 
-            </div>
+                <!-- =========================
+                     Content Tab
+                     ========================= -->
 
-        </form>
+                <div id="contentTab"
+                     class="edit-tab-panel active p-4">
+
+                    <div class="mb-4">
+
+                        <label class="form-label">
+                            تی‌وی شو
+                        </label>
+
+                        <input type="text"
+                               class="form-control"
+                               value="@Model.TVShowTitle"
+                               readonly />
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            اطلاعات تکمیلی تی‌وی شو
+                        </label>
+
+                        <div id="toolbar">
+
+                            <span class="ql-formats">
+
+                                <select class="ql-header">
+                                    <option selected></option>
+                                    <option value="1"></option>
+                                    <option value="2"></option>
+                                    <option value="3"></option>
+                                    <option value="4"></option>
+                                    <option value="5"></option>
+                                    <option value="6"></option>
+                                </select>
+
+                            </span>
+
+
+                            <span class="ql-formats">
+
+                                <button class="ql-bold"></button>
+
+                                <button class="ql-italic"></button>
+
+                                <button class="ql-underline"></button>
+
+                            </span>
+
+
+                            <span class="ql-formats">
+
+                                <button class="ql-list"
+                                        value="ordered">
+                                </button>
+
+                                <button class="ql-list"
+                                        value="bullet">
+                                </button>
+
+                            </span>
+
+
+                            <span class="ql-formats">
+
+                                <select class="ql-align">
+
+                                    <option selected></option>
+
+                                    <option value="center"></option>
+
+                                    <option value="right"></option>
+
+                                    <option value="justify"></option>
+
+                                </select>
+
+                            </span>
+
+
+                            <span class="ql-formats">
+
+                                <button class="ql-link"></button>
+
+                                <button class="ql-image"></button>
+
+                            </span>
+
+
+                            <span class="ql-formats">
+
+                                <button class="ql-clean"></button>
+
+                            </span>
+
+                        </div>
+
+
+                        <div id="editor">
+                            @Html.Raw(Model.Content)
+                        </div>
+
+
+                        <textarea asp-for="Content"
+                                  id="Content"
+                                  hidden></textarea>
+
+
+                        <span asp-validation-for="Content"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =========================
+                     SEO Tab
+                     ========================= -->
+
+                <div id="seoTab"
+                     class="edit-tab-panel p-4">
+
+                    <div class="seo-description">
+
+                        این تنظیمات فقط برای موتورهای جستجو (گوگل)
+                        و اشتراک‌گذاری در شبکه‌های اجتماعی استفاده می‌شوند.
+
+                    </div>
+
+
+                    <div class="seo-form-grid">
+
+
+                        <!-- Meta Title -->
+
+                        <div class="seo-field">
+
+                            <label asp-for="MetaTitle"
+                                   class="seo-label">
+
+                                عنوان متا (META TITLE)
+
+                            </label>
+
+                            <input asp-for="MetaTitle"
+                                   class="seo-input"
+                                   placeholder="عنوانی که در نتایج گوگل نمایش داده می‌شود" />
+
+                        </div>
+
+
+                        <!-- Meta Keywords -->
+
+                        <div class="seo-field">
+
+                            <label asp-for="MetaKeywords"
+                                   class="seo-label">
+
+                                کلمات کلیدی (META KEYWORDS)
+
+                            </label>
+
+                            <input asp-for="MetaKeywords"
+                                   class="seo-input"
+                                   placeholder="با کاما جدا کنید" />
+
+                        </div>
+
+
+                        <!-- OG Image -->
+
+                        <div class="seo-field">
+
+                            <label asp-for="OgImage"
+                                   class="seo-label">
+
+                                تصویر اشتراک‌گذاری (OPEN GRAPH IMAGE)
+
+                            </label>
+
+                            <input asp-for="OgImage"
+                                   class="seo-input"
+                                   placeholder="لینک تصویر یا مسیر نسبی" />
+
+                            <span class="seo-help">
+
+                                تصویری که هنگام اشتراک‌گذاری لینک
+                                در تلگرام/واتساپ نمایش داده می‌شود.
+
+                            </span>
+
+                        </div>
+
+
+                        <!-- Twitter Card -->
+
+                        <div class="seo-field">
+
+                            <label asp-for="TwitterCard"
+                                   class="seo-label">
+
+                                نوع کارت توییتر (TWITTER CARD)
+
+                            </label>
+
+                            <select asp-for="TwitterCard"
+                                    class="seo-select">
+
+                                <option value="">
+                                    انتخاب کنید...
+                                </option>
+
+                                <option value="summary">
+                                    Summary
+                                </option>
+
+                                <option value="summary_large_image">
+                                    Summary Large Image
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- Meta Description -->
+
+                        <div class="seo-field full-width">
+
+                            <label asp-for="MetaDescription"
+                                   class="seo-label">
+
+                                توضیحات متا (META DESCRIPTION)
+
+                            </label>
+
+                            <textarea asp-for="MetaDescription"
+                                      class="seo-textarea"
+                                      placeholder="توضیح کوتاه و جذاب برای گوگل (حدود 160 کاراکتر)"></textarea>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Index Settings -->
+
+                    <div class="seo-index-grid">
+
+
+                        <!-- NoIndex -->
+
+                        <div class="seo-toggle-card">
+
+                            <div class="seo-toggle-row">
+
+                                <div>
+
+                                    <div class="seo-toggle-title">
+                                        عدم ایندکس (NoIndex)
+                                    </div>
+
+                                    <p class="seo-toggle-description">
+
+                                        اگر فعال باشد، گوگل این صفحه
+                                        را در نتایج جستجو نشان نمی‌دهد.
+
+                                    </p>
+
+                                </div>
+
+
+                                <label class="seo-switch">
+
+                                    <input asp-for="NoIndex"
+                                           type="checkbox" />
+
+                                    <span class="seo-slider"></span>
+
+                                </label>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- NoFollow -->
+
+                        <div class="seo-toggle-card">
+
+                            <div class="seo-toggle-row">
+
+                                <div>
+
+                                    <div class="seo-toggle-title">
+                                        عدم دنبال کردن لینک‌ها (NoFollow)
+                                    </div>
+
+                                    <p class="seo-toggle-description">
+
+                                        ربات‌های گوگل لینک‌های داخل
+                                        این صفحه را دنبال نمی‌کنند.
+
+                                    </p>
+
+                                </div>
+
+
+                                <label class="seo-switch">
+
+                                    <input asp-for="NoFollow"
+                                           type="checkbox" />
+
+                                    <span class="seo-slider"></span>
+
+                                </label>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =========================
+                     Form Actions
+                     ========================= -->
+
+                <div class="d-flex gap-2 p-4 border-top">
+
+                    <button type="submit"
+                            class="btn btn-primary">
+
+                        ذخیره تغییرات
+
+                    </button>
+
+
+                    <a asp-action="Details"
+                       asp-route-id="@Model.Id"
+                       class="btn btn-secondary">
+
+                        انصراف
+
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
 
     </div>
+
 </div>
 
-@section Scripts {
 
+@section Scripts
+{
     <partial name="_ValidationScriptsPartial" />
 
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
 
     <script>
-        const toolbarOptions = [
-            [{ header: [1, 2, 3, 4, 5, 6, false] }],
-            ['bold', 'italic', 'underline'],
-            [{ list: 'ordered' }, { list: 'bullet' }],
-            [{ align: [] }],
-            ['link', 'image'],
-            ['clean']
-        ];
 
-        const quill = new Quill('#editor', {
-            theme: 'snow',
-            modules: {
-                toolbar: toolbarOptions
-            }
-        });
+        // ==================================================
+        // Quill
+        // ==================================================
 
-        const existingContent =
-            document.getElementById('Content').value;
+        const quill =
+            new Quill('#editor', {
 
-        if (existingContent) {
-            quill.clipboard.dangerouslyPasteHTML(
-                existingContent
+                theme: 'snow',
+
+                modules: {
+
+                    toolbar: {
+
+                        container: '#toolbar',
+
+                        handlers: {
+
+                            image: function() {
+
+                                const url =
+                                    prompt(
+                                        'آدرس تصویر را وارد کنید:'
+                                    );
+
+                                if (url) {
+
+                                    const range =
+                                        quill.getSelection();
+
+                                    quill.insertEmbed(
+                                        range
+                                            ? range.index
+                                            : 0,
+                                        'image',
+                                        url
+                                    );
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            });
+
+
+        // ==================================================
+        // Tabs
+        // ==================================================
+
+        const tabs =
+            document.querySelectorAll('.edit-tab');
+
+        const panels =
+            document.querySelectorAll('.edit-tab-panel');
+
+
+        tabs.forEach(function(tab) {
+
+            tab.addEventListener(
+                'click',
+                function() {
+
+                    const targetId =
+                        tab.getAttribute(
+                            'data-tab'
+                        );
+
+
+                    tabs.forEach(function(item) {
+
+                        item.classList.remove(
+                            'active'
+                        );
+
+                    });
+
+
+                    panels.forEach(function(panel) {
+
+                        panel.classList.remove(
+                            'active'
+                        );
+
+                    });
+
+
+                    tab.classList.add('active');
+
+
+                    document
+                        .getElementById(targetId)
+                        .classList.add('active');
+
+                }
             );
-        }
 
-        const form = document.querySelector('form');
-        const contentInput =
-            document.getElementById('Content');
-
-        form.addEventListener('submit', function() {
-            contentInput.value = quill.root.innerHTML;
         });
+
+
+        // ==================================================
+        // Form Submit
+        // ==================================================
+
+        const form =
+            document.getElementById(
+                'additionalInfoForm'
+            );
+
+
+        form.addEventListener(
+            'submit',
+            function() {
+
+                document.getElementById(
+                    'Content'
+                ).value =
+                    quill.root.innerHTML;
+
+            }
+        );
+
     </script>
 }

@@ -16,6 +16,7 @@ public class SeriesAdditionalInfoListDto
     public DateTime? UpdatedAt { get; set; }
 }
 
+
 public class SeriesAdditionalInfoCreateDto
 {
     [Required(ErrorMessage = "انتخاب سریال الزامی است.")]
@@ -24,9 +25,11 @@ public class SeriesAdditionalInfoCreateDto
     [Required(ErrorMessage = "اطلاعات تکمیلی سریال الزامی است.")]
     public string Content { get; set; } = string.Empty;
 
-    public List<SeriesAdditionalInfoSeriesItemDto> Series { get; set; }
-        = new();
+    public List<SeriesAdditionalInfoSeriesItemDto>
+        Series
+    { get; set; } = new();
 }
+
 
 public class SeriesAdditionalInfoEditDto
 {
@@ -38,7 +41,35 @@ public class SeriesAdditionalInfoEditDto
 
     [Required(ErrorMessage = "اطلاعات تکمیلی سریال الزامی است.")]
     public string Content { get; set; } = string.Empty;
+
+
+    // ==================================================
+    // SEO
+    // ==================================================
+
+    public string? MetaTitle { get; set; }
+
+    public string? MetaDescription { get; set; }
+
+    public string? MetaKeywords { get; set; }
+
+    public string? Slug { get; set; }
+
+    public string? CanonicalUrl { get; set; }
+
+    public string? OgTitle { get; set; }
+
+    public string? OgDescription { get; set; }
+
+    public string? OgImage { get; set; }
+
+    public string? TwitterCard { get; set; }
+
+    public bool NoIndex { get; set; }
+
+    public bool NoFollow { get; set; }
 }
+
 
 public class SeriesAdditionalInfoDetailsDto
 {
@@ -55,7 +86,35 @@ public class SeriesAdditionalInfoDetailsDto
     public DateTime CreatedAt { get; set; }
 
     public DateTime? UpdatedAt { get; set; }
+
+
+    // ==================================================
+    // SEO
+    // ==================================================
+
+    public string? MetaTitle { get; set; }
+
+    public string? MetaDescription { get; set; }
+
+    public string? MetaKeywords { get; set; }
+
+    public string? Slug { get; set; }
+
+    public string? CanonicalUrl { get; set; }
+
+    public string? OgTitle { get; set; }
+
+    public string? OgDescription { get; set; }
+
+    public string? OgImage { get; set; }
+
+    public string? TwitterCard { get; set; }
+
+    public bool NoIndex { get; set; }
+
+    public bool NoFollow { get; set; }
 }
+
 
 public class SeriesAdditionalInfoSeriesItemDto
 {

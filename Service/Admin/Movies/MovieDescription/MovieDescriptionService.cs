@@ -2,7 +2,6 @@
 using Ganss.Xss;
 using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
-
 namespace Service.Admin.Movies.MovieDescription;
 
 public interface IMovieDescriptionService
@@ -11,26 +10,33 @@ public interface IMovieDescriptionService
 
     Task<MovieDescriptionCreateDto> GetCreateDataAsync();
 
-    Task FillCreateFormDataAsync(MovieDescriptionCreateDto dto);
+    Task FillCreateFormDataAsync(
+        MovieDescriptionCreateDto dto);
 
-    Task<bool> CreateAsync(MovieDescriptionCreateDto dto);
+    Task<bool> CreateAsync(
+        MovieDescriptionCreateDto dto);
 
-    Task<MovieDescriptionEditDto?> GetEditDataAsync(int id);
+    Task<MovieDescriptionEditDto?>
+        GetEditDataAsync(int id);
 
-    Task<bool> UpdateAsync(MovieDescriptionEditDto dto);
+    Task<bool> UpdateAsync(
+        MovieDescriptionEditDto dto);
 
-    Task<MovieDescriptionDetailsDto?> GetDetailsAsync(int id);
+    Task<MovieDescriptionDetailsDto?>
+        GetDetailsAsync(int id);
 }
 
 
-public class MovieDescriptionService : IMovieDescriptionService
+public class MovieDescriptionService
+    : IMovieDescriptionService
 {
     private readonly MyContext _context;
 
     private readonly HtmlSanitizer _sanitizer;
 
 
-    public MovieDescriptionService(MyContext context)
+    public MovieDescriptionService(
+        MyContext context)
     {
         _context = context;
 
@@ -42,7 +48,8 @@ public class MovieDescriptionService : IMovieDescriptionService
     // دریافت تمام شرح فیلم‌ها
     // ==================================================
 
-    public async Task<List<MovieDescriptionListDto>> GetAllAsync()
+    public async Task<List<MovieDescriptionListDto>>
+        GetAllAsync()
     {
         return await _context.MovieDescriptions
             .AsNoTracking()
@@ -69,9 +76,11 @@ public class MovieDescriptionService : IMovieDescriptionService
     // دریافت اطلاعات اولیه فرم Create
     // ==================================================
 
-    public async Task<MovieDescriptionCreateDto> GetCreateDataAsync()
+    public async Task<MovieDescriptionCreateDto>
+        GetCreateDataAsync()
     {
-        var dto = new MovieDescriptionCreateDto();
+        var dto =
+            new MovieDescriptionCreateDto();
 
         await FillCreateFormDataAsync(dto);
 
@@ -89,17 +98,19 @@ public class MovieDescriptionService : IMovieDescriptionService
         var movies = await _context.Movies
             .AsNoTracking()
             .Where(x => !x.IsArchived)
-            .Where(x => !_context.MovieDescriptions
-                .Any(description => description.MovieId == x.Id))
+            .Where(x =>
+                !_context.MovieDescriptions
+                    .Any(description =>
+                        description.MovieId == x.Id))
             .OrderBy(x => x.Title)
-            .Select(x => new MovieDescriptionMovieItemDto
-            {
-                Id = x.Id,
+            .Select(x =>
+                new MovieDescriptionMovieItemDto
+                {
+                    Id = x.Id,
 
-                Title = x.Title
-            })
+                    Title = x.Title
+                })
             .ToListAsync();
-
 
         dto.Movies = movies;
     }
@@ -112,37 +123,43 @@ public class MovieDescriptionService : IMovieDescriptionService
     public async Task<bool> CreateAsync(
         MovieDescriptionCreateDto dto)
     {
-        var movieExists = await _context.Movies
-            .AnyAsync(x =>
-                x.Id == dto.MovieId &&
-                !x.IsArchived);
+        var movieExists =
+            await _context.Movies
+                .AnyAsync(x =>
+                    x.Id == dto.MovieId &&
+                    !x.IsArchived);
 
         if (!movieExists)
             return false;
 
 
-        var descriptionExists = await _context.MovieDescriptions
-            .AnyAsync(x => x.MovieId == dto.MovieId);
+        var descriptionExists =
+            await _context.MovieDescriptions
+                .AnyAsync(x =>
+                    x.MovieId == dto.MovieId);
 
         if (descriptionExists)
             return false;
 
 
-        var sanitizedContent = SanitizeContent(dto.Content);
+        var sanitizedContent =
+            SanitizeContent(dto.Content);
 
         if (!HasTextContent(sanitizedContent))
             return false;
 
 
-        var description = new DataBase.Entity.MovieDescription
-        {
-            MovieId = dto.MovieId,
+        var description =
+            new DataBase.Entity.MovieDescription
+            {
+                MovieId = dto.MovieId,
 
-            Content = sanitizedContent
-        };
+                Content = sanitizedContent
+            };
 
 
-        _context.MovieDescriptions.Add(description);
+        _context.MovieDescriptions
+            .Add(description);
 
         await _context.SaveChangesAsync();
 
@@ -151,11 +168,11 @@ public class MovieDescriptionService : IMovieDescriptionService
 
 
     // ==================================================
-    // دریافت اطلاعات Description برای Edit
+    // دریافت اطلاعات Edit + SEO
     // ==================================================
 
-    public async Task<MovieDescriptionEditDto?> GetEditDataAsync(
-        int id)
+    public async Task<MovieDescriptionEditDto?>
+        GetEditDataAsync(int id)
     {
         return await _context.MovieDescriptions
             .AsNoTracking()
@@ -168,33 +185,153 @@ public class MovieDescriptionService : IMovieDescriptionService
 
                 MovieTitle = x.Movie.Title,
 
-                Content = x.Content
+                Content = x.Content,
+
+
+                // ==============================
+                // SEO
+                // ==============================
+
+                MetaTitle = x.Movie.MetaTitle,
+
+                MetaDescription =
+                    x.Movie.MetaDescription,
+
+                MetaKeywords =
+                    x.Movie.MetaKeywords,
+
+                Slug =
+                    x.Movie.Slug,
+
+                CanonicalUrl =
+                    x.Movie.CanonicalUrl,
+
+                OgTitle =
+                    x.Movie.OgTitle,
+
+                OgDescription =
+                    x.Movie.OgDescription,
+
+                OgImage =
+                    x.Movie.OgImage,
+
+                TwitterCard =
+                    x.Movie.TwitterCard,
+
+                NoIndex =
+                    x.Movie.NoIndex,
+
+                NoFollow =
+                    x.Movie.NoFollow
             })
             .FirstOrDefaultAsync();
     }
 
 
     // ==================================================
-    // ویرایش Description
+    // Update Content + SEO
     // ==================================================
 
     public async Task<bool> UpdateAsync(
         MovieDescriptionEditDto dto)
     {
-        var description = await _context.MovieDescriptions
-            .FirstOrDefaultAsync(x => x.Id == dto.Id);
+        var description =
+            await _context.MovieDescriptions
+                .Include(x => x.Movie)
+                .FirstOrDefaultAsync(x =>
+                    x.Id == dto.Id);
 
         if (description == null)
             return false;
 
 
-        var sanitizedContent = SanitizeContent(dto.Content);
+        // ==================================================
+        // بررسی فیلم
+        // ==================================================
+
+        if (description.Movie == null)
+            return false;
+
+
+        // ==================================================
+        // Sanitize Content
+        // ==================================================
+
+        var sanitizedContent =
+            SanitizeContent(dto.Content);
 
         if (!HasTextContent(sanitizedContent))
             return false;
 
 
-        description.Content = sanitizedContent;
+        // ==================================================
+        // بررسی Slug
+        // ==================================================
+
+        var slug =
+            string.IsNullOrWhiteSpace(dto.Slug)
+                ? null
+                : dto.Slug.Trim();
+
+
+        if (!string.IsNullOrWhiteSpace(slug))
+        {
+            var duplicateSlug =
+                await _context.Movies
+                    .AnyAsync(x =>
+                        x.Id != description.MovieId &&
+                        x.Slug == slug);
+
+            if (duplicateSlug)
+                return false;
+        }
+
+
+        // ==================================================
+        // Update Description
+        // ==================================================
+
+        description.Content =
+            sanitizedContent;
+
+
+        // ==================================================
+        // Update SEO روی Movie
+        // ==================================================
+
+        description.Movie.MetaTitle =
+            NormalizeNullable(dto.MetaTitle);
+
+        description.Movie.MetaDescription =
+            NormalizeNullable(dto.MetaDescription);
+
+        description.Movie.MetaKeywords =
+            NormalizeNullable(dto.MetaKeywords);
+
+        description.Movie.Slug =
+            slug;
+
+        description.Movie.CanonicalUrl =
+            NormalizeNullable(dto.CanonicalUrl);
+
+        description.Movie.OgTitle =
+            NormalizeNullable(dto.OgTitle);
+
+        description.Movie.OgDescription =
+            NormalizeNullable(dto.OgDescription);
+
+        description.Movie.OgImage =
+            NormalizeNullable(dto.OgImage);
+
+        description.Movie.TwitterCard =
+            NormalizeTwitterCard(dto.TwitterCard);
+
+        description.Movie.NoIndex =
+            dto.NoIndex;
+
+        description.Movie.NoFollow =
+            dto.NoFollow;
+
 
         await _context.SaveChangesAsync();
 
@@ -203,11 +340,11 @@ public class MovieDescriptionService : IMovieDescriptionService
 
 
     // ==================================================
-    // دریافت جزئیات Description
+    // دریافت Details
     // ==================================================
 
-    public async Task<MovieDescriptionDetailsDto?> GetDetailsAsync(
-        int id)
+    public async Task<MovieDescriptionDetailsDto?>
+        GetDetailsAsync(int id)
     {
         return await _context.MovieDescriptions
             .AsNoTracking()
@@ -226,58 +363,138 @@ public class MovieDescriptionService : IMovieDescriptionService
 
                 CreatedAt = x.CreatedAt,
 
-                UpdatedAt = x.UpdatedAt
+                UpdatedAt = x.UpdatedAt,
+
+
+                // ==============================
+                // SEO
+                // ==============================
+
+                MetaTitle =
+                    x.Movie.MetaTitle,
+
+                MetaDescription =
+                    x.Movie.MetaDescription,
+
+                MetaKeywords =
+                    x.Movie.MetaKeywords,
+
+                Slug =
+                    x.Movie.Slug,
+
+                CanonicalUrl =
+                    x.Movie.CanonicalUrl,
+
+                OgTitle =
+                    x.Movie.OgTitle,
+
+                OgDescription =
+                    x.Movie.OgDescription,
+
+                OgImage =
+                    x.Movie.OgImage,
+
+                TwitterCard =
+                    x.Movie.TwitterCard,
+
+                NoIndex =
+                    x.Movie.NoIndex,
+
+                NoFollow =
+                    x.Movie.NoFollow
             })
             .FirstOrDefaultAsync();
     }
 
 
     // ==================================================
-    // پاک‌سازی HTML
+    // Sanitize
     // ==================================================
 
-    private string SanitizeContent(string content)
+    private string SanitizeContent(
+        string content)
     {
         if (string.IsNullOrWhiteSpace(content))
             return string.Empty;
-
 
         return _sanitizer.Sanitize(content);
     }
 
 
     // ==================================================
-    // بررسی وجود محتوای متنی واقعی
+    // بررسی وجود متن واقعی
     // ==================================================
 
-    private bool HasTextContent(string html)
+    private bool HasTextContent(
+        string html)
     {
-        var text = Regex.Replace(
-            html,
-            "<.*?>",
-            string.Empty);
+        var text =
+            Regex.Replace(
+                html,
+                "<.*?>",
+                string.Empty);
 
         return !string.IsNullOrWhiteSpace(text);
     }
 
 
     // ==================================================
-    // ساخت HtmlSanitizer
+    // Normalize nullable string
     // ==================================================
 
-    private static HtmlSanitizer CreateSanitizer()
+    private static string? NormalizeNullable(
+        string? value)
     {
-        var sanitizer = new HtmlSanitizer();
+        if (string.IsNullOrWhiteSpace(value))
+            return null;
+
+        return value.Trim();
+    }
 
 
-        // ------------------------------------------------
-        // تگ‌های مجاز
-        // ------------------------------------------------
+    // ==================================================
+    // Twitter Card
+    // ==================================================
+
+    private static string? NormalizeTwitterCard(
+        string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return null;
+
+        var normalized =
+            value.Trim().ToLowerInvariant();
+
+        return normalized switch
+        {
+            "summary" => "summary",
+
+            "summary_large_image" =>
+                "summary_large_image",
+
+            "app" => "app",
+
+            "player" => "player",
+
+            _ => null
+        };
+    }
+
+
+    // ==================================================
+    // Html Sanitizer
+    // ==================================================
+
+    private static HtmlSanitizer
+        CreateSanitizer()
+    {
+        var sanitizer =
+            new HtmlSanitizer();
+
 
         sanitizer.AllowedTags.Clear();
 
         sanitizer.AllowedTags.Add("p");
-
         sanitizer.AllowedTags.Add("br");
 
         sanitizer.AllowedTags.Add("h1");
@@ -296,54 +513,37 @@ public class MovieDescriptionService : IMovieDescriptionService
         sanitizer.AllowedTags.Add("li");
 
         sanitizer.AllowedTags.Add("a");
-
         sanitizer.AllowedTags.Add("img");
 
         sanitizer.AllowedTags.Add("blockquote");
 
 
-        // ------------------------------------------------
-        // Attributeهای مجاز
-        // ------------------------------------------------
-
         sanitizer.AllowedAttributes.Clear();
 
         sanitizer.AllowedAttributes.Add("href");
-
         sanitizer.AllowedAttributes.Add("src");
-
         sanitizer.AllowedAttributes.Add("alt");
-
         sanitizer.AllowedAttributes.Add("title");
-
         sanitizer.AllowedAttributes.Add("target");
-
         sanitizer.AllowedAttributes.Add("rel");
-
         sanitizer.AllowedAttributes.Add("class");
 
 
-        // ------------------------------------------------
-        // فقط Classهای موردنیاز Quill
-        // ------------------------------------------------
-
         sanitizer.AllowedClasses.Clear();
 
-        sanitizer.AllowedClasses.Add("ql-align-center");
+        sanitizer.AllowedClasses.Add(
+            "ql-align-center");
 
-        sanitizer.AllowedClasses.Add("ql-align-right");
+        sanitizer.AllowedClasses.Add(
+            "ql-align-right");
 
-        sanitizer.AllowedClasses.Add("ql-align-justify");
+        sanitizer.AllowedClasses.Add(
+            "ql-align-justify");
 
-
-        // ------------------------------------------------
-        // Schemeهای مجاز برای لینک و تصویر
-        // ------------------------------------------------
 
         sanitizer.AllowedSchemes.Clear();
 
         sanitizer.AllowedSchemes.Add("http");
-
         sanitizer.AllowedSchemes.Add("https");
 
 

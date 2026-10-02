@@ -7,10 +7,12 @@ using Service.Admin.Content.AboutUs;
 using Service.Admin.Content.AboutUsComment;
 using Service.Admin.Content.AboutUsSocialLink;
 using Service.Admin.Content.AboutUsTeamMember;
+using Service.Admin.Content.Banner;
 using Service.Admin.Content.ContactUs;
 using Service.Admin.Content.ContactUsCard;
 using Service.Admin.Content.FAQ;
 using Service.Admin.Content.PrivacyPolicies;
+using Service.Admin.Content.TagSearch;
 using Service.Admin.Content.TermsAndConditions;
 using Service.Admin.Content.UserQuestion;
 using Service.Admin.Movies.CastMember;
@@ -19,6 +21,8 @@ using Service.Admin.Movies.Language;
 using Service.Admin.Movies.MovieAdditionalInfo;
 using Service.Admin.Movies.MovieDescription;
 using Service.Admin.Movies.Review;
+using Service.Admin.Settings.Logo;
+using Service.Admin.Settings.SiteSettings;
 using Service.Admin.TvSeries.Episodes;
 using Service.Admin.TvSeries.Seasons;
 using Service.Admin.TvSeries.Series;
@@ -65,8 +69,10 @@ builder.Services.AddScoped<IAboutUsService,AboutUsService>();
 builder.Services.AddScoped<IAboutUsCommentService,AboutUsCommentService>();
 builder.Services.AddScoped<IAboutUsTeamMemberService,AboutUsTeamMemberService>();
 builder.Services.AddScoped<IAboutUsSocialLinkService,AboutUsSocialLinkService>();
-
-
+builder.Services.AddScoped<ILogoService,LogoService>();
+builder.Services.AddScoped<IBannerService,BannerService>();
+builder.Services.AddScoped<ITagSearchesService,TagSearchesService>();
+builder.Services.AddScoped<ISiteSettingsService, SiteSettingsService>();
 
 
 

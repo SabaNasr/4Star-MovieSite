@@ -4,38 +4,64 @@ namespace DataBase.Entity;
 public class Movie : BaseEntity
 {
     public string Title { get; set; } = string.Empty;
-    public string PosterPath { get; set; } = string.Empty;
-    public string ShortDescription { get; set; } = string.Empty;
-    public string? DownloadLink { get; set; }
+
+    public string? PosterPath { get; set; }
+
+    public string? ShortDescription { get; set; }
+
     public int DurationMinutes { get; set; }
 
-    // سال ساخت فیلم
     public int Year { get; set; }
 
-    // امتیاز IMDb
     public decimal ImdbRating { get; set; }
 
-    // تعداد بازدید فیلم
     public long ViewCount { get; set; }
 
-    // کیفیت‌های موجود برای فیلم
-    public List<Quality> AvailableQualities { get; set; } = [];
+    public List<Quality> AvailableQualities { get; set; } = new();
 
-    // رابطه چند به چند با Genre
-    public List<Genre> Genres { get; set; } = [];
+    public string? DownloadLink { get; set; }
 
-    // رابطه چند به چند با Language
-    public List<Language> Languages { get; set; } = [];
 
-    // رابطه چند به چند با عوامل فیلم
-    public List<CastMember> CastMembers { get; set; } = [];
+    // =========================
+    // SEO
+    // =========================
 
-    // رابطه یک به چند با نظرات کاربران
-    public List<Review> Reviews { get; set; } = [];
+    public string? MetaTitle { get; set; }
 
-    // رابطه یک به یک با بخش شرح
+    public string? MetaDescription { get; set; }
+
+    public string? MetaKeywords { get; set; }
+
+    public string? Slug { get; set; }
+
+    public string? CanonicalUrl { get; set; }
+
+    public string? OgTitle { get; set; }
+
+    public string? OgDescription { get; set; }
+
+    public string? OgImage { get; set; }
+
+    public string? TwitterCard { get; set; }
+
+    public bool NoIndex { get; set; } = false;
+
+    public bool NoFollow { get; set; } = false;
+
+
+    // =========================
+    // Relationships
+    // =========================
+
+    public List<Genre> Genres { get; set; } = new();
+
+    public List<Language> Languages { get; set; } = new();
+
+    public List<CastMember> CastMembers { get; set; } = new();
+
+    public List<Review> Reviews { get; set; } = new();
+
     public MovieDescription? Description { get; set; }
 
-    // رابطه یک به یک با اطلاعات تکمیلی
     public MovieAdditionalInfo? AdditionalInfo { get; set; }
 }

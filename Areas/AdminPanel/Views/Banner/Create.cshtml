@@ -1,0 +1,86 @@
+﻿@model Service.Admin.Content.Banner.BannerCreateDto
+
+@{
+    ViewData["Title"] = "ایجاد بنر جدید";
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4">
+        <span class="text-muted fw-light">بنرها /</span> ایجاد بنر جدید
+    </h4>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <h5 class="card-header">اطلاعات بنر</h5>
+                <div class="card-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <form asp-action="Create" method="post" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+
+                        <div class="mb-3">
+                            <label asp-for="Image" class="form-label fw-bold"></label>
+                            <input asp-for="Image" class="form-control" type="file" accept="image/*" required />
+                            <span asp-validation-for="Image" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Text" class="form-label">متن روی بنر</label>
+                                <input asp-for="Text" class="form-control" placeholder="مثال: جشنواره تابستانه" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Alt" class="form-label">متن جایگزین (Alt)</label>
+                                <input asp-for="Alt" class="form-control" placeholder="توضیح کوتاه برای سئو" />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Link" class="form-label">لینک مقصد</label>
+                                <input asp-for="Link" class="form-control" dir="ltr" placeholder="https://example.com/page" />
+                                <div class="form-text">اگر خالی باشد، بنر لینک نمی‌شود.</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="TagSearchId" class="form-label">تگ جستجوی مرتبط (اختیاری)</label>
+                                <!-- ✅ هماهنگی کامل: استفاده از Title به جای Name -->
+                                <select asp-for="TagSearchId" class="form-select" asp-items="@(new SelectList(ViewBag.TagSearches, "Id", "Title"))">
+                                    <option value="">-- بدون تگ --</option>
+                                </select>
+                                <div class="form-text">با انتخاب این مورد، لینک بنر به صفحه جستجوی این تگ تنظیم می‌شود.</div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Order" class="form-label">ترتیب نمایش</label>
+                                <input asp-for="Order" type="number" class="form-control" value="0" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="IsActive" class="form-label">وضعیت</label>
+                                <div class="form-check form-switch mt-2">
+                                    <input asp-for="IsActive" class="form-check-input" />
+                                    <label class="form-check-label" asp-for="IsActive">فعال</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-primary me-2">
+                                <i class="bx bx-save me-1"></i> ذخیره بنر
+                            </button>
+                            <a asp-action="Index" class="btn btn-label-secondary">انصراف</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

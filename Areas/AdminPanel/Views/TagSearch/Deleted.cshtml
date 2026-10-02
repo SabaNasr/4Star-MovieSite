@@ -1,0 +1,57 @@
+﻿@model List<Service.Admin.Content.TagSearch.TagSearchListDto>
+
+@{
+    ViewData["Title"] = "سطل زباله تگ‌ها";
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-bold py-3 mb-0">سطل زباله تگ‌های جستجو</h4>
+        <a asp-action="Index" class="btn btn-label-secondary">
+            <i class="bx bx-arrow-back me-1"></i> بازگشت به لیست
+        </a>
+    </div>
+
+    <ul class="nav nav-pills mb-3" role="tablist">
+        <li class="nav-item"><a class="nav-link" asp-action="Index"><i class="bx bx-list-ul me-1"></i> تگ‌های فعال</a></li>
+        <li class="nav-item"><a class="nav-link active" asp-action="Deleted"><i class="bx bx-trash me-1"></i> سطل زباله</a></li>
+    </ul>
+
+    <div class="card">
+        <div class="table-responsive text-nowrap p-3">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>عنوان تگ</th>
+                        <th>نامک (Slug)</th>
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr class="text-muted">
+                            <td class="fw-bold">@item.Title</td>
+                            <td><code>@item.Slug</code></td>
+                            <td>
+                                <form asp-action="Restore" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="return confirm('آیا می‌خواهید این تگ را بازگردانی کنید؟');">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm btn-success">
+                                        <i class="bx bx-undo me-1"></i> بازگردانی
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @if (!Model.Any())
+            {
+                <div class="text-center p-4 text-muted">
+                    <i class="bx bx-check-circle bx-md text-success"></i>
+                    <p class="mt-2">سطل زباله خالی است!</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>

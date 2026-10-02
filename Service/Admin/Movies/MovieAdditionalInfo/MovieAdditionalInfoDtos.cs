@@ -4,14 +4,18 @@ namespace Service.Admin.Movies.MovieAdditionalInfo;
 public class MovieAdditionalInfoListDto
 {
     public int Id { get; set; }
+
     public int MovieId { get; set; }
+
     public string MovieTitle { get; set; } = string.Empty;
 
     public bool IsActive { get; set; }
 
     public DateTime CreatedAt { get; set; }
+
     public DateTime? UpdatedAt { get; set; }
 }
+
 
 public class MovieAdditionalInfoCreateDto
 {
@@ -21,8 +25,11 @@ public class MovieAdditionalInfoCreateDto
     [Required(ErrorMessage = "اطلاعات تکمیلی فیلم الزامی است.")]
     public string Content { get; set; } = string.Empty;
 
-    public List<MovieAdditionalInfoMovieItemDto> Movies { get; set; } = new();
+    public List<MovieAdditionalInfoMovieItemDto>
+        Movies
+    { get; set; } = new();
 }
+
 
 public class MovieAdditionalInfoEditDto
 {
@@ -34,7 +41,35 @@ public class MovieAdditionalInfoEditDto
 
     [Required(ErrorMessage = "اطلاعات تکمیلی فیلم الزامی است.")]
     public string Content { get; set; } = string.Empty;
+
+
+    // ==================================================
+    // SEO
+    // ==================================================
+
+    public string? MetaTitle { get; set; }
+
+    public string? MetaDescription { get; set; }
+
+    public string? MetaKeywords { get; set; }
+
+    public string? Slug { get; set; }
+
+    public string? CanonicalUrl { get; set; }
+
+    public string? OgTitle { get; set; }
+
+    public string? OgDescription { get; set; }
+
+    public string? OgImage { get; set; }
+
+    public string? TwitterCard { get; set; }
+
+    public bool NoIndex { get; set; }
+
+    public bool NoFollow { get; set; }
 }
+
 
 public class MovieAdditionalInfoDetailsDto
 {
@@ -51,7 +86,35 @@ public class MovieAdditionalInfoDetailsDto
     public DateTime CreatedAt { get; set; }
 
     public DateTime? UpdatedAt { get; set; }
+
+
+    // ==================================================
+    // SEO
+    // ==================================================
+
+    public string? MetaTitle { get; set; }
+
+    public string? MetaDescription { get; set; }
+
+    public string? MetaKeywords { get; set; }
+
+    public string? Slug { get; set; }
+
+    public string? CanonicalUrl { get; set; }
+
+    public string? OgTitle { get; set; }
+
+    public string? OgDescription { get; set; }
+
+    public string? OgImage { get; set; }
+
+    public string? TwitterCard { get; set; }
+
+    public bool NoIndex { get; set; }
+
+    public bool NoFollow { get; set; }
 }
+
 
 public class MovieAdditionalInfoMovieItemDto
 {

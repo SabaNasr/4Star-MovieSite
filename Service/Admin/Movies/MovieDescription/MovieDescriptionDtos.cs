@@ -16,7 +16,6 @@ public class MovieDescriptionListDto
     public DateTime? UpdatedAt { get; set; }
 }
 
-
 public class MovieDescriptionCreateDto
 {
     [Required(ErrorMessage = "انتخاب فیلم الزامی است.")]
@@ -28,7 +27,6 @@ public class MovieDescriptionCreateDto
     public List<MovieDescriptionMovieItemDto> Movies { get; set; } = new();
 }
 
-
 public class MovieDescriptionEditDto
 {
     public int Id { get; set; }
@@ -39,8 +37,34 @@ public class MovieDescriptionEditDto
 
     [Required(ErrorMessage = "شرح کامل فیلم الزامی است.")]
     public string Content { get; set; } = string.Empty;
-}
 
+
+    // ==================================================
+    // SEO
+    // ==================================================
+
+    public string? MetaTitle { get; set; }
+
+    public string? MetaDescription { get; set; }
+
+    public string? MetaKeywords { get; set; }
+
+    public string? Slug { get; set; }
+
+    public string? CanonicalUrl { get; set; }
+
+    public string? OgTitle { get; set; }
+
+    public string? OgDescription { get; set; }
+
+    public string? OgImage { get; set; }
+
+    public string? TwitterCard { get; set; }
+
+    public bool NoIndex { get; set; }
+
+    public bool NoFollow { get; set; }
+}
 
 public class MovieDescriptionDetailsDto
 {
@@ -57,8 +81,34 @@ public class MovieDescriptionDetailsDto
     public DateTime CreatedAt { get; set; }
 
     public DateTime? UpdatedAt { get; set; }
-}
 
+
+    // ==================================================
+    // SEO
+    // ==================================================
+
+    public string? MetaTitle { get; set; }
+
+    public string? MetaDescription { get; set; }
+
+    public string? MetaKeywords { get; set; }
+
+    public string? Slug { get; set; }
+
+    public string? CanonicalUrl { get; set; }
+
+    public string? OgTitle { get; set; }
+
+    public string? OgDescription { get; set; }
+
+    public string? OgImage { get; set; }
+
+    public string? TwitterCard { get; set; }
+
+    public bool NoIndex { get; set; }
+
+    public bool NoFollow { get; set; }
+}
 
 public class MovieDescriptionMovieItemDto
 {

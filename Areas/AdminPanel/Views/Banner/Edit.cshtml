@@ -1,0 +1,84 @@
+﻿@model Service.Admin.Content.Banner.BannerUpdateDto
+
+@{
+    ViewData["Title"] = "ویرایش بنر";
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">بنرها /</span> ویرایش بنر</h4>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <h5 class="card-header">اطلاعات بنر</h5>
+                <div class="card-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                    <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="ExistingImage" />
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">تصویر فعلی</label>
+                            @if (!string.IsNullOrEmpty(Model.ExistingImage))
+                            {
+                                <img src="@Model.ExistingImage" class="img-fluid rounded mb-2 border" style="max-height: 150px; width: 100%; object-fit: cover;" />
+                            }
+                            <label asp-for="NewImage" class="form-label">تصویر جدید (اختیاری)</label>
+                            <input asp-for="NewImage" class="form-control" type="file" accept="image/*" />
+                            <div class="form-text">در صورت انتخاب، تصویر قبلی جایگزین می‌شود.</div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Text" class="form-label">متن روی بنر</label>
+                                <input asp-for="Text" class="form-control" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Alt" class="form-label">متن جایگزین (Alt)</label>
+                                <input asp-for="Alt" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Link" class="form-label">لینک مقصد</label>
+                                <input asp-for="Link" class="form-control" dir="ltr" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="TagSearchId" class="form-label">تگ جستجوی مرتبط</label>
+                                <select asp-for="TagSearchId" class="form-select" asp-items="@(new SelectList(ViewBag.TagSearches, "Id", "Title"))">
+                                    <option value="">-- بدون تگ --</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Order" class="form-label">ترتیب نمایش</label>
+                                <input asp-for="Order" type="number" class="form-control" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="IsActive" class="form-label">وضعیت</label>
+                                <div class="form-check form-switch mt-2">
+                                    <input asp-for="IsActive" class="form-check-input" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-primary me-2">ذخیره تغییرات</button>
+                            <a asp-action="Index" class="btn btn-label-secondary">انصراف</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

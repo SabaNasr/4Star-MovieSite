@@ -53,8 +53,7 @@ public class TVShowDescriptionController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(
-        TVShowDescriptionCreateDto dto)
+    public async Task<IActionResult> Create(TVShowDescriptionCreateDto dto)
     {
         if (!ModelState.IsValid)
         {
@@ -72,9 +71,8 @@ public class TVShowDescriptionController : Controller
 
         if (!result)
         {
-            ModelState.AddModelError(
-                string.Empty,
-                "امکان ثبت شرح کامل تی‌وی شو وجود ندارد. ممکن است برای این تی‌وی شو قبلاً شرح ثبت شده باشد.");
+            ModelState.AddModelError(string.Empty,
+                "امکان ثبت شرح تی‌وی شو وجود ندارد. ممکن است برای این تی‌وی شو قبلاً شرح ثبت شده باشد.");
 
             await _tvShowDescriptionService
                 .FillCreateFormDataAsync(dto);
@@ -117,8 +115,7 @@ public class TVShowDescriptionController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(
-        TVShowDescriptionEditDto dto)
+    public async Task<IActionResult> Edit(TVShowDescriptionEditDto dto)
     {
         if (!ModelState.IsValid)
             return View(dto);
@@ -133,19 +130,21 @@ public class TVShowDescriptionController : Controller
         {
             ModelState.AddModelError(
                 string.Empty,
-                "امکان ویرایش شرح کامل تی‌وی شو وجود ندارد.");
+                "امکان ویرایش شرح تی‌وی شو وجود ندارد. ممکن است Slug واردشده قبلاً استفاده شده باشد.");
 
             return View(dto);
         }
 
 
         TempData["SuccessMessage"] =
-            "شرح کامل تی‌وی شو با موفقیت ویرایش شد.";
+            "شرح کامل تی‌وی شو و تنظیمات سئو با موفقیت ویرایش شد.";
 
 
-        return RedirectToAction(
-            nameof(Details),
-            new { id = dto.Id });
+        return RedirectToAction(nameof(Details),
+            new
+            {
+                id = dto.Id
+            });
     }
 
 
